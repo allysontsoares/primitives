@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      timescape:
+        specifier: ^0.8.0
+        version: 0.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@storybook/addon-a11y':
         specifier: ^8.0.0
@@ -2014,6 +2018,32 @@ packages:
 
   thenify@3.3.1:
     resolution: {integrity: sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==}
+
+  timescape@0.8.0:
+    resolution: {integrity: sha512-nNYAnZY1BPHSfnnpx3V9wWdxb9z4tB7zksRx0/mRFpZ8gK3fqEMZQ43hHqUDgJICVTb33hmfkeAYaKGkN7Q3Nw==}
+    peerDependencies:
+      '@preact/signals': 1.x
+      preact: 10.x
+      react: '>=17'
+      react-dom: '>=17'
+      solid-js: '>=1'
+      svelte: 3.x
+      vue: 3.x
+    peerDependenciesMeta:
+      '@preact/signals':
+        optional: true
+      preact:
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
 
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
@@ -4072,6 +4102,11 @@ snapshots:
   thenify@3.3.1:
     dependencies:
       any-promise: 1.3.0
+
+  timescape@0.8.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   tiny-invariant@1.3.3: {}
 
