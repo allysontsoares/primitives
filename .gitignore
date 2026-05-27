@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+coverage/
+.turbo/
+.vite/
+*.tsbuildinfo
+
+# Local/generated project artifacts ignored for now
+/docs/
+/tests/
+/storybook-static/
+/.storybook/
+/.claude/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
