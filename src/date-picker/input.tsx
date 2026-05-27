@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { type DateType, useTimescape } from "timescape/react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTimescape } from "timescape/react";
 import { isDateDisabled } from "../utils/date";
 import { getSegmentInfo } from "../utils/locale";
 import { useDatePickerContext } from "./context";
@@ -18,79 +18,54 @@ export interface InputProps {
 	style?: React.CSSProperties;
 }
 
-export function Input({ index, segmentLabels, className, style }: InputProps) {
+// ─── Inner component ────────────────────────────────────────────────────────
+// Lives in a separate component so React can remount it (via `key`) whenever
+// an external update (e.g. calendar click) must reinitialise timescape with
+// a new date.  If we updated timescape's internal state imperatively with
+// `update()`, it would silently no-op when timescape starts in placeholder
+// mode (no initial date), so remounting is the reliable path.
+
+interface SegmentsProps {
+	sourceDate: Date | null;
+	segmentOrder: string[];
+	separator: string;
+	labels: Record<string, string>;
+	onDateChange: (date: Date | undefined) => void;
+	className?: string | undefined;
+	style?: React.CSSProperties | undefined;
+}
+
+function Segments({
+	sourceDate,
+	segmentOrder,
+	separator,
+	labels,
+	onDateChange,
+	className,
+	style,
+}: SegmentsProps) {
 	const { state, dispatch, ids, config } = useDatePickerContext();
 
-	const { order: segmentOrder, separator } = useMemo(
-		() => getSegmentInfo(config.locale),
-		[config.locale],
-	);
+	// Keep onDateChange stable inside timescape even when the prop reference changes.
+	const onDateChangeRef = useRef(onDateChange);
+	onDateChangeRef.current = onDateChange;
 
-	const labels = {
-		month: segmentLabels?.month ?? DEFAULT_LABELS.month,
-		day: segmentLabels?.day ?? DEFAULT_LABELS.day,
-		year: segmentLabels?.year ?? DEFAULT_LABELS.year,
-	};
-
-	const sourceDate =
-		index === 1
-			? state.rangeEnd
-			: index === 0
-				? state.rangeStart
-				: state.selectedDate;
-
-	const sourceDateRef = useRef(sourceDate);
-	useEffect(() => {
-		sourceDateRef.current = sourceDate;
-	}, [sourceDate]);
-
-	const baseOptions: any = {
+	const opts: Record<string, unknown> = {
 		wrapAround: true,
-		onChangeDate: (nextDate: Date | undefined) => {
-			if (!nextDate) return;
-			if (isDateDisabled(nextDate, config)) return;
-
-			const prevDate = sourceDateRef.current;
-			if (prevDate && prevDate.getTime() === nextDate.getTime()) return;
-
-			dispatch({ type: "FOCUS_DATE", date: nextDate });
-			if (config.mode === "single") {
-				dispatch({ type: "SELECT_DATE", date: nextDate });
-			} else if (config.mode === "range" && index === 0) {
-				dispatch({ type: "ANCHOR_DATE", date: nextDate });
-			} else if (config.mode === "range" && index === 1) {
-				dispatch({ type: "EXTEND_RANGE", date: nextDate });
-			} else if (config.mode === "multiple") {
-				dispatch({ type: "TOGGLE_DATE", date: nextDate });
-			}
-		},
+		onChangeDate: (d: Date | undefined) => onDateChangeRef.current(d),
 	};
-	
-	if (config.minDate) baseOptions.minDate = config.minDate;
-	if (config.maxDate) baseOptions.maxDate = config.maxDate;
-	if (sourceDate) baseOptions.date = sourceDate;
+	if (config.minDate) opts.minDate = config.minDate;
+	if (config.maxDate) opts.maxDate = config.maxDate;
+	if (sourceDate) opts.date = sourceDate;
 
-	const { getRootProps, getInputProps, options, update } = useTimescape(baseOptions);
+	const { getRootProps, getInputProps } = useTimescape(opts as Parameters<typeof useTimescape>[0]);
 
-	// Keep timescape in sync when sourceDate changes externally
-	useEffect(() => {
-		update((prev: any) => {
-			const next = { ...prev };
-			if (sourceDate) {
-				next.date = sourceDate;
-			} else {
-				delete next.date;
-			}
-			return next;
-		});
-	}, [sourceDate, update]);
-
-	// Track focused segment to replicate `focused` state / `openSource`
 	const [focused, setFocused] = useState<string | null>(null);
 
 	function handleSegmentFocus(field: string) {
 		setFocused(field);
-		if (!state.open) dispatch({ type: "OPEN", source: "input" });
+		if (!state.open && !config.readOnly)
+			dispatch({ type: "OPEN", source: "input" });
 	}
 
 	function handleSegmentBlur(
@@ -123,7 +98,7 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
 			className={className}
 			style={style}
 			{...getRootProps()}
-			{...(config.readOnly ? { "data-disabled": "true" } : {})}
+			{...(config.readOnly ? { "data-readonly": "true" } : {})}
 		>
 			{segmentOrder.map((field, i) => {
 				const type = FIELD_MAP[field as keyof typeof FIELD_MAP];
@@ -139,10 +114,10 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
 						)}
 						<input
 							{...getInputProps(type)}
-							aria-label={labels[field as keyof typeof labels]}
+							aria-label={labels[field]}
 							data-segment={field}
-							tabIndex={isTabStop ? 0 : -1}
-							readOnly={config.readOnly}
+							tabIndex={config.readOnly ? -1 : (isTabStop ? 0 : -1)}
+							disabled={config.readOnly}
 							onFocus={(e) => {
 								getInputProps(type).ref(e.currentTarget);
 								handleSegmentFocus(field);
@@ -165,5 +140,106 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
 				);
 			})}
 		</div>
+	);
+}
+
+// ─── Public component ────────────────────────────────────────────────────────
+
+export function Input({ index, segmentLabels, className, style }: InputProps) {
+	const { state, dispatch, config } = useDatePickerContext();
+
+	const { order: segmentOrder, separator } = useMemo(
+		() => getSegmentInfo(config.locale),
+		[config.locale],
+	);
+
+	const labels = {
+		month: segmentLabels?.month ?? DEFAULT_LABELS.month,
+		day: segmentLabels?.day ?? DEFAULT_LABELS.day,
+		year: segmentLabels?.year ?? DEFAULT_LABELS.year,
+	};
+
+	const sourceDate =
+		index === 1
+			? state.rangeEnd
+			: index === 0
+				? state.rangeStart
+				: state.selectedDate;
+
+	// ── External-change detection ──────────────────────────────────────────
+	// When the user picks a date from the calendar (external update), we
+	// increment `timescapeKey` to remount <Segments> with the correct
+	// initialDate.  When the change came from this input's own onDateChange
+	// (internal), we skip the remount to preserve focus.
+	const isInternalChangeRef = useRef(false);
+	const prevSourceDateRef = useRef(sourceDate);
+	const [timescapeKey, setTimescapeKey] = useState(0);
+
+	useEffect(() => {
+		const prev = prevSourceDateRef.current;
+		prevSourceDateRef.current = sourceDate;
+
+		if (isInternalChangeRef.current) {
+			isInternalChangeRef.current = false;
+			return;
+		}
+
+		// Compare by value so same-day objects don't trigger a remount.
+		const prevTime = prev?.getTime();
+		const currTime = sourceDate?.getTime();
+		if (prevTime !== currTime) {
+			setTimescapeKey((k) => k + 1);
+		}
+	}, [sourceDate]);
+
+	// ── Date-change handler ────────────────────────────────────────────────
+	const onDateChange = useCallback(
+		(nextDate: Date | undefined) => {
+			if (!nextDate) return;
+			if (isDateDisabled(nextDate, config)) return;
+
+			const prevDate = prevSourceDateRef.current;
+			if (
+				prevDate &&
+				prevDate.getTime() === nextDate.getTime()
+			)
+				return;
+
+			if (config.mode === "multiple") {
+				// Clear the input after each toggle so the user can enter
+				// the next date without a manual clear.
+				dispatch({ type: "FOCUS_DATE", date: nextDate });
+				dispatch({ type: "TOGGLE_DATE", date: nextDate });
+				setTimescapeKey((k) => k + 1);
+				return;
+			}
+
+			// For single / range: mark as internal so the useEffect above
+			// does not remount timescape (we want to keep segment focus).
+			isInternalChangeRef.current = true;
+			dispatch({ type: "FOCUS_DATE", date: nextDate });
+
+			if (config.mode === "single") {
+				dispatch({ type: "SELECT_DATE", date: nextDate });
+			} else if (config.mode === "range" && index === 0) {
+				dispatch({ type: "ANCHOR_DATE", date: nextDate });
+			} else if (config.mode === "range" && index === 1) {
+				dispatch({ type: "EXTEND_RANGE", date: nextDate });
+			}
+		},
+		[config, dispatch, index],
+	);
+
+	return (
+		<Segments
+			key={timescapeKey}
+			sourceDate={sourceDate}
+			segmentOrder={segmentOrder}
+			separator={separator}
+			labels={labels}
+			onDateChange={onDateChange}
+			className={className}
+			style={style}
+		/>
 	);
 }

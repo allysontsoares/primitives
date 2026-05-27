@@ -160,9 +160,16 @@ export const baseCalendarStyles = `
     border-color: ${vars.primary};
     box-shadow: 0 0 0 2px ${vars.primaryLight};
   }
-  .dp-input[data-disabled] {
+  .dp-input[data-disabled],
+  .dp-input[data-readonly] {
     background: #f9fafb;
     color: ${vars.muted};
+    cursor: default;
+  }
+  .dp-input[data-readonly] input:disabled {
+    color: inherit;
+    background: transparent;
+    cursor: default;
   }
   .dp-input [role="spinbutton"] {
     border-radius: 4px;
@@ -195,7 +202,8 @@ export const baseCalendarStyles = `
     padding: 6px 10px;
     font-size: 14px;
   }
-  .dp-trigger:hover { background: ${vars.hover}; }
+  .dp-trigger:hover:not(:disabled) { background: ${vars.hover}; }
+  .dp-trigger:disabled { opacity: 0.5; cursor: not-allowed; }
   .dp-label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 4px; }
   .dp-month-grid {
     display: grid;

@@ -159,7 +159,7 @@ export const FrenchLocale: StoryObj = {
 export const ReadOnly: StoryObj = {
   render: () => (
     <StyleWrapper>
-      <Hint>Calendar opens for navigation, but segment editing and selection are blocked.</Hint>
+      <Hint>Read-only: the displayed date cannot be changed. Segment editing and calendar selection are both blocked.</Hint>
       <DatePicker.Root defaultValue={new Date(2024, 5, 15)} readOnly>
         <DatePicker.Label className="dp-label">Read-only date</DatePicker.Label>
         <FieldRow>
