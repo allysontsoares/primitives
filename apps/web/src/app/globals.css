@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/* 1. Tailwind v4 Theme Tokens Mapping */
+@theme {
+  --font-display: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --color-border: #161616;
+}
+
+/* 2. Base Elements Styling */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #000000;
+    color: #e4e4e7;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background-color: rgba(59, 130, 246, 0.25);
+    color: #93c5fd;
+  }
+
+  :focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+}
+
+/* 3. Elegant Custom Utilities */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #1f1f23;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #2e2e33;
+}
+
+/* 4. Elegant DatePicker Input Segment Styling */
+.timescape-input {
+  transition: all 120ms ease;
+  border-radius: 4px;
+}
+
+.timescape-input:focus {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.timescape-input::selection {
+  background: transparent !important;
+}
+

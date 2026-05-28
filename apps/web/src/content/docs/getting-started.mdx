@@ -1,0 +1,144 @@
+# Getting started
+
+## Install
+
+```bash
+npm install @at5/kairo
+```
+
+Peer dependencies: `react >=19` and `react-dom >=19`.
+
+## Interactive Demo
+
+Try out Kairo's different selection modes and BCP 47 locale rendering (including full RTL segment order and grid layouts) below:
+
+<LivePreview />
+
+## Your first date picker
+
+The simplest setup is a single-mode picker with a segmented input and a calendar popover.
+
+```tsx
+import { DatePicker } from "@at5/kairo";
+
+export function MyDatePicker() {
+  return (
+    <DatePicker.Root mode="single" locale="en-US">
+      <DatePicker.Label>Appointment date</DatePicker.Label>
+      <DatePicker.Input className="my-input" />
+      <DatePicker.Trigger>📅</DatePicker.Trigger>
+      <DatePicker.Content className="my-popover">
+        <DatePicker.ViewControl>
+          <DatePicker.PrevTrigger />
+          <DatePicker.ViewTrigger />
+          <DatePicker.NextTrigger />
+        </DatePicker.ViewControl>
+        <DatePicker.View view="day">
+          <DatePicker.Grid header={<DatePicker.WeekDays />}>
+            {({ weeks }) =>
+              weeks.map((week, wi) => (
+                <tr key={wi}>
+                  {week.map((day, di) => (
+                    <DatePicker.Day key={di} date={day} className="my-day" />
+                  ))}
+                </tr>
+              ))
+            }
+          </DatePicker.Grid>
+        </DatePicker.View>
+        <DatePicker.View view="month">
+          <DatePicker.MonthGrid>
+            {({ months }) =>
+              months.map((m) => (
+                <DatePicker.MonthCell key={m.value} value={m.value} disabled={m.isDisabled}>
+                  {m.label.slice(0, 3)}
+                </DatePicker.MonthCell>
+              ))
+            }
+          </DatePicker.MonthGrid>
+        </DatePicker.View>
+        <DatePicker.View view="year">
+          <DatePicker.YearGrid>
+            {({ years }) =>
+              years.map((y) => (
+                <DatePicker.YearCell key={y.value} value={y.value} disabled={y.isDisabled}>
+                  {y.value}
+                </DatePicker.YearCell>
+              ))
+            }
+          </DatePicker.YearGrid>
+        </DatePicker.View>
+      </DatePicker.Content>
+    </DatePicker.Root>
+  );
+}
+```
+
+## Listening to value changes
+
+```tsx
+<DatePicker.Root
+  mode="single"
+  defaultValue={new Date()}
+  onValueChange={(date) => console.log(date)}
+>
+  ...
+</DatePicker.Root>
+```
+
+## Range mode
+
+```tsx
+<DatePicker.Root
+  mode="range"
+  onValueChange={({ start, end }) => console.log(start, end)}
+>
+  <DatePicker.Input index={0} />
+  <DatePicker.Input index={1} />
+  <DatePicker.Trigger>📅</DatePicker.Trigger>
+  <DatePicker.Content>...</DatePicker.Content>
+</DatePicker.Root>
+```
+
+## Multi-select mode
+
+```tsx
+<DatePicker.Root
+  mode="multiple"
+  onValueChange={(dates) => console.log(dates)}
+>
+  <DatePicker.Input />
+  <DatePicker.Trigger>📅</DatePicker.Trigger>
+  <DatePicker.Content>...</DatePicker.Content>
+</DatePicker.Root>
+```
+
+## Locale
+
+Pass any BCP 47 locale tag. Segment order, separator, weekday names, and month labels are all derived from `Intl`.
+
+```tsx
+<DatePicker.Root mode="single" locale="pt-BR">...</DatePicker.Root>
+<DatePicker.Root mode="single" locale="ja-JP">...</DatePicker.Root>
+<DatePicker.Root mode="single" locale="ar">...</DatePicker.Root>
+```
+
+## Min / max dates
+
+```tsx
+<DatePicker.Root
+  mode="single"
+  minDate={new Date(2024, 0, 1)}
+  maxDate={new Date(2024, 11, 31)}
+>
+  ...
+</DatePicker.Root>
+```
+
+## Read-only
+
+```tsx
+<DatePicker.Root mode="single" readOnly defaultValue={new Date()}>
+  ...
+</DatePicker.Root>
+```

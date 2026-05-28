@@ -1,0 +1,56 @@
+# Kairo
+
+Kairo is a headless React library for date and scheduling primitives. It ships zero CSS, has no opinion on styling, and is built around the WAI-ARIA grid pattern for full keyboard and screen-reader accessibility.
+
+## What's included
+
+- **Single date picker** — segmented keyboard input + calendar popover
+- **Date range picker** — two inputs, one shared calendar
+- **Multi-select date picker** — toggle individual dates
+
+## Design principles
+
+**Unstyled.** Kairo renders only semantic HTML. You control every pixel via `className` and `style` props.
+
+**Composable.** Each part of the UI is a separate primitive (`Label`, `Input`, `Trigger`, `Grid`, `Day`, …). Compose exactly what your design needs.
+
+**Locale-aware.** Segment order, separators, weekday names, and month labels all derive from `Intl`. Pass any BCP 47 locale tag and it just works.
+
+**Accessible.** WAI-ARIA roles, `aria-label`, `aria-selected`, keyboard navigation, and focus management are handled for you.
+
+## Installation
+
+```bash
+npm install @at5/kairo
+```
+
+React 19 and React DOM 19 are peer dependencies.
+
+## Quick look
+
+```tsx
+import { DatePicker } from "@at5/kairo";
+
+export function Demo() {
+  return (
+    <DatePicker.Root mode="single">
+      <DatePicker.Label>Date</DatePicker.Label>
+      <DatePicker.Input />
+      <DatePicker.Trigger>📅</DatePicker.Trigger>
+      <DatePicker.Content>
+        <DatePicker.Grid>
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((day, di) => (
+                  <DatePicker.Day key={di} date={day} />
+                ))}
+              </tr>
+            ))
+          }
+        </DatePicker.Grid>
+      </DatePicker.Content>
+    </DatePicker.Root>
+  );
+}
+```
