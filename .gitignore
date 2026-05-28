@@ -4,16 +4,21 @@ node_modules/
 # Build outputs
 dist/
 coverage/
+.next/
+out/
+
+# Turbo
 .turbo/
+
+# Vite
 .vite/
 *.tsbuildinfo
 
-# Local/generated project artifacts ignored for now
-/docs/
-/tests/
-/storybook-static/
-/.storybook/
-/.claude/
+# Storybook
+storybook-static/
+
+# Local artifacts
+.claude/
 
 # Logs
 *.log

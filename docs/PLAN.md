@@ -3,6 +3,7 @@
 ## Context
 
 Build a headless DatePicker primitive library for React/TypeScript, inspired by Ark UI's date-picker but with:
+
 - **Zero external runtime dependencies** — only React, TypeScript, and native browser APIs
 - **Truly headless** — no default styles; works with Tailwind, Panda CSS, CSS-in-JS, plain CSS
 - **Fully accessible** — WAI-ARIA date picker pattern, keyboard navigation, screen reader support
@@ -13,13 +14,14 @@ Build a headless DatePicker primitive library for React/TypeScript, inspired by 
 
 ## Complexity Assessment
 
-| Scope | Timeline | What's included |
-|-------|----------|-----------------|
-| MVP | 1–2 weeks | Single selection, English locale, day view only, basic ARIA, open/close |
-| Mid-tier | 3–4 weeks | + Month/year views, range mode, locale-aware week start, input parsing, focus trap |
+| Scope      | Timeline  | What's included                                                                        |
+| ---------- | --------- | -------------------------------------------------------------------------------------- |
+| MVP        | 1–2 weeks | Single selection, English locale, day view only, basic ARIA, open/close                |
+| Mid-tier   | 3–4 weeks | + Month/year views, range mode, locale-aware week start, input parsing, focus trap     |
 | Production | 5–6 weeks | + Multiple mode, full keyboard nav, animations, a11y audit, Storybook, full test suite |
 
 **Hardest problems to get right:**
+
 1. **Keyboard nav across month boundaries** — arrow key focus must cross month, re-rendering grid, with roving tabindex reassigned via `useEffect`
 2. **Segmented input** — locale-aware field order/separators, independent spinbutton editing, and synchronization with calendar state
 3. **Range mode UX** — anchor/extend/hover-preview state, two-input binding, preventing start > end
@@ -38,7 +40,7 @@ Build a headless DatePicker primitive library for React/TypeScript, inspired by 
   <DatePicker.Input />
   <DatePicker.Trigger>Open calendar</DatePicker.Trigger>
   <DatePicker.Content>
-    <DatePicker.Calendar />   {/* self-contained: nav header + weekdays + grid */}
+    <DatePicker.Calendar /> {/* self-contained: nav header + weekdays + grid */}
   </DatePicker.Content>
 </DatePicker.Root>
 ```
@@ -59,29 +61,39 @@ Build a headless DatePicker primitive library for React/TypeScript, inspired by 
     <DatePicker.View view="day">
       <DatePicker.WeekDays />
       <DatePicker.Grid>
-        {({ weeks }) => weeks.map((week, wi) =>
-          week.map((day, di) => (
-            <DatePicker.Day key={`${wi}-${di}`} date={day}>
-              {({ date, isSelected, isToday, isOutsideMonth, isDisabled }) => (
-                <span className={isSelected ? 'selected' : ''}>{date.getDate()}</span>
-              )}
-            </DatePicker.Day>
-          ))
-        )}
+        {({ weeks }) =>
+          weeks.map((week, wi) =>
+            week.map((day, di) => (
+              <DatePicker.Day key={`${wi}-${di}`} date={day}>
+                {({ date, isSelected, isToday, isOutsideMonth, isDisabled }) => (
+                  <span className={isSelected ? "selected" : ""}>{date.getDate()}</span>
+                )}
+              </DatePicker.Day>
+            )),
+          )
+        }
       </DatePicker.Grid>
     </DatePicker.View>
     <DatePicker.View view="month">
       <DatePicker.MonthGrid>
-        {({ months }) => months.map(m => (
-          <DatePicker.MonthCell key={m.value} value={m.value}>{m.label}</DatePicker.MonthCell>
-        ))}
+        {({ months }) =>
+          months.map((m) => (
+            <DatePicker.MonthCell key={m.value} value={m.value}>
+              {m.label}
+            </DatePicker.MonthCell>
+          ))
+        }
       </DatePicker.MonthGrid>
     </DatePicker.View>
     <DatePicker.View view="year">
       <DatePicker.YearGrid>
-        {({ years }) => years.map(y => (
-          <DatePicker.YearCell key={y} value={y}>{y}</DatePicker.YearCell>
-        ))}
+        {({ years }) =>
+          years.map((y) => (
+            <DatePicker.YearCell key={y} value={y}>
+              {y}
+            </DatePicker.YearCell>
+          ))
+        }
       </DatePicker.YearGrid>
     </DatePicker.View>
   </DatePicker.Content>
@@ -94,10 +106,19 @@ Build a headless DatePicker primitive library for React/TypeScript, inspired by 
 <DatePicker.Root
   mode="range"
   value={{ start: startDate, end: endDate }}
-  onValueChange={({ start, end }) => { setStart(start); setEnd(end); }}
+  onValueChange={({ start, end }) => {
+    setStart(start);
+    setEnd(end);
+  }}
 >
-  <DatePicker.Input index={0} segmentLabels={{ month: 'Start month', day: 'Start day', year: 'Start year' }} />
-  <DatePicker.Input index={1} segmentLabels={{ month: 'End month', day: 'End day', year: 'End year' }} />
+  <DatePicker.Input
+    index={0}
+    segmentLabels={{ month: "Start month", day: "Start day", year: "Start year" }}
+  />
+  <DatePicker.Input
+    index={1}
+    segmentLabels={{ month: "End month", day: "End day", year: "End year" }}
+  />
   <DatePicker.Trigger />
   <DatePicker.Content>
     <DatePicker.Calendar />
@@ -112,8 +133,8 @@ type DatePickerRootProps = DatePickerSharedProps &
   (DatePickerSingleProps | DatePickerRangeProps | DatePickerMultipleProps);
 
 interface DatePickerSharedProps {
-  locale?: string;            // default: navigator.language
-  weekStartsOn?: 0|1|2|3|4|5|6;  // override locale default
+  locale?: string; // default: navigator.language
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6; // override locale default
   minDate?: Date;
   maxDate?: Date;
   disabled?: boolean | ((date: Date) => boolean);
@@ -121,8 +142,8 @@ interface DatePickerSharedProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  modal?: boolean;            // default: true — focus trap
-  closeOnSelect?: boolean;    // default: true for single, false for range/multiple
+  modal?: boolean; // default: true — focus trap
+  closeOnSelect?: boolean; // default: true for single, false for range/multiple
 }
 ```
 
@@ -134,39 +155,43 @@ interface DatePickerSharedProps {
 
 ```typescript
 // reducer.ts — pure function, no React deps, fully testable
-type ViewMode = 'day' | 'month' | 'year';
+type ViewMode = "day" | "month" | "year";
 
 interface DatePickerState {
   open: boolean;
-  openSource: 'trigger' | 'input' | null;
+  openSource: "trigger" | "input" | null;
   view: ViewMode;
   focusedMonth: number;
   focusedYear: number;
   focusedDate: Date | null;
-  selectedDate: Date | null;       // single mode
-  rangeStart: Date | null;         // range mode
-  rangeEnd: Date | null;           // range mode
-  hoverDate: Date | null;          // range preview
-  selectedDates: Date[];           // multiple mode
+  selectedDate: Date | null; // single mode
+  rangeStart: Date | null; // range mode
+  rangeEnd: Date | null; // range mode
+  hoverDate: Date | null; // range preview
+  selectedDates: Date[]; // multiple mode
   inputValue: string;
-  yearPageStart: number;           // first year in year grid
+  yearPageStart: number; // first year in year grid
 }
 
 type DatePickerAction =
-  | { type: 'OPEN'; source?: 'trigger' | 'input' } | { type: 'CLOSE' } | { type: 'TOGGLE'; source?: 'trigger' | 'input' }
-  | { type: 'SET_VIEW'; view: ViewMode }
-  | { type: 'NAV_PREV' } | { type: 'NAV_NEXT' }
-  | { type: 'FOCUS_DATE'; date: Date }
-  | { type: 'SELECT_DATE'; date: Date }
-  | { type: 'ANCHOR_DATE'; date: Date }
-  | { type: 'EXTEND_RANGE'; date: Date }
-  | { type: 'TOGGLE_DATE'; date: Date }
-  | { type: 'HOVER_DATE'; date: Date | null }
-  | { type: 'SET_INPUT'; value: string }
-  | { type: 'COMMIT_INPUT' }
-  | { type: 'SELECT_MONTH'; month: number }
-  | { type: 'SELECT_YEAR'; year: number }
-  | { type: 'YEAR_PAGE_PREV' } | { type: 'YEAR_PAGE_NEXT' };
+  | { type: "OPEN"; source?: "trigger" | "input" }
+  | { type: "CLOSE" }
+  | { type: "TOGGLE"; source?: "trigger" | "input" }
+  | { type: "SET_VIEW"; view: ViewMode }
+  | { type: "NAV_PREV" }
+  | { type: "NAV_NEXT" }
+  | { type: "FOCUS_DATE"; date: Date }
+  | { type: "SELECT_DATE"; date: Date }
+  | { type: "ANCHOR_DATE"; date: Date }
+  | { type: "EXTEND_RANGE"; date: Date }
+  | { type: "TOGGLE_DATE"; date: Date }
+  | { type: "HOVER_DATE"; date: Date | null }
+  | { type: "SET_INPUT"; value: string }
+  | { type: "COMMIT_INPUT" }
+  | { type: "SELECT_MONTH"; month: number }
+  | { type: "SELECT_YEAR"; year: number }
+  | { type: "YEAR_PAGE_PREV" }
+  | { type: "YEAR_PAGE_NEXT" };
 ```
 
 ### Calendar Grid Algorithm
@@ -177,11 +202,9 @@ function buildCalendarGrid(year: number, month: number, weekStartDay: number): D
   const firstOfMonth = new Date(year, month, 1);
   const offset = (firstOfMonth.getDay() - weekStartDay + 7) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const rows = (offset + daysInMonth) <= 35 ? 5 : 6;
+  const rows = offset + daysInMonth <= 35 ? 5 : 6;
   return Array.from({ length: rows }, (_, row) =>
-    Array.from({ length: 7 }, (_, col) =>
-      new Date(year, month, 1 - offset + row * 7 + col)
-    )
+    Array.from({ length: 7 }, (_, col) => new Date(year, month, 1 - offset + row * 7 + col)),
   );
 }
 
@@ -191,7 +214,9 @@ function getWeekStartDay(locale: string, override?: number): number {
   try {
     const weekInfo = new Intl.Locale(locale).weekInfo;
     return weekInfo.firstDay === 7 ? 0 : weekInfo.firstDay;
-  } catch { return 0; }
+  } catch {
+    return 0;
+  }
 }
 ```
 
@@ -202,7 +227,7 @@ Phase 10 replaced the original plain text input with an Ark-inspired segmented d
 ```typescript
 // utils/locale.ts
 function getSegmentInfo(locale: string): {
-  order: Array<'year' | 'month' | 'day'>;
+  order: Array<"year" | "month" | "day">;
   separator: string;
 };
 ```
@@ -226,21 +251,21 @@ DatePickerContext (state + dispatch + config + derived values)
 
 ### Keyboard Navigation (WAI-ARIA Grid Pattern)
 
-| Context | Key | Behavior |
-|---------|-----|----------|
-| Segmented input | `0–9` | Enter digits for focused segment; auto-advance when possible |
-| Segmented input | `ArrowUp/Down` | Increment/decrement focused segment; month/day wrap, year clamps |
-| Segmented input | `ArrowLeft/Right` | Move between date segments |
-| Segmented input | `Backspace/Delete` | Clear pending/current segment, then move backward when empty |
-| Segmented input | `Escape` | Close calendar |
-| Grid | `←→↑↓` | Move focus 1 day / 1 week; auto-navigate months |
-| Grid | `PageUp/Down` | Prev/next month |
-| Grid | `Ctrl+PageUp/Down` | Prev/next year |
-| Grid | `Home/End` | First/last of week |
-| Grid | `Enter/Space` | Select focused date |
-| Grid | `Escape` | Close, return focus to trigger |
-| Month/Year grid | `←→↑↓` | Move focus; ↓/↑ = ±3 (same column) |
-| Month/Year grid | `Enter/Space` | Select, drill down |
+| Context         | Key                | Behavior                                                         |
+| --------------- | ------------------ | ---------------------------------------------------------------- |
+| Segmented input | `0–9`              | Enter digits for focused segment; auto-advance when possible     |
+| Segmented input | `ArrowUp/Down`     | Increment/decrement focused segment; month/day wrap, year clamps |
+| Segmented input | `ArrowLeft/Right`  | Move between date segments                                       |
+| Segmented input | `Backspace/Delete` | Clear pending/current segment, then move backward when empty     |
+| Segmented input | `Escape`           | Close calendar                                                   |
+| Grid            | `←→↑↓`             | Move focus 1 day / 1 week; auto-navigate months                  |
+| Grid            | `PageUp/Down`      | Prev/next month                                                  |
+| Grid            | `Ctrl+PageUp/Down` | Prev/next year                                                   |
+| Grid            | `Home/End`         | First/last of week                                               |
+| Grid            | `Enter/Space`      | Select focused date                                              |
+| Grid            | `Escape`           | Close, return focus to trigger                                   |
+| Month/Year grid | `←→↑↓`             | Move focus; ↓/↑ = ±3 (same column)                               |
+| Month/Year grid | `Enter/Space`      | Select, drill down                                               |
 
 ---
 
@@ -297,16 +322,28 @@ tests/
 **Tooling:** tsup (build) + Vitest + jsdom (tests) + Storybook React/Vite (demos) + @storybook/addon-a11y
 
 **`package.json` key fields:**
+
 ```json
 {
   "type": "module",
-  "exports": { ".": { "import": "./dist/index.js", "require": "./dist/index.cjs", "types": "./dist/index.d.ts" } },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "sideEffects": false,
   "peerDependencies": { "react": ">=18.0.0", "react-dom": ">=18.0.0" },
   "devDependencies": {
-    "typescript": "^5.5.0", "tsup": "^8.0.0", "vitest": "^2.0.0",
-    "@testing-library/react": "^16.0.0", "@testing-library/user-event": "^14.0.0",
-    "jsdom": "^24.0.0", "@storybook/react-vite": "^8.0.0", "@storybook/addon-a11y": "^8.0.0"
+    "typescript": "^5.5.0",
+    "tsup": "^8.0.0",
+    "vitest": "^2.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "jsdom": "^24.0.0",
+    "@storybook/react-vite": "^8.0.0",
+    "@storybook/addon-a11y": "^8.0.0"
   }
 }
 ```
@@ -328,6 +365,8 @@ tests/
 9. **Week 5–6** — Edge cases (min/max, disabled fn, locale variants), performance (`useMemo` on grid), docs, README.
 10. **Phase 10** — Rewrite `input.tsx` as locale-aware segmented spinbuttons; add `getSegmentInfo`; harden focus management in `content.tsx`, `use-focus-trap.ts`, and `grid.tsx`; add regression tests for input/calendar focus edge cases.
 11. **Phase 11** — Run a `timescape` spike for segmented input robustness; use React Aria DateField/DatePicker behavior as the reference model; adopt `timescape` only if bundle, API, ARIA, focus, and test outcomes justify adding a runtime dependency.
+12. **Phase 12** — Integrate `@floating-ui/dom` for `Content` positioning: viewport-aware flip/shift, `side`/`align`/`sideOffset` props, optional portal rendering.
+13. **Phase 13** — Align story imports from internal `'../date-picker/index'` to public `'../index'`; no runtime changes, ensures stories accurately document consumer usage.
 
 ---
 
@@ -339,6 +378,114 @@ tests/
 4. **Type check:** `tsc --noEmit`
 5. **Manual:** Storybook stories for single/range/multiple/custom-day/disabled
 6. **Bundle check:** `tsup --analyze` — confirm zero runtime deps in output
+
+---
+
+## Phase 12 Plan — Floating UI Positioning
+
+Goal: replace the zero-positioning `Content` div with an overlay that self-positions relative to
+the trigger, handles viewport collision, and optionally renders in a portal.
+
+### Why `@floating-ui/react-dom` and not `@floating-ui/dom` or `@floating-ui/react`
+
+Both Radix UI (`@radix-ui/react-popper`) and Base UI (`@base-ui/react`) use `@floating-ui/react-dom`
+(~6KB), not the raw DOM layer or the full React package. This is the right middle ground:
+
+- `@floating-ui/dom` — pure DOM, no React bindings; you write the `useFloating` hook yourself.
+  More work for the same result.
+- `@floating-ui/react-dom` — exports `useFloating` ready-to-use in React. This is what Radix and
+  Base UI ship with.
+- `@floating-ui/react` (~10KB) — adds `FloatingPortal`, `FloatingFocusManager`, `useInteractions`,
+  `useHover`, `useClick`, `useDismiss`. All redundant: this project already owns focus trap,
+  click-outside, and portal (via `ReactDOM.createPortal`).
+
+`@floating-ui/react-dom` gives `useFloating` for position computation and `autoUpdate` for
+scroll/resize tracking — the only two primitives needed here.
+
+### New `use-floating.ts` hook
+
+```typescript
+interface UseFloatingOptions {
+  open: boolean;
+  side?: "top" | "bottom" | "left" | "right"; // default: 'bottom'
+  align?: "start" | "center" | "end"; // default: 'start'
+  sideOffset?: number; // default: 4
+  alignOffset?: number; // default: 0
+  avoidCollisions?: boolean; // default: true
+  collisionPadding?: number; // default: 8
+}
+
+interface UseFloatingReturn {
+  referenceRef: RefCallback<HTMLElement>; // attach to trigger
+  floatingRef: RefCallback<HTMLElement>; // attach to content
+  floatingStyles: CSSProperties; // position: fixed + x/y
+}
+```
+
+Middleware used when `avoidCollisions: true`: `offset(sideOffset)` + `flip()` + `shift({ padding: collisionPadding })`.
+`autoUpdate` runs while the calendar is open; cleanup fires on close or unmount.
+
+### Updated `Content` props
+
+```typescript
+interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  forceMount?: boolean;
+  side?: "top" | "bottom" | "left" | "right";
+  align?: "start" | "center" | "end";
+  sideOffset?: number;
+  alignOffset?: number;
+  avoidCollisions?: boolean;
+  collisionPadding?: number;
+  portal?: boolean; // renders into document.body via ReactDOM.createPortal
+}
+```
+
+The trigger element is resolved via `ids.trigger` (already used in click-outside and Escape focus
+return), so no new context value is needed.
+
+---
+
+## Phase 13 Plan — Public API Import Alignment
+
+Goal: make the internal stories accurately reflect how consumers use the package.
+
+### The gap
+
+`src/index.ts` already provides the correct public entry point:
+
+```ts
+// src/index.ts
+export * as DatePicker from "./date-picker/index";
+```
+
+So consumers get the clean import:
+
+```ts
+import { DatePicker } from 'kairo-date-picker';
+
+<DatePicker.Root>
+  <DatePicker.Input />
+  <DatePicker.Trigger />
+  <DatePicker.Content>
+    <DatePicker.Calendar />
+  </DatePicker.Content>
+</DatePicker.Root>
+```
+
+But all story files bypass this and import directly from the internal path:
+
+```ts
+// current (internal, bypasses public API)
+import * as DatePicker from "../date-picker/index";
+
+// correct (mirrors consumer usage)
+import { DatePicker } from "../index";
+```
+
+### Scope
+
+Only the story files and `story-helpers.tsx` need updating. The `src/date-picker/index.ts` barrel
+and `src/index.ts` are already correct. No runtime behavior changes.
 
 ---
 

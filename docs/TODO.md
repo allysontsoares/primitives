@@ -169,13 +169,56 @@ React Aria is the behavioral reference, not the planned implementation dependenc
 
 ---
 
+## Phase 12 — Floating UI Positioning ✅
+
+Replace the zero-positioning `Content` div with a proper overlay anchored to the trigger via `@floating-ui/react-dom`.
+
+- [x] Install `@floating-ui/react-dom` as a runtime dependency (same choice as Radix UI and Base UI)
+- [x] `src/date-picker/use-floating.ts` — thin wrapper around `useFloating` + `autoUpdate` from `@floating-ui/react-dom`
+  - [x] Accept `side: 'top' | 'bottom' | 'left' | 'right'` (default `'bottom'`)
+  - [x] Accept `align: 'start' | 'center' | 'end'` (default `'start'`)
+  - [x] Accept `sideOffset: number` (default `4`)
+  - [x] Accept `alignOffset: number` (default `0`)
+  - [x] Accept `avoidCollisions: boolean` (default `true`) — wires `flip()` + `shift()` middleware
+  - [x] Accept `collisionPadding: number` (default `8`) — viewport boundary padding
+  - [x] Returns `{ setFloating, floatingStyles }` — `strategy: 'fixed'` + transform-based positioning
+  - [x] `autoUpdate` recomputes on scroll/resize while open; cleanup on close
+- [x] `src/date-picker/content.tsx` — integrate `useFloating`
+  - [x] Accept new props: `side`, `align`, `sideOffset`, `alignOffset`, `avoidCollisions`, `collisionPadding`, `portal`
+  - [x] Apply `floatingStyles` merged with consumer `style` prop
+  - [x] Trigger element resolved via `ids.trigger` (useState + useEffect)
+  - [x] Ref memoized with `useCallback` to prevent null/element cycles on re-renders
+  - [x] `portal?: boolean` — wraps content in `ReactDOM.createPortal(…, document.body)` when true
+- [x] Update `src/date-picker/index.ts` — export `ContentProps`
+- [x] Update Storybook `single.stories.tsx` — `FloatingPositions` story: bottom-start, top-end, portal
+- [x] Fix pre-existing test regression in `tests/keyboard-nav.test.tsx` — re-query segments after Segments remount
+- [x] Bundle size: `~43KB → ~47KB ESM` (+4KB for `@floating-ui/react-dom`) ✅
+
+---
+
+## Phase 13 — Public API Import Alignment ✅
+
+`src/index.ts` already exports `export * as DatePicker from './date-picker/index'`, so consumers
+can correctly do `import { DatePicker } from "kairo-date-picker"`. The stories bypass this and
+import directly from the internal path, making them inaccurate documentation.
+
+- [x] Update all story files to import from `'../index'` instead of `'../date-picker/index'`
+  - [x] `src/stories/single.stories.tsx`
+  - [x] `src/stories/range.stories.tsx`
+  - [x] `src/stories/multiple.stories.tsx`
+  - [x] `src/stories/locales.stories.tsx`
+  - [x] `src/stories/story-helpers.tsx`
+- [x] Remove stale `margin-top: 4px` from `.dp-content` CSS (Floating UI `sideOffset` now controls the gap)
+
+---
+
 ## Current Status
 
-**146 tests passing · 0 type errors · ~43KB build (1 runtime dep: `timescape`)**
+**146 tests passing · 0 type errors · ~47KB build (2 runtime deps: `timescape` + `@floating-ui/react-dom`)**
 
 Verified on 2026-05-27 with `pnpm test --run` and `pnpm run type-check`.
 
-All 11 implementation phases complete. Phase 11 (Timescape) was adopted successfully!
+All 13 implementation phases complete. Phases 12 (Floating UI) and 13 (import alignment) adopted successfully!
 
 ---
 

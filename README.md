@@ -25,7 +25,7 @@ Requires React ≥ 18.
 ## Quick start
 
 ```tsx
-import * as DatePicker from '@at5/kairo';
+import * as DatePicker from "@at5/kairo";
 
 function MyDatePicker() {
   return (
@@ -51,25 +51,26 @@ Apply your own styles via `className`, `style`, or `data-*` attribute selectors 
 
 The context provider. Accepts all shared props plus a mode-specific value/onChange pair.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `mode` | `'single' \| 'range' \| 'multiple'` | `'single'` | Selection mode |
-| `value` | `Date \| null` | — | Controlled value (single mode) |
-| `defaultValue` | `Date \| null` | — | Uncontrolled initial value |
-| `onValueChange` | `(date: Date \| null) => void` | — | Called when selection changes |
-| `locale` | `string` | `navigator.language` | BCP 47 locale tag (`'en-US'`, `'fr-FR'`, …) |
-| `weekStartsOn` | `0–6` | locale default | Override first day of week (0 = Sunday) |
-| `minDate` | `Date` | — | Earliest selectable date |
-| `maxDate` | `Date` | — | Latest selectable date |
-| `disabled` | `boolean \| ((date: Date) => boolean)` | — | Disable all or specific dates |
-| `readOnly` | `boolean` | `false` | Allow navigation but block selection |
-| `open` | `boolean` | — | Controlled open state |
-| `defaultOpen` | `boolean` | `false` | Uncontrolled initial open state |
-| `onOpenChange` | `(open: boolean) => void` | — | Called when popup opens/closes |
-| `modal` | `boolean` | `true` | Trap focus inside the dialog |
-| `closeOnSelect` | `boolean` | `true` (single) | Close after selection |
+| Prop            | Type                                   | Default              | Description                                 |
+| --------------- | -------------------------------------- | -------------------- | ------------------------------------------- |
+| `mode`          | `'single' \| 'range' \| 'multiple'`    | `'single'`           | Selection mode                              |
+| `value`         | `Date \| null`                         | —                    | Controlled value (single mode)              |
+| `defaultValue`  | `Date \| null`                         | —                    | Uncontrolled initial value                  |
+| `onValueChange` | `(date: Date \| null) => void`         | —                    | Called when selection changes               |
+| `locale`        | `string`                               | `navigator.language` | BCP 47 locale tag (`'en-US'`, `'fr-FR'`, …) |
+| `weekStartsOn`  | `0–6`                                  | locale default       | Override first day of week (0 = Sunday)     |
+| `minDate`       | `Date`                                 | —                    | Earliest selectable date                    |
+| `maxDate`       | `Date`                                 | —                    | Latest selectable date                      |
+| `disabled`      | `boolean \| ((date: Date) => boolean)` | —                    | Disable all or specific dates               |
+| `readOnly`      | `boolean`                              | `false`              | Allow navigation but block selection        |
+| `open`          | `boolean`                              | —                    | Controlled open state                       |
+| `defaultOpen`   | `boolean`                              | `false`              | Uncontrolled initial open state             |
+| `onOpenChange`  | `(open: boolean) => void`              | —                    | Called when popup opens/closes              |
+| `modal`         | `boolean`                              | `true`               | Trap focus inside the dialog                |
+| `closeOnSelect` | `boolean`                              | `true` (single)      | Close after selection                       |
 
 **Range mode:**
+
 ```tsx
 <DatePicker.Root
   mode="range"
@@ -79,6 +80,7 @@ The context provider. Accepts all shared props plus a mode-specific value/onChan
 ```
 
 **Multiple mode:**
+
 ```tsx
 <DatePicker.Root
   mode="multiple"
@@ -99,9 +101,9 @@ Renders a `<label>` automatically linked to the input via `htmlFor`/`id`.
 
 Segmented date input for locale-aware month/day/year editing.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `index` | `0 \| 1` | For range mode: 0 = start, 1 = end input |
+| Prop            | Type                                              | Description                                 |
+| --------------- | ------------------------------------------------- | ------------------------------------------- |
+| `index`         | `0 \| 1`                                          | For range mode: 0 = start, 1 = end input    |
 | `segmentLabels` | `{ month?: string; day?: string; year?: string }` | Accessible labels for the editable segments |
 
 **Keyboard:** digits edit the focused segment · `ArrowUp`/`ArrowDown` increments/decrements · `ArrowLeft`/`ArrowRight` moves between segments · `Backspace`/`Delete` clears · `Escape` closes
@@ -118,9 +120,9 @@ Button that toggles the calendar popup. Automatically wires `aria-haspopup`, `ar
 
 The popup container (`role="dialog"`, `aria-modal`). Manages click-outside close, focus trap, and Escape key.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `forceMount` | `boolean` | Keep mounted when closed (for CSS animations via `data-state="open|closed"`) |
+| Prop         | Type      | Description                                                        |
+| ------------ | --------- | ------------------------------------------------------------------ | --------- |
+| `forceMount` | `boolean` | Keep mounted when closed (for CSS animations via `data-state="open | closed"`) |
 
 **Animation hook:** use `[data-state="open"]` / `[data-state="closed"]` selectors with CSS transitions.
 
@@ -154,10 +156,10 @@ Navigation header. `PrevTrigger` and `NextTrigger` label themselves contextually
 
 Renders `<table role="grid">` with keyboard navigation built in.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `header` | `ReactNode` | Content for `<thead>` (use `<DatePicker.WeekDays />`) |
-| `children` | `(ctx: { weeks: Date[][] }) => ReactNode` | Custom day rendering |
+| Prop       | Type                                      | Description                                           |
+| ---------- | ----------------------------------------- | ----------------------------------------------------- |
+| `header`   | `ReactNode`                               | Content for `<thead>` (use `<DatePicker.WeekDays />`) |
+| `children` | `(ctx: { weeks: Date[][] }) => ReactNode` | Custom day rendering                                  |
 
 **Keyboard (day view):** `←→↑↓` move focus · `PageUp/Down` prev/next month · `Ctrl+PageUp/Down` prev/next year · `Home/End` start/end of week · `Enter/Space` select · `Escape` close
 
@@ -167,8 +169,8 @@ Renders `<table role="grid">` with keyboard navigation built in.
 
 Renders `<tr>` of `<th scope="col">` column headers with locale-aware day abbreviations.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| Prop     | Type                            | Default   | Description     |
+| -------- | ------------------------------- | --------- | --------------- |
 | `format` | `'short' \| 'narrow' \| 'long'` | `'short'` | Day name format |
 
 ---
@@ -177,14 +179,15 @@ Renders `<tr>` of `<th scope="col">` column headers with locale-aware day abbrev
 
 Single day cell (`role="gridcell"`). Exposes `data-*` attributes for CSS styling.
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `date` | `Date` | The date this cell represents |
-| `children` | `(meta: DayCellMeta) => ReactNode` | Custom render function |
+| Prop       | Type                               | Description                   |
+| ---------- | ---------------------------------- | ----------------------------- |
+| `date`     | `Date`                             | The date this cell represents |
+| `children` | `(meta: DayCellMeta) => ReactNode` | Custom render function        |
 
 **`data-*` attributes:** `data-selected` · `data-today` · `data-disabled` · `data-outside-month` · `data-range-start` · `data-range-end` · `data-in-range`
 
 **`DayCellMeta`:**
+
 ```typescript
 interface DayCellMeta {
   date: Date;
@@ -207,11 +210,13 @@ Month selection grid for the "month" view.
 
 ```tsx
 <DatePicker.MonthGrid>
-  {({ months }) => months.map(m => (
-    <DatePicker.MonthCell key={m.value} value={m.value} disabled={m.isDisabled}>
-      {m.label}
-    </DatePicker.MonthCell>
-  ))}
+  {({ months }) =>
+    months.map((m) => (
+      <DatePicker.MonthCell key={m.value} value={m.value} disabled={m.isDisabled}>
+        {m.label}
+      </DatePicker.MonthCell>
+    ))
+  }
 </DatePicker.MonthGrid>
 ```
 
@@ -225,11 +230,13 @@ Year selection grid for the "year" view.
 
 ```tsx
 <DatePicker.YearGrid>
-  {({ years }) => years.map(y => (
-    <DatePicker.YearCell key={y.value} value={y.value} disabled={y.isDisabled}>
-      {y.value}
-    </DatePicker.YearCell>
-  ))}
+  {({ years }) =>
+    years.map((y) => (
+      <DatePicker.YearCell key={y.value} value={y.value} disabled={y.isDisabled}>
+        {y.value}
+      </DatePicker.YearCell>
+    ))
+  }
 </DatePicker.YearGrid>
 ```
 
@@ -242,23 +249,37 @@ Year selection grid for the "year" view.
 Every component is unstyled. Use any approach:
 
 **CSS `data-*` selectors (recommended):**
+
 ```css
-[data-selected] { background: #2563eb; color: white; }
-[data-today] { font-weight: bold; }
-[data-disabled] { opacity: 0.4; cursor: not-allowed; }
-[data-in-range] { background: #dbeafe; }
+[data-selected] {
+  background: #2563eb;
+  color: white;
+}
+[data-today] {
+  font-weight: bold;
+}
+[data-disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+[data-in-range] {
+  background: #dbeafe;
+}
 ```
 
 **Tailwind:**
+
 ```tsx
 <DatePicker.Day date={day}>
   {({ isSelected, isToday, isDisabled }) => (
-    <td className={cn(
-      'h-8 w-8 text-center text-sm rounded cursor-pointer',
-      isSelected && 'bg-blue-600 text-white',
-      isToday && !isSelected && 'font-bold text-blue-600',
-      isDisabled && 'opacity-40 cursor-not-allowed',
-    )}>
+    <td
+      className={cn(
+        "h-8 w-8 text-center text-sm rounded cursor-pointer",
+        isSelected && "bg-blue-600 text-white",
+        isToday && !isSelected && "font-bold text-blue-600",
+        isDisabled && "opacity-40 cursor-not-allowed",
+      )}
+    >
       {day.getDate()}
     </td>
   )}
@@ -266,12 +287,18 @@ Every component is unstyled. Use any approach:
 ```
 
 **CSS animations with `forceMount`:**
+
 ```tsx
 <DatePicker.Content forceMount>…</DatePicker.Content>
 ```
+
 ```css
-[data-state="open"]  { animation: slideIn 150ms ease; }
-[data-state="closed"] { animation: slideOut 150ms ease; }
+[data-state="open"] {
+  animation: slideIn 150ms ease;
+}
+[data-state="closed"] {
+  animation: slideOut 150ms ease;
+}
 ```
 
 ---
@@ -289,13 +316,13 @@ Every component is unstyled. Use any approach:
 
 ## Architecture
 
-| Concern | Approach |
-|---------|----------|
-| State management | Pure `useReducer` — no Zag JS |
-| Date arithmetic | Native `Date` API |
-| Locale / formatting | `Intl.DateTimeFormat`, `Intl.Locale` |
-| Styling | Zero — `data-*` attributes + className passthrough |
-| Bundle | ~35KB ESM+CJS, zero runtime deps |
+| Concern             | Approach                                           |
+| ------------------- | -------------------------------------------------- |
+| State management    | Pure `useReducer` — no Zag JS                      |
+| Date arithmetic     | Native `Date` API                                  |
+| Locale / formatting | `Intl.DateTimeFormat`, `Intl.Locale`               |
+| Styling             | Zero — `data-*` attributes + className passthrough |
+| Bundle              | ~35KB ESM+CJS, zero runtime deps                   |
 
 ---
 
