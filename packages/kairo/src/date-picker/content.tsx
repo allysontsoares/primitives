@@ -58,12 +58,36 @@ export function Content({
     ...(collisionPadding !== undefined && { collisionPadding }),
   });
 
+  // Resolve and bind the Floating UI anchor while the popover is open.
+  //
+  // The segmented Input remounts its group element (via a `key`) whenever an
+  // external date change occurs, which swaps out the DOM node we anchor to.
+  // Because that remount is local state inside <Input>, it does NOT re-render
+  // <Content>, so a one-shot effect would keep pointing Floating UI at the now
+  // detached old node — a detached node measures as (0,0), parking the popover
+  // in the top-left corner. We watch the DOM for that swap and re-bind the
+  // reference to the current node so positioning always tracks the live anchor.
   useLayoutEffect(() => {
     if (!isOpen) return;
-    const el = document.getElementById(ids.input) ||
-               document.getElementById(`${ids.input}-0`) ||
-               document.getElementById(ids.trigger);
-    setReference(el);
+
+    const resolveAnchor = () =>
+      document.getElementById(ids.input) ||
+      document.getElementById(`${ids.input}-0`) ||
+      document.getElementById(ids.trigger);
+
+    let current = resolveAnchor();
+    setReference(current);
+
+    const observer = new MutationObserver(() => {
+      const next = resolveAnchor();
+      if (next && next !== current) {
+        current = next;
+        setReference(next);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
   }, [isOpen, ids.input, ids.trigger, setReference]);
 
   // Memoized so the ref callback identity is stable across re-renders.
@@ -83,6 +107,22 @@ export function Content({
     isOpen,
   );
   useFocusTrap(contentRef, isOpen);
+
+  // Floating UI computes the position one frame after mount, so the element
+  // briefly sits at (0,0) before jumping to the anchor. If the consumer applies
+  // a CSS transition (e.g. `transition-all`), that jump animates as a visible
+  // "fly-in" from the top-left corner. We suppress transitions until the frame
+  // after the first successful positioning, then restore them so later moves
+  // (scroll, resize, collision flips) still animate smoothly.
+  const [transitionsReady, setTransitionsReady] = useState(false);
+  useEffect(() => {
+    if (!isOpen || !isPositioned) {
+      setTransitionsReady(false);
+      return;
+    }
+    const raf = requestAnimationFrame(() => setTransitionsReady(true));
+    return () => cancelAnimationFrame(raf);
+  }, [isOpen, isPositioned]);
 
   useEffect(() => {
     if (!isOpen || !contentRef.current) return;
@@ -117,6 +157,7 @@ export function Content({
         ...floatingStyles,
         ...(!isOpen ? { display: "none" } : undefined),
         visibility: isOpen && !isPositioned ? "hidden" : undefined,
+        ...(isOpen && !transitionsReady ? { transition: "none" } : undefined),
         ...style,
       }}
       onKeyDown={(e) => {
