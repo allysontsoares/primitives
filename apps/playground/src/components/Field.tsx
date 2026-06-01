@@ -21,7 +21,13 @@ export function Field({ label, index }: FieldProps) {
             [&_[data-separator]]:text-zinc-500"
         />
         <DatePicker.Trigger className="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-base text-zinc-400 transition-colors hover:border-zinc-600 hover:bg-zinc-800 hover:text-zinc-200 disabled:cursor-not-allowed disabled:opacity-50">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            className="h-4 w-4"
+          >
             <rect x="2" y="3" width="12" height="11" rx="2" />
             <path d="M5 1v3M11 1v3M2 7h12" />
           </svg>
