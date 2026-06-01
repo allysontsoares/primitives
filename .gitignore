@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Internal docs
+docs/
+
 # Build outputs
 dist/
 coverage/
