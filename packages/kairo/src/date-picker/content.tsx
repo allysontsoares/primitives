@@ -156,7 +156,11 @@ export function Content({
       style={{
         ...floatingStyles,
         ...(!isOpen ? { display: "none" } : undefined),
-        visibility: isOpen && !isPositioned ? "hidden" : undefined,
+        // Hide via opacity (not `visibility`/`display`) while Floating UI
+        // resolves the first position: this keeps the popover at (0,0)
+        // invisible to sighted users for one frame without removing it from
+        // the accessibility tree, so assistive tech still sees the dialog.
+        ...(isOpen && !isPositioned ? { opacity: 0, pointerEvents: "none" } : undefined),
         ...(isOpen && !transitionsReady ? { transition: "none" } : undefined),
         ...style,
       }}
