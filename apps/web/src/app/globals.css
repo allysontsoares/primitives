@@ -1,86 +1,292 @@
 @import "tailwindcss";
 
-/* 1. Tailwind v4 Theme Tokens Mapping */
+/* ============================================================
+   Kairo Docs — xAI-inspired design tokens
+   Tailwind v4 CSS-first config. Raw tokens live on :root /
+   [data-theme] so they switch at runtime; @theme maps them to
+   Tailwind color/utility names (bg-surface, text-accent, …).
+   Fonts: Geist Sans + Geist Mono (wired via next/font in layout).
+   ============================================================ */
+
 @theme {
-  --font-display: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
-  --color-border: #161616;
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* semantic colors → resolve to runtime tokens */
+  --color-bg: var(--bg);
+  --color-subtle: var(--bg-subtle);
+  --color-card: var(--card);
+  --color-card2: var(--card-2);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-ink: var(--text);
+  --color-ink2: var(--text-2);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-on-accent: var(--on-accent);
+  --color-hover: var(--hover);
+  --color-hover-strong: var(--hover-strong);
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+
+  --radius-card: 12px;
+  --radius-lg2: 18px;
+
+  --shadow-pop: var(--shadow-pop-val);
+
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* fluid type for hero / page titles */
+  --text-hero: clamp(2.125rem, 1.4rem + 3vw, 2.875rem);
+  --text-page: clamp(2rem, 1.4rem + 2.6vw, 2.75rem);
+  --text-section: clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem);
 }
 
-/* 2. Base Elements Styling */
+/* layout sizing tokens (not colors) */
+:root {
+  --sidebar-w: 264px;
+  --toc-w: 232px;
+  --topbar-h: 60px;
+
+  --accent: #ff5b29;
+  --accent-soft: rgba(255, 91, 41, 0.12);
+  --accent-line: rgba(255, 91, 41, 0.35);
+}
+
+/* ---------- Light (warm white) ---------- */
+:root,
+[data-theme="light"] {
+  --bg: #ffffff;
+  --bg-subtle: #f7f6f3;
+  --card: #f5f3f0;
+  --card-2: #efece7;
+  --code-bg: #0b0b0c;
+  --code-fg: #e9e9ec;
+  --border: rgba(20, 18, 15, 0.09);
+  --border-strong: rgba(20, 18, 15, 0.16);
+  --text: #1a1815;
+  --text-2: #4d4a45;
+  --text-muted: #86827b;
+  --text-faint: #aaa69e;
+  --on-accent: #ffffff;
+  --selection: rgba(255, 91, 41, 0.18);
+  --kbd-bg: #ffffff;
+  --hover: rgba(20, 18, 15, 0.045);
+  --hover-strong: rgba(20, 18, 15, 0.07);
+  --shadow-pop-val: 0 4px 12px rgba(0, 0, 0, 0.08), 0 18px 48px rgba(0, 0, 0, 0.14);
+  --syntax-key: #c678dd;
+  --syntax-str: #98c379;
+  --syntax-num: #d19a66;
+  --syntax-com: #6a6f7a;
+  --syntax-fn: #61afef;
+  --syntax-tag: #e06c75;
+  --syntax-punc: #abb2bf;
+}
+
+/* ---------- Dark (near-black, xAI / Grok) ---------- */
+[data-theme="dark"] {
+  --bg: #000000;
+  --bg-subtle: #0a0a0a;
+  --card: #111112;
+  --card-2: #18181a;
+  --code-bg: #0b0b0c;
+  --code-fg: #e9e9ec;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #f4f3f1;
+  --text-2: #c4c2bd;
+  --text-muted: #8a8782;
+  --text-faint: #5e5c58;
+  --on-accent: #ffffff;
+  --selection: rgba(255, 91, 41, 0.26);
+  --kbd-bg: #18181a;
+  --hover: rgba(255, 255, 255, 0.05);
+  --hover-strong: rgba(255, 255, 255, 0.09);
+  --shadow-pop-val: 0 4px 12px rgba(0, 0, 0, 0.5), 0 18px 48px rgba(0, 0, 0, 0.7);
+  --syntax-key: #c678dd;
+  --syntax-str: #98c379;
+  --syntax-num: #d19a66;
+  --syntax-com: #6a6f7a;
+  --syntax-fn: #61afef;
+  --syntax-tag: #e06c75;
+  --syntax-punc: #9aa0ab;
+}
+
 @layer base {
-  *, *::before, *::after {
+  * {
     box-sizing: border-box;
   }
-
   html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
   }
-
   body {
-    background-color: #000000;
-    color: #e4e4e7;
+    margin: 0;
     font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
-    color: #ffffff;
-  }
-
-  code, pre, kbd, samp {
-    font-family: var(--font-mono);
-  }
-
   ::selection {
-    background-color: rgba(59, 130, 246, 0.25);
-    color: #93c5fd;
+    background: var(--selection);
   }
-
-  :focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }
 
-/* 3. Elegant Custom Utilities */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+/* custom scrollbars */
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
 }
-
-.custom-scrollbar::-webkit-scrollbar-track {
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1f1f23;
-  border-radius: 4px;
+/* ---- prose typography for rendered docs content ---- */
+.prose-docs :where(p) {
+  color: var(--text-2);
+  margin: 0 0 1rem;
 }
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #2e2e33;
+.prose-docs :where(a) {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-strong);
+  cursor: pointer;
 }
-
-/* 4. Elegant DatePicker Input Segment Styling */
-.timescape-input {
-  transition: all 120ms ease;
-  border-radius: 4px;
+.prose-docs :where(a:hover) {
+  text-decoration-color: var(--accent);
+  color: var(--accent);
 }
-
-.timescape-input:focus {
-  background-color: rgba(59, 130, 246, 0.15) !important;
-  color: #3b82f6 !important;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+.prose-docs :where(ul) {
+  color: var(--text-2);
+  padding-left: 1.4rem;
+  margin: 0 0 1.1rem;
+}
+.prose-docs :where(li) {
+  margin-bottom: 0.5rem;
+}
+.prose-docs :where(li)::marker {
+  color: var(--text-faint);
+}
+.prose-docs :where(:not(pre) > code) {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 1.5px 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.prose-docs :where(strong) {
+  color: var(--text);
   font-weight: 600;
-  transform: scale(1.05);
 }
 
-.timescape-input::selection {
-  background: transparent !important;
+/* ---- syntax highlight tokens ---- */
+.tok-key { color: var(--syntax-key); }
+.tok-str { color: var(--syntax-str); }
+.tok-num { color: var(--syntax-num); }
+.tok-com { color: var(--syntax-com); font-style: italic; }
+.tok-fn  { color: var(--syntax-fn); }
+.tok-tag { color: var(--syntax-tag); }
+.tok-punc{ color: var(--syntax-punc); }
+
+/* ---- keyframes for popovers / modals ---- */
+@keyframes kairo-pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes kairo-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-pop { animation: kairo-pop 0.16s var(--ease-smooth); }
+.animate-fade { animation: kairo-fade 0.12s ease; }
+
+/* ---- calendar day range states (data/utility driven) ---- */
+.cal-day { font-variant-numeric: tabular-nums; }
+.cal-day[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+.cal-day.in-range {
+  background: var(--accent-soft);
+  border-radius: 0;
+  color: var(--text);
+}
+.cal-day.range-start {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 8px 0 0 8px;
+}
+.cal-day.range-end {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 0 8px 8px 0;
+}
+.cal-day.range-start.range-end { border-radius: 8px; }
+.cal-day.today::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--accent);
+}
+.cal-day[aria-selected="true"].today::after { background: var(--on-accent); }
+
+/* data tables (API attrs, keyboard, guides) */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13.5px;
+}
+.data-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border-strong);
+}
+.data-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
+  vertical-align: top;
+}
+.data-table td:first-child {
+  font-family: var(--font-mono);
+  color: var(--text);
+  white-space: nowrap;
 }
 
+/* segmented date-field active segment */
+.kf-seg:focus {
+  background: var(--accent);
+  color: var(--on-accent);
+  outline: none;
+}
