@@ -3,10 +3,8 @@
 Headless date & scheduling primitives for React. Built on top of the native Intl API, timescape and Floating UI — with full keyboard navigation and WAI-ARIA compliance.
 
 - **Truly headless** — no default styles; bring your own CSS (Tailwind, Panda CSS, CSS modules, inline styles)
-- **`floating-ui`** — for popover positioning.
-- **`timescape`** — for segmented input and.
 - **Fully accessible** — WAI-ARIA date picker pattern, keyboard navigation, screen reader support
-- **State machine powered** — predictable behavior via plain `useReducer`
+- **Predictable** — plain `useReducer`, no hidden magic
 - **Simpler API** — `<DatePicker.Calendar />` shorthand for the common case; escape hatches for full control
 
 ## Features
@@ -29,21 +27,19 @@ pnpm add @at5/kairo
 npm install @at5/kairo
 ```
 
-Requires React ≥ 18.
+Requires React ≥ 19.
 
 ---
 
 ## Quick start
 
 ```tsx
-import * as DatePicker from "@at5/kairo";
+import { DatePicker } from "@at5/kairo";
 
 function MyDatePicker() {
   return (
     <DatePicker.Root defaultValue={new Date()} onValueChange={console.log}>
-      <DatePicker.Label>Departure date</DatePicker.Label>
-      <DatePicker.Input />
-      <DatePicker.Trigger>📅</DatePicker.Trigger>
+      <DatePicker.Trigger />
       <DatePicker.Content>
         <DatePicker.Calendar />
       </DatePicker.Content>
@@ -64,8 +60,7 @@ The context provider. Accepts all shared props plus a mode-specific value/onChan
 
 | Prop            | Type                                   | Default              | Description                                 |
 | --------------- | -------------------------------------- | -------------------- | ------------------------------------------- |
-| `mode`          | `'single' \| 'range' \| 'multiple'`    | `'single'`           | Selection mode                              |
-| `value`         | `Date \| null`                         | —                    | Controlled value (single mode)              |
+| `value`         | `Date \| null`                         | —                    | Controlled value                            |
 | `defaultValue`  | `Date \| null`                         | —                    | Uncontrolled initial value                  |
 | `onValueChange` | `(date: Date \| null) => void`         | —                    | Called when selection changes               |
 | `locale`        | `string`                               | `navigator.language` | BCP 47 locale tag (`'en-US'`, `'fr-FR'`, …) |
@@ -80,25 +75,7 @@ The context provider. Accepts all shared props plus a mode-specific value/onChan
 | `modal`         | `boolean`                              | `true`               | Trap focus inside the dialog                |
 | `closeOnSelect` | `boolean`                              | `true` (single)      | Close after selection                       |
 
-**Range mode:**
-
-```tsx
-<DatePicker.Root
-  mode="range"
-  value={{ start: startDate, end: endDate }}
-  onValueChange={({ start, end }) => { setStart(start); setEnd(end); }}
->
-```
-
-**Multiple mode:**
-
-```tsx
-<DatePicker.Root
-  mode="multiple"
-  value={selectedDates}
-  onValueChange={setSelectedDates}
->
-```
+> For range selection use `<DateRangePicker.Root>` instead — it is a separate component.
 
 ---
 
@@ -333,7 +310,7 @@ Every component is unstyled. Use any approach:
 | Date arithmetic     | Native `Date` API                                  |
 | Locale / formatting | `Intl.DateTimeFormat`, `Intl.Locale`               |
 | Styling             | Zero — `data-*` attributes + className passthrough |
-| Bundle              | ~35KB ESM+CJS, zero runtime deps                   |
+| Bundle              | ~50KB ESM+CJS                                      |
 
 ---
 
