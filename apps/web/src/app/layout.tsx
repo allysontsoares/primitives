@@ -14,7 +14,15 @@ export const metadata: Metadata = {
   },
   description:
     "A composable React library for date and scheduling UI. Zero CSS, no styling opinions, built on the WAI-ARIA grid pattern.",
-  keywords: ["react", "date picker", "calendar", "headless ui", "accessibility", "WAI-ARIA", "kairo"],
+  keywords: [
+    "react",
+    "date picker",
+    "calendar",
+    "headless ui",
+    "accessibility",
+    "WAI-ARIA",
+    "kairo",
+  ],
   openGraph: {
     title: "Kairo — Headless date primitives for React",
     description:

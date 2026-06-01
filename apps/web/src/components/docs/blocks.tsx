@@ -73,7 +73,16 @@ export function CopyPage() {
     <div className="relative" onMouseLeave={() => setOpen(false)}>
       <div className="inline-flex items-stretch overflow-hidden rounded-[10px] border border-line-strong bg-subtle">
         <button className="inline-flex min-h-9 items-center gap-2 px-3.5 text-[13.5px] font-semibold text-ink transition-colors hover:bg-hover">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.7}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <rect x="9" y="9" width="11" height="11" rx="2" />
             <path d="M5 15V5a2 2 0 0 1 2-2h10" />
           </svg>
@@ -84,7 +93,16 @@ export function CopyPage() {
           aria-label="More copy options"
           className="grid w-[34px] place-items-center border-l border-line text-ink transition-colors hover:bg-hover"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.9}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M6 9l6 6 6-6" />
           </svg>
         </button>
@@ -92,20 +110,41 @@ export function CopyPage() {
       {open && (
         <div className="absolute right-0 top-[calc(100%+8px)] z-40 min-w-[232px] rounded-[12px] border border-line-strong bg-card p-1.5 shadow-pop">
           {item(
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+            >
               <path d="M4 4h16v16H4z" />
               <path d="M8 8h2v8M14 8h2M16 8v8" />
             </svg>,
             "View as Markdown",
           )}
           {item(
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+            >
               <circle cx="12" cy="12" r="9" />
             </svg>,
             "Open in ChatGPT",
           )}
           {item(
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+            >
               <path d="M12 3l9 16H3z" />
             </svg>,
             "Open in Claude",
@@ -117,11 +156,19 @@ export function CopyPage() {
 }
 
 export function ActionRow() {
-  const link = "inline-flex items-center gap-1.5 text-[13.5px] text-muted transition-colors hover:text-ink";
+  const link =
+    "inline-flex items-center gap-1.5 text-[13.5px] text-muted transition-colors hover:text-ink";
   return (
     <div className="mb-6 flex flex-wrap items-center gap-[18px]">
       <button className={link}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.6}
+        >
           <rect x="9" y="9" width="11" height="11" rx="2" />
           <path d="M5 15V5a2 2 0 0 1 2-2h10" />
         </svg>
@@ -129,7 +176,14 @@ export function ActionRow() {
       </button>
       <div className="h-3.5 w-px bg-line" />
       <button className={link}>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.6}
+        >
           <path d="M4 4h16v16H4z" />
           <path d="M8 9h8M8 13h5" />
         </svg>
@@ -157,7 +211,11 @@ function AnatomyBox({ node }: { node: AnatomyNode }) {
       </span>
       {node.note && <div className="px-0.5 pt-1 text-xs text-muted">{node.note}</div>}
       {node.children && (
-        <div className={leafRow ? "mt-4 flex flex-col gap-2.5 sm:flex-row" : "mt-4 flex flex-col gap-2.5"}>
+        <div
+          className={
+            leafRow ? "mt-4 flex flex-col gap-2.5 sm:flex-row" : "mt-4 flex flex-col gap-2.5"
+          }
+        >
           {node.children.map((c, i) => (
             <div key={i} className={leafRow ? "flex-1" : ""}>
               <AnatomyBox node={c} />
@@ -219,7 +277,10 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
         if (g.keys) {
           return (
             <section key={gi}>
-              <h2 id={id} className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20">
+              <h2
+                id={id}
+                className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20"
+              >
                 {g.group}
               </h2>
               <table className="data-table">
@@ -246,7 +307,10 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
         if (g.attrs) {
           return (
             <section key={gi}>
-              <h2 id={id} className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20">
+              <h2
+                id={id}
+                className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20"
+              >
                 {g.group}
               </h2>
               <table className="data-table">
@@ -274,7 +338,10 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
         }
         return (
           <section key={gi}>
-            <h2 id={id} className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20">
+            <h2
+              id={id}
+              className="mt-14 mb-4 text-[clamp(1.4rem,1.1rem+0.8vw,1.6875rem)] font-bold tracking-tight text-ink scroll-mt-20"
+            >
               {g.group}
             </h2>
             <div>
@@ -293,7 +360,9 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
                       </span>
                     )}
                     {p.required && (
-                      <span className="text-[11px] font-semibold uppercase tracking-wide text-accent">Required</span>
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-accent">
+                        Required
+                      </span>
                     )}
                   </div>
                   <p className="m-0 max-w-[64ch] text-[13.5px] text-ink2">{p.desc}</p>

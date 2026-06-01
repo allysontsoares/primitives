@@ -8,9 +8,37 @@ function esc(s: string) {
 }
 
 const KW = new Set([
-  "import", "from", "export", "default", "const", "let", "var", "function", "return", "if", "else",
-  "for", "while", "new", "await", "async", "typeof", "interface", "type", "extends", "implements",
-  "as", "of", "in", "true", "false", "null", "undefined", "void", "class", "this",
+  "import",
+  "from",
+  "export",
+  "default",
+  "const",
+  "let",
+  "var",
+  "function",
+  "return",
+  "if",
+  "else",
+  "for",
+  "while",
+  "new",
+  "await",
+  "async",
+  "typeof",
+  "interface",
+  "type",
+  "extends",
+  "implements",
+  "as",
+  "of",
+  "in",
+  "true",
+  "false",
+  "null",
+  "undefined",
+  "void",
+  "class",
+  "this",
 ]);
 
 export function highlight(code: string, lang = ""): string {
@@ -47,21 +75,51 @@ export function highlight(code: string, lang = ""): string {
 }
 
 const CopyIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.7}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <rect x="9" y="9" width="11" height="11" rx="2" />
     <path d="M5 15V5a2 2 0 0 1 2-2h10" />
   </svg>
 );
 const CheckIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M20 6L9 17l-5-5" />
   </svg>
 );
 
 export type CodeTab = { label: string; lang?: string; code: string };
 
-export function CodeBlock({ tabs, code, lang, label }: { tabs?: CodeTab[]; code?: string; lang?: string; label?: string }) {
-  const resolved: CodeTab[] = tabs ?? [{ label: label || lang || "code", lang: lang ?? "", code: code ?? "" }];
+export function CodeBlock({
+  tabs,
+  code,
+  lang,
+  label,
+}: {
+  tabs?: CodeTab[];
+  code?: string;
+  lang?: string;
+  label?: string;
+}) {
+  const resolved: CodeTab[] = tabs ?? [
+    { label: label || lang || "code", lang: lang ?? "", code: code ?? "" },
+  ];
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
   const cur = resolved[active] ?? resolved[0]!;

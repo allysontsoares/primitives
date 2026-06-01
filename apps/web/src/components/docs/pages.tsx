@@ -5,7 +5,15 @@ import { useState, type ReactNode } from "react";
 import { COMPONENTS, API, type DemoKind } from "../../lib/docs-data";
 import { CodeBlock } from "./CodeBlock";
 import { ActionRow, Anatomy, ApiReference, CopyPage, DemoStage, Example, PageNav } from "./blocks";
-import { CalIcon, DateField, InlineCalendar, DatePicker, DateRangePicker, LiveDemo, D } from "../kairo/primitives";
+import {
+  CalIcon,
+  DateField,
+  InlineCalendar,
+  DatePicker,
+  DateRangePicker,
+  LiveDemo,
+  D,
+} from "../kairo/primitives";
 
 /* ---------------- shared typography ---------------- */
 export const Eyebrow = ({ children }: { children: ReactNode }) => (
@@ -20,15 +28,23 @@ export const PageTitle = ({ children, action }: { children: ReactNode; action?: 
   </div>
 );
 export const Lead = ({ children }: { children: ReactNode }) => (
-  <p className="mb-5 max-w-[62ch] text-[length:var(--text-fluid-lg,1.125rem)] leading-[1.55] text-ink2">{children}</p>
+  <p className="mb-5 max-w-[62ch] text-[length:var(--text-fluid-lg,1.125rem)] leading-[1.55] text-ink2">
+    {children}
+  </p>
 );
 export const H2 = ({ id, children }: { id: string; children: ReactNode }) => (
-  <h2 id={id} className="mt-14 mb-4 scroll-mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.025em] text-ink">
+  <h2
+    id={id}
+    className="mt-14 mb-4 scroll-mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.025em] text-ink"
+  >
     {children}
   </h2>
 );
 export const H3 = ({ id, children }: { id: string; children: ReactNode }) => (
-  <h3 id={id} className="mt-9 mb-3 scroll-mt-20 text-[19px] font-[650] tracking-[-0.015em] text-ink">
+  <h3
+    id={id}
+    className="mt-9 mb-3 scroll-mt-20 text-[19px] font-[650] tracking-[-0.015em] text-ink"
+  >
     {children}
   </h3>
 );
@@ -150,8 +166,8 @@ export function ComponentPage({ slug }: { slug: string }) {
 
       <H2 id="examples">Examples</H2>
       <P>
-        You can explore the <InlineCode>{slug}</InlineCode> primitive in the following curated examples. Every demo
-        below is fully interactive and keyboard-navigable.
+        You can explore the <InlineCode>{slug}</InlineCode> primitive in the following curated
+        examples. Every demo below is fully interactive and keyboard-navigable.
       </P>
 
       <H3 id="default">Default</H3>
@@ -163,8 +179,8 @@ export function ComponentPage({ slug }: { slug: string }) {
 
       <H3 id="localized">Locale-aware</H3>
       <P>
-        Segment order, separators, weekday names and the first day of the week all derive from <InlineCode>Intl</InlineCode>.
-        Switch the locale to see the same primitive adapt.
+        Segment order, separators, weekday names and the first day of the week all derive from{" "}
+        <InlineCode>Intl</InlineCode>. Switch the locale to see the same primitive adapt.
       </P>
       <div className="mb-3.5 flex flex-wrap gap-2">
         {localeOpts.map(([v, l]) => (
@@ -172,7 +188,9 @@ export function ComponentPage({ slug }: { slug: string }) {
             key={v}
             onClick={() => setLocale(v)}
             className={`min-h-9 rounded-lg border px-3 text-[12.5px] transition-colors ${
-              v === locale ? "border-accent text-accent" : "border-line text-ink2 hover:border-line-strong"
+              v === locale
+                ? "border-accent text-accent"
+                : "border-line text-ink2 hover:border-line-strong"
             }`}
           >
             {l}
@@ -184,11 +202,17 @@ export function ComponentPage({ slug }: { slug: string }) {
       </DemoStage>
 
       <H2 id="anatomy">Anatomy</H2>
-      <P>Import the parts and compose exactly what your design needs. Each part is a separate, unstyled primitive.</P>
+      <P>
+        Import the parts and compose exactly what your design needs. Each part is a separate,
+        unstyled primitive.
+      </P>
       <Anatomy parts={c.parts} />
 
       <H2 id="api-reference">API Reference</H2>
-      <P>The full list of props, data attributes and keyboard interactions lives on the dedicated reference page.</P>
+      <P>
+        The full list of props, data attributes and keyboard interactions lives on the dedicated
+        reference page.
+      </P>
       <Link
         href={`/${slug}/api`}
         className="inline-flex min-h-10 items-center gap-2 rounded-[11px] border border-line-strong px-4 text-sm font-semibold text-ink transition-colors hover:bg-hover"
@@ -211,7 +235,8 @@ export function ApiPage({ slug }: { slug: string }) {
       <Eyebrow>API Reference</Eyebrow>
       <PageTitle action={<CopyPage />}>{c.name} API</PageTitle>
       <Lead>
-        Props, data attributes and keyboard interactions for every <InlineCode>{c.name}</InlineCode> part.
+        Props, data attributes and keyboard interactions for every <InlineCode>{c.name}</InlineCode>{" "}
+        part.
       </Lead>
       <Link
         href={`/${slug}`}
@@ -234,23 +259,68 @@ export function ApiPage({ slug }: { slug: string }) {
 
 /* ================= OVERVIEW (home / landing) ================= */
 const ArrowRight = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M5 12h14M13 6l6 6-6 6" />
   </svg>
 );
 
 export function Overview() {
   const cards = [
-    { route: "calendar", title: "Calendar", desc: "Month grid on the WAI-ARIA grid pattern with roving focus.", k: "role", v: "grid" },
-    { route: "date-picker", title: "Date Picker", desc: "Input + popover calendar for a single date.", k: "parts", v: "6" },
-    { route: "date-range-picker", title: "Date Range Picker", desc: "Start/end selection with live range preview.", k: "mode", v: "range" },
-    { route: "date-field", title: "Date Field", desc: "Segmented, locale-aware input — no calendar needed.", k: "role", v: "spinbutton" },
+    {
+      route: "calendar",
+      title: "Calendar",
+      desc: "Month grid on the WAI-ARIA grid pattern with roving focus.",
+      k: "role",
+      v: "grid",
+    },
+    {
+      route: "date-picker",
+      title: "Date Picker",
+      desc: "Input + popover calendar for a single date.",
+      k: "parts",
+      v: "6",
+    },
+    {
+      route: "date-range-picker",
+      title: "Date Range Picker",
+      desc: "Start/end selection with live range preview.",
+      k: "mode",
+      v: "range",
+    },
+    {
+      route: "date-field",
+      title: "Date Field",
+      desc: "Segmented, locale-aware input — no calendar needed.",
+      k: "role",
+      v: "spinbutton",
+    },
   ];
   const principles = [
-    { t: "Unstyled", d: "Kairo renders only semantic HTML. You control every pixel via className and style props — zero CSS ships." },
-    { t: "Composable", d: "Each part of the UI is a separate primitive: Label, Input, Trigger, Grid, Day. Compose exactly what you need." },
-    { t: "Locale-aware", d: "Segment order, separators, weekday names and month labels all derive from Intl. Pass any BCP 47 tag." },
-    { t: "Accessible", d: "ARIA roles, aria-selected, keyboard navigation and focus management are handled for you." },
+    {
+      t: "Unstyled",
+      d: "Kairo renders only semantic HTML. You control every pixel via className and style props — zero CSS ships.",
+    },
+    {
+      t: "Composable",
+      d: "Each part of the UI is a separate primitive: Label, Input, Trigger, Grid, Day. Compose exactly what you need.",
+    },
+    {
+      t: "Locale-aware",
+      d: "Segment order, separators, weekday names and month labels all derive from Intl. Pass any BCP 47 tag.",
+    },
+    {
+      t: "Accessible",
+      d: "ARIA roles, aria-selected, keyboard navigation and focus management are handled for you.",
+    },
   ];
   return (
     <>
@@ -265,8 +335,8 @@ export function Overview() {
             Date primitives, <span className="font-normal text-muted">headless.</span>
           </h1>
           <p className="mb-6 max-w-[38ch] text-[16.5px] text-ink2">
-            A composable React library for date and scheduling UI. Zero CSS, no styling opinions, built on the WAI-ARIA
-            grid pattern.
+            A composable React library for date and scheduling UI. Zero CSS, no styling opinions,
+            built on the WAI-ARIA grid pattern.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
@@ -294,7 +364,10 @@ export function Overview() {
       </div>
 
       {/* primitives */}
-      <h2 id="primitives" className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink">
+      <h2
+        id="primitives"
+        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
+      >
         Primitives
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -320,19 +393,25 @@ export function Overview() {
       </div>
 
       {/* try it */}
-      <h2 id="try-it" className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink">
+      <h2
+        id="try-it"
+        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
+      >
         Try it
       </h2>
       <P>
-        Headless means you bring the CSS — here&apos;s the Date Picker primitive with a dark skin. Click the field, use
-        arrow keys, type a date.
+        Headless means you bring the CSS — here&apos;s the Date Picker primitive with a dark skin.
+        Click the field, use arrow keys, type a date.
       </P>
       <DemoStage tall>
         <DatePicker label="Pick a date" />
       </DemoStage>
 
       {/* principles */}
-      <h2 id="design-principles" className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink">
+      <h2
+        id="design-principles"
+        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
+      >
         Design principles
       </h2>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -350,4 +429,14 @@ export function Overview() {
 }
 
 /* re-exports for guide pages */
-export { InlineCode, P, DemoStage, CodeBlock, DateField, InlineCalendar, DatePicker, DateRangePicker, D };
+export {
+  InlineCode,
+  P,
+  DemoStage,
+  CodeBlock,
+  DateField,
+  InlineCalendar,
+  DatePicker,
+  DateRangePicker,
+  D,
+};

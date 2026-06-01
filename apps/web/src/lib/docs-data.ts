@@ -211,15 +211,48 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value", type: "Date | null", def: "null", desc: "The selected date in controlled mode." },
-        { name: "defaultValue", type: "Date | null", def: "null", desc: "The initial selected date in uncontrolled mode." },
-        { name: "onValueChange", type: "(date: Date) => void", desc: "Called when the user selects a date." },
-        { name: "locale", type: "string", def: '"en-US"', desc: "Any BCP 47 tag. Drives weekday/month labels and week start." },
-        { name: "weekStartsOn", type: "0 – 6", def: "derived from locale", desc: "Override the first day of the week (0 = Sunday)." },
+        {
+          name: "value",
+          type: "Date | null",
+          def: "null",
+          desc: "The selected date in controlled mode.",
+        },
+        {
+          name: "defaultValue",
+          type: "Date | null",
+          def: "null",
+          desc: "The initial selected date in uncontrolled mode.",
+        },
+        {
+          name: "onValueChange",
+          type: "(date: Date) => void",
+          desc: "Called when the user selects a date.",
+        },
+        {
+          name: "locale",
+          type: "string",
+          def: '"en-US"',
+          desc: "Any BCP 47 tag. Drives weekday/month labels and week start.",
+        },
+        {
+          name: "weekStartsOn",
+          type: "0 – 6",
+          def: "derived from locale",
+          desc: "Override the first day of the week (0 = Sunday).",
+        },
         { name: "min", type: "Date", desc: "Earliest selectable date. Earlier days are disabled." },
         { name: "max", type: "Date", desc: "Latest selectable date." },
-        { name: "isDateUnavailable", type: "(date: Date) => boolean", desc: "Return true to disable an individual date." },
-        { name: "numberOfMonths", type: "number", def: "1", desc: "Render multiple month panels side by side." },
+        {
+          name: "isDateUnavailable",
+          type: "(date: Date) => boolean",
+          desc: "Return true to disable an individual date.",
+        },
+        {
+          name: "numberOfMonths",
+          type: "number",
+          def: "1",
+          desc: "Render multiple month panels side by side.",
+        },
       ],
     },
     {
@@ -228,8 +261,16 @@ export const API: Record<string, ApiGroup[]> = {
       props: [
         { name: "[data-selected]", type: "CellTrigger", desc: "Present on the selected day." },
         { name: "[data-today]", type: "CellTrigger", desc: "Present on the current date." },
-        { name: "[data-outside-range]", type: "CellTrigger", desc: "Day belongs to an adjacent month." },
-        { name: "[data-disabled]", type: "CellTrigger", desc: "Day is unavailable or out of min/max." },
+        {
+          name: "[data-outside-range]",
+          type: "CellTrigger",
+          desc: "Day belongs to an adjacent month.",
+        },
+        {
+          name: "[data-disabled]",
+          type: "CellTrigger",
+          desc: "Day is unavailable or out of min/max.",
+        },
       ],
     },
   ],
@@ -238,14 +279,46 @@ export const API: Record<string, ApiGroup[]> = {
       ...rootGroup,
       props: [
         { name: "value", type: "Date | null", def: "null", desc: "Selected date (controlled)." },
-        { name: "defaultValue", type: "Date | null", def: "null", desc: "Initial date (uncontrolled)." },
-        { name: "onValueChange", type: "(date: Date | null) => void", desc: "Fires on selection or input parse." },
+        {
+          name: "defaultValue",
+          type: "Date | null",
+          def: "null",
+          desc: "Initial date (uncontrolled).",
+        },
+        {
+          name: "onValueChange",
+          type: "(date: Date | null) => void",
+          desc: "Fires on selection or input parse.",
+        },
         { name: "open", type: "boolean", desc: "Controls popover visibility." },
-        { name: "onOpenChange", type: "(open: boolean) => void", desc: "Called when the popover opens or closes." },
-        { name: "locale", type: "string", def: '"en-US"', desc: "Locale tag for parsing, segments and labels." },
-        { name: "format", type: "Intl.DateTimeFormatOptions", desc: "Override how the input renders the value." },
-        { name: "closeOnSelect", type: "boolean", def: "true", desc: "Close the popover after a date is chosen." },
-        { name: "placement", type: '"bottom-start" | "bottom-end" | …', def: '"bottom-start"', desc: "Popover placement relative to the control." },
+        {
+          name: "onOpenChange",
+          type: "(open: boolean) => void",
+          desc: "Called when the popover opens or closes.",
+        },
+        {
+          name: "locale",
+          type: "string",
+          def: '"en-US"',
+          desc: "Locale tag for parsing, segments and labels.",
+        },
+        {
+          name: "format",
+          type: "Intl.DateTimeFormatOptions",
+          desc: "Override how the input renders the value.",
+        },
+        {
+          name: "closeOnSelect",
+          type: "boolean",
+          def: "true",
+          desc: "Close the popover after a date is chosen.",
+        },
+        {
+          name: "placement",
+          type: '"bottom-start" | "bottom-end" | …',
+          def: '"bottom-start"',
+          desc: "Popover placement relative to the control.",
+        },
       ],
     },
     {
@@ -265,11 +338,28 @@ export const API: Record<string, ApiGroup[]> = {
       ...rootGroup,
       props: [
         { name: "value", type: "[Date, Date] | null", desc: "Selected range (controlled)." },
-        { name: "defaultValue", type: "[Date, Date] | null", desc: "Initial range (uncontrolled)." },
-        { name: "onValueChange", type: "(range) => void", desc: "Fires once both endpoints are set." },
-        { name: "minNights", type: "number", def: "0", desc: "Minimum nights enforced between endpoints." },
+        {
+          name: "defaultValue",
+          type: "[Date, Date] | null",
+          desc: "Initial range (uncontrolled).",
+        },
+        {
+          name: "onValueChange",
+          type: "(range) => void",
+          desc: "Fires once both endpoints are set.",
+        },
+        {
+          name: "minNights",
+          type: "number",
+          def: "0",
+          desc: "Minimum nights enforced between endpoints.",
+        },
         { name: "maxNights", type: "number", desc: "Maximum selectable span." },
-        { name: "presets", type: "Preset[]", desc: "Quick-select shortcuts rendered in the footer." },
+        {
+          name: "presets",
+          type: "Preset[]",
+          desc: "Quick-select shortcuts rendered in the footer.",
+        },
         { name: "locale", type: "string", def: '"en-US"', desc: "Locale tag." },
       ],
     },
@@ -280,9 +370,23 @@ export const API: Record<string, ApiGroup[]> = {
       props: [
         { name: "value", type: "Date | null", desc: "Parsed value (controlled)." },
         { name: "defaultValue", type: "Date | null", desc: "Initial value (uncontrolled)." },
-        { name: "onValueChange", type: "(date: Date | null) => void", desc: "Fires when all segments are complete." },
-        { name: "locale", type: "string", def: '"en-US"', desc: "Determines segment order and separators." },
-        { name: "granularity", type: '"day" | "month" | "year"', def: '"day"', desc: "Smallest editable segment." },
+        {
+          name: "onValueChange",
+          type: "(date: Date | null) => void",
+          desc: "Fires when all segments are complete.",
+        },
+        {
+          name: "locale",
+          type: "string",
+          def: '"en-US"',
+          desc: "Determines segment order and separators.",
+        },
+        {
+          name: "granularity",
+          type: '"day" | "month" | "year"',
+          def: '"day"',
+          desc: "Smallest editable segment.",
+        },
         { name: "min", type: "Date", desc: "Clamp segment values to this lower bound." },
         { name: "max", type: "Date", desc: "Clamp segment values to this upper bound." },
       ],
@@ -334,5 +438,12 @@ export function titleForRoute(route: string): string {
 }
 
 /* helper: routes that map to /[slug] dynamic pages (non-component guides) */
-export const GUIDE_ROUTES = ["installation", "quickstart", "changelog", "localization", "accessibility", "styling"];
+export const GUIDE_ROUTES = [
+  "installation",
+  "quickstart",
+  "changelog",
+  "localization",
+  "accessibility",
+  "styling",
+];
 export const COMPONENT_ROUTES = Object.keys(COMPONENTS);

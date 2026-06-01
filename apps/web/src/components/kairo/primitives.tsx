@@ -7,14 +7,7 @@
    utilities + a few state classes from globals.css.
    ============================================================ */
 
-import {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-  useMemo,
-  type KeyboardEvent,
-} from "react";
+import { useState, useRef, useEffect, useCallback, useMemo, type KeyboardEvent } from "react";
 
 /* ---------------- date utils ---------------- */
 export const D = {
@@ -30,7 +23,11 @@ export const D = {
         ).padStart(2, "0")}`
       : "",
   same: (a?: Date | null, b?: Date | null) =>
-    !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(),
+    !!a &&
+    !!b &&
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate(),
   sameMonth: (a?: Date | null, b?: Date | null) =>
     !!a && !!b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth(),
   addDays: (d: Date, n: number) => {
@@ -45,13 +42,28 @@ export const D = {
   },
   startOfMonth: (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1),
   cmp: (a: Date, b: Date) => a.getTime() - b.getTime(),
-  inRange: (d: Date, a: number, b: number) => d.getTime() > Math.min(a, b) && d.getTime() < Math.max(a, b),
+  inRange: (d: Date, a: number, b: number) =>
+    d.getTime() > Math.min(a, b) && d.getTime() < Math.max(a, b),
 };
 
 function firstDayOfWeek(locale: string): number {
   try {
     const region = new Intl.Locale(locale).maximize().region;
-    const sundayFirst = ["US", "CA", "JP", "IL", "KR", "MX", "ZA", "BR", "PH", "CO", "SA", "TW", "HK"];
+    const sundayFirst = [
+      "US",
+      "CA",
+      "JP",
+      "IL",
+      "KR",
+      "MX",
+      "ZA",
+      "BR",
+      "PH",
+      "CO",
+      "SA",
+      "TW",
+      "HK",
+    ];
     const satFirst = ["AE", "AF", "BH", "DZ", "EG", "IQ", "JO", "KW", "LY", "OM", "QA", "SY"];
     if (region && satFirst.includes(region)) return 6;
     if (region && sundayFirst.includes(region)) return 0;
@@ -85,9 +97,16 @@ function monthMatrix(viewDate: Date, weekStart: number) {
   return weeks;
 }
 
-function formatDisplay(date: Date | null, locale: string, opts?: Intl.DateTimeFormatOptions): string {
+function formatDisplay(
+  date: Date | null,
+  locale: string,
+  opts?: Intl.DateTimeFormatOptions,
+): string {
   if (!date) return "";
-  return new Intl.DateTimeFormat(locale, opts || { year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+  return new Intl.DateTimeFormat(
+    locale,
+    opts || { year: "numeric", month: "2-digit", day: "2-digit" },
+  ).format(date);
 }
 
 type Seg = { type: "literal"; value: string } | { type: "year" | "month" | "day" };
@@ -144,12 +163,23 @@ type CalProps = {
 };
 
 function Calendar(props: CalProps) {
-  const { locale = "en-US", mode = "single", value, rangeValue, onPick, isDisabled, hover, setHover } = props;
+  const {
+    locale = "en-US",
+    mode = "single",
+    value,
+    rangeValue,
+    onPick,
+    isDisabled,
+    hover,
+    setHover,
+  } = props;
   const weekStart = props.weekStart != null ? props.weekStart : firstDayOfWeek(locale);
   const [view, setView] = useState(() =>
     D.startOfMonth(props.defaultView || value || (rangeValue && rangeValue[0]) || D.today()),
   );
-  const [focus, setFocus] = useState<Date>(() => value || (rangeValue && rangeValue[0]) || D.today());
+  const [focus, setFocus] = useState<Date>(
+    () => value || (rangeValue && rangeValue[0]) || D.today(),
+  );
   const [pane, setPane] = useState<"days" | "months" | "years">("days");
   const cellRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const today = D.today();
@@ -234,7 +264,9 @@ function Calendar(props: CalProps) {
               type="button"
               role="gridcell"
               className={myBtn}
-              aria-selected={!!value && value.getMonth() === m && value.getFullYear() === view.getFullYear()}
+              aria-selected={
+                !!value && value.getMonth() === m && value.getFullYear() === view.getFullYear()
+              }
               onClick={() => {
                 setView(new Date(view.getFullYear(), m, 1));
                 setPane("days");
@@ -316,7 +348,12 @@ function Calendar(props: CalProps) {
                 const disabled = isDisabled?.(cell.date);
                 const isFocus = D.same(cell.date, focus);
                 return (
-                  <td key={D.iso(cell.date)} className="p-px text-center" role="gridcell" aria-selected={selected || undefined}>
+                  <td
+                    key={D.iso(cell.date)}
+                    className="p-px text-center"
+                    role="gridcell"
+                    aria-selected={selected || undefined}
+                  >
                     <button
                       ref={(el) => {
                         cellRefs.current[D.iso(cell.date)] = el;
@@ -433,7 +470,15 @@ export function DatePicker({
   const placeholder = useMemo(
     () =>
       fieldSegments(locale)
-        .map((s) => (s.type === "literal" ? s.value : s.type === "year" ? "yyyy" : s.type === "month" ? "mm" : "dd"))
+        .map((s) =>
+          s.type === "literal"
+            ? s.value
+            : s.type === "year"
+              ? "yyyy"
+              : s.type === "month"
+                ? "mm"
+                : "dd",
+        )
         .join(""),
     [locale],
   );
@@ -538,7 +583,14 @@ export function DateRangePicker({
       {open && (
         <div className="absolute top-full left-0 mt-2 z-30">
           <div className={popoverCls} role="dialog" aria-label={label}>
-            <Calendar locale={locale} mode="range" rangeValue={range} hover={hover} setHover={setHover} onPick={pick} />
+            <Calendar
+              locale={locale}
+              mode="range"
+              rangeValue={range}
+              hover={hover}
+              setHover={setHover}
+              onPick={pick}
+            />
             {presets && (
               <div className="flex gap-2 mt-2.5 pt-2.5 border-t border-line">
                 <button type="button" className={presetBtn} onClick={() => applyPreset(3)}>
@@ -570,7 +622,11 @@ export function DateField({
   defaultValue?: Date | null;
 }) {
   const segs = useMemo(() => fieldSegments(locale), [locale]);
-  const [vals, setVals] = useState<{ year: number | null; month: number | null; day: number | null }>(() => {
+  const [vals, setVals] = useState<{
+    year: number | null;
+    month: number | null;
+    day: number | null;
+  }>(() => {
     const v = defaultValue;
     return {
       year: v ? v.getFullYear() : null,
@@ -601,9 +657,13 @@ export function DateField({
     if (/^[0-9]$/.test(e.key)) {
       e.preventDefault();
       let next =
-        cur != null && String(cur).length < (type === "year" ? 4 : 2) ? Number(String(cur) + e.key) : Number(e.key);
+        cur != null && String(cur).length < (type === "year" ? 4 : 2)
+          ? Number(String(cur) + e.key)
+          : Number(e.key);
       if (next > max[type]) next = Number(e.key);
-      const filled = String(next).length >= (type === "year" ? 4 : 2) || (type !== "year" && next * 10 > max[type]);
+      const filled =
+        String(next).length >= (type === "year" ? 4 : 2) ||
+        (type !== "year" && next * 10 > max[type]);
       setVals((v) => ({ ...v, [type]: next }));
       if (filled) focusNext(type);
     } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -673,7 +733,13 @@ export function DateField({
 }
 
 /* ---------------- Inline Calendar ---------------- */
-export function InlineCalendar({ locale = "en-US", defaultValue = null }: { locale?: string; defaultValue?: Date | null }) {
+export function InlineCalendar({
+  locale = "en-US",
+  defaultValue = null,
+}: {
+  locale?: string;
+  defaultValue?: Date | null;
+}) {
   const [value, setValue] = useState<Date | null>(defaultValue);
   return (
     <div className="rounded-[14px] border border-line-strong bg-card p-3.5 w-[296px] shadow-pop">
