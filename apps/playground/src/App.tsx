@@ -122,9 +122,7 @@ export function App() {
                 type="button"
                 onClick={() => setTab(t.id)}
                 className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  tab === t.id
-                    ? "bg-zinc-700 text-zinc-100"
-                    : "text-zinc-400 hover:text-zinc-200"
+                  tab === t.id ? "bg-zinc-700 text-zinc-100" : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
                 {t.label}
