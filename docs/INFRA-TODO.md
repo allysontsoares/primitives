@@ -158,7 +158,7 @@ Referência completa: `docs/INFRA-PLAN.md`
 - [x] Criar conta em [npmjs.com](https://www.npmjs.com)
 - [ ] Ativar 2FA na conta npm
 - [x] Criar organização `@at5` no npm (Account → Add Organization)
-- [X] Fazer login local: `npm login`
+- [x] Fazer login local: `npm login`
 - [x] Verificar login: `npm whoami`
 - [x] Fazer dry-run: `cd packages/kairo && npm publish --dry-run`
 - [ ] Revisar output do dry-run — confirmar que apenas `dist/` e docs vão

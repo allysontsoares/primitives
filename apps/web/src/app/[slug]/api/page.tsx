@@ -7,7 +7,11 @@ export function generateStaticParams() {
   return COMPONENT_ROUTES.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const comp = COMPONENTS[slug];
   if (comp) return { title: `${comp.name} API` };

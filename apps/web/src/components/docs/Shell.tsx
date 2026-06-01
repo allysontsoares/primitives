@@ -15,45 +15,99 @@ function pathToRoute(pathname: string) {
 
 /* ---------------- icons ---------------- */
 const Search = ({ s = 16 }: { s?: number }) => (
-  <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+  <svg
+    width={s}
+    height={s}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+  >
     <circle cx="10.5" cy="10.5" r="6.5" />
     <path d="M16 16l4 4" />
   </svg>
 );
 const Moon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round">
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.7}
+    strokeLinecap="round"
+  >
     <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
   </svg>
 );
 const Sun = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round">
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.7}
+    strokeLinecap="round"
+  >
     <circle cx="12" cy="12" r="4" />
     <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
   </svg>
 );
 const Menu = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round">
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    strokeLinecap="round"
+  >
     <path d="M3 6h18M3 12h18M3 18h18" />
   </svg>
 );
 const DocIco = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+  >
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
     <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
   </svg>
 );
 const CompIco = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+  >
     <rect x="2" y="3" width="20" height="14" rx="2" />
     <path d="M8 21h8M12 17v4" />
   </svg>
 );
 const ApiIco = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6}>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.6}
+  >
     <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
   </svg>
 );
-const kindIco = (k: SearchEntry["kind"]) => (k === "comp" ? <CompIco /> : k === "api" ? <ApiIco /> : <DocIco />);
+const kindIco = (k: SearchEntry["kind"]) =>
+  k === "comp" ? <CompIco /> : k === "api" ? <ApiIco /> : <DocIco />;
 
 /* ============================ THEME ============================ */
 function useTheme() {
@@ -84,7 +138,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
   const results = q.trim()
     ? SEARCH.filter(
-        (s) => s.title.toLowerCase().includes(q.toLowerCase()) || s.crumb.toLowerCase().includes(q.toLowerCase()),
+        (s) =>
+          s.title.toLowerCase().includes(q.toLowerCase()) ||
+          s.crumb.toLowerCase().includes(q.toLowerCase()),
       )
     : SEARCH.slice(0, 8);
 
@@ -148,7 +204,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
         </div>
         <div className="max-h-[52vh] overflow-y-auto p-2">
           {results.length === 0 ? (
-            <div className="p-10 text-center text-sm text-muted">No results for &ldquo;{q}&rdquo;</div>
+            <div className="p-10 text-center text-sm text-muted">
+              No results for &ldquo;{q}&rdquo;
+            </div>
           ) : (
             Object.entries(groups).map(([crumb, items]) => (
               <div key={crumb}>
@@ -283,7 +341,9 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             const active = route === item.route || route === item.route + "/api";
             const itemCls = (on: boolean) =>
               `flex min-h-9 items-center gap-2 rounded-lg px-2.5 text-[13.5px] transition-colors ${
-                on ? "bg-hover-strong font-semibold text-ink" : "text-muted hover:bg-hover hover:text-ink"
+                on
+                  ? "bg-hover-strong font-semibold text-ink"
+                  : "text-muted hover:bg-hover hover:text-ink"
               }`;
             return (
               <div key={item.route}>
@@ -355,7 +415,11 @@ function Toc() {
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 84, behavior: "smooth" });
+    if (el)
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.scrollY - 84,
+        behavior: "smooth",
+      });
   };
 
   if (!items.length) return <aside className="hidden xl:block" />;
@@ -413,7 +477,10 @@ export function DocsShell({ children }: { children: ReactNode }) {
       <div className="grid items-start md:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <main className="min-w-0">
-          <div id="docs-content" className="mx-auto max-w-[760px] px-5 pb-28 pt-10 sm:px-10 sm:pt-[46px]">
+          <div
+            id="docs-content"
+            className="mx-auto max-w-[760px] px-5 pb-28 pt-10 sm:px-10 sm:pt-[46px]"
+          >
             {children}
           </div>
         </main>
