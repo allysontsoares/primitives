@@ -7,7 +7,18 @@
    utilities + a few state classes from globals.css.
    ============================================================ */
 
-import { useState, useRef, useEffect, useCallback, useMemo, type KeyboardEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useMemo,
+  type KeyboardEvent,
+  type ReactNode,
+  type CSSProperties,
+} from "react";
+import { createPortal } from "react-dom";
 
 /* ---------------- date utils ---------------- */
 export const D = {
@@ -149,6 +160,48 @@ const RightIcon = () => (
 );
 
 /* ---------------- Calendar (the WAI-ARIA grid) ---------------- */
+export type CalSize = "default" | "compact";
+type PopoverPlacement = "below" | "above";
+
+const CAL_UI: Record<
+  CalSize,
+  {
+    shell: string;
+    day: string;
+    weekday: string;
+    headNav: string;
+    headTitle: string;
+    headGap: string;
+    paneBtn: string;
+  }
+> = {
+  default: {
+    shell: "rounded-[14px] border border-line-strong bg-card p-3.5 w-[296px] shadow-pop",
+    day: "relative grid place-items-center w-[34px] h-[34px] rounded-lg text-[13.5px]",
+    weekday: "text-[11px] font-semibold text-muted py-1.5 text-center uppercase tracking-wide",
+    headNav:
+      "grid place-items-center w-[30px] h-[30px] rounded-lg text-ink2 hover:bg-hover hover:text-ink transition-colors",
+    headTitle:
+      "text-sm font-[650] px-2.5 py-1 rounded-lg text-ink hover:bg-hover transition-colors",
+    headGap: "mb-2.5",
+    paneBtn:
+      "py-3 rounded-[9px] text-[13.5px] text-ink hover:bg-hover-strong transition-colors aria-selected:bg-accent aria-selected:text-on-accent aria-selected:font-semibold",
+  },
+  compact: {
+    shell:
+      "rounded-[12px] border border-line-strong bg-card p-2 w-[228px] max-w-full shadow-pop",
+    day: "relative grid place-items-center w-[26px] h-[26px] rounded-md text-[12px]",
+    weekday: "text-[10px] font-semibold text-muted py-1 text-center uppercase tracking-wide",
+    headNav:
+      "grid place-items-center w-[26px] h-[26px] rounded-md text-ink2 hover:bg-hover hover:text-ink transition-colors",
+    headTitle:
+      "text-[13px] font-[650] px-2 py-0.5 rounded-md text-ink hover:bg-hover transition-colors",
+    headGap: "mb-2",
+    paneBtn:
+      "py-2 rounded-lg text-[12px] text-ink hover:bg-hover-strong transition-colors aria-selected:bg-accent aria-selected:text-on-accent aria-selected:font-semibold",
+  },
+};
+
 type CalProps = {
   locale?: string;
   weekStart?: number;
@@ -160,6 +213,7 @@ type CalProps = {
   onPick?: (d: Date) => void;
   isDisabled?: (d: Date) => boolean;
   defaultView?: Date;
+  size?: CalSize;
 };
 
 function Calendar(props: CalProps) {
@@ -172,7 +226,9 @@ function Calendar(props: CalProps) {
     isDisabled,
     hover,
     setHover,
+    size = "default",
   } = props;
+  const ui = CAL_UI[size];
   const weekStart = props.weekStart != null ? props.weekStart : firstDayOfWeek(locale);
   const [view, setView] = useState(() =>
     D.startOfMonth(props.defaultView || value || (rangeValue && rangeValue[0]) || D.today()),
@@ -244,14 +300,12 @@ function Calendar(props: CalProps) {
     return { cls: cls.join(" "), selected };
   }
 
-  const myBtn =
-    "py-3 rounded-[9px] text-[13.5px] text-ink hover:bg-hover-strong transition-colors aria-selected:bg-accent aria-selected:text-on-accent aria-selected:font-semibold";
-
   if (pane === "months") {
     const monthFmt = new Intl.DateTimeFormat(locale, { month: "short" });
     return (
       <div className="select-none">
         <CalHead
+          ui={ui}
           onPrev={() => setView(D.addMonths(view, -12))}
           onNext={() => setView(D.addMonths(view, 12))}
           heading={String(view.getFullYear())}
@@ -263,7 +317,7 @@ function Calendar(props: CalProps) {
               key={m}
               type="button"
               role="gridcell"
-              className={myBtn}
+              className={ui.paneBtn}
               aria-selected={
                 !!value && value.getMonth() === m && value.getFullYear() === view.getFullYear()
               }
@@ -284,6 +338,7 @@ function Calendar(props: CalProps) {
     return (
       <div className="select-none">
         <CalHead
+          ui={ui}
           onPrev={() => setView(D.addMonths(view, -120))}
           onNext={() => setView(D.addMonths(view, 120))}
           heading={`${start}–${start + 11}`}
@@ -297,7 +352,7 @@ function Calendar(props: CalProps) {
                 key={y}
                 type="button"
                 role="gridcell"
-                className={myBtn}
+                className={ui.paneBtn}
                 aria-selected={!!value && value.getFullYear() === y}
                 onClick={() => {
                   setView(new Date(y, view.getMonth(), 1));
@@ -316,6 +371,7 @@ function Calendar(props: CalProps) {
   return (
     <div className="select-none">
       <CalHead
+        ui={ui}
         onPrev={() => setView(D.addMonths(view, -1))}
         onNext={() => setView(D.addMonths(view, 1))}
         heading={formatDisplay(view, locale, { month: "long", year: "numeric" })}
@@ -333,7 +389,7 @@ function Calendar(props: CalProps) {
                 key={i}
                 scope="col"
                 abbr={l}
-                className="text-[11px] font-semibold text-muted py-1.5 text-center uppercase tracking-wide"
+                className={ui.weekday}
               >
                 {l.slice(0, 2)}
               </th>
@@ -369,7 +425,7 @@ function Calendar(props: CalProps) {
                         day: "numeric",
                       })}
                       aria-current={D.same(cell.date, today) ? "date" : undefined}
-                      className={`relative grid place-items-center w-[34px] h-[34px] rounded-lg text-[13.5px] text-ink transition-colors hover:bg-hover-strong focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed ${cls}`}
+                      className={`${ui.day} text-ink transition-colors hover:bg-hover-strong focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 disabled:opacity-40 disabled:cursor-not-allowed ${cls}`}
                       onClick={() => {
                         setFocus(cell.date);
                         onPick?.(cell.date);
@@ -391,45 +447,45 @@ function Calendar(props: CalProps) {
 }
 
 function CalHead({
+  ui,
   onPrev,
   onNext,
   heading,
   onHeading,
 }: {
+  ui: (typeof CAL_UI)[CalSize];
   onPrev: () => void;
   onNext: () => void;
   heading: string;
   onHeading: () => void;
 }) {
-  const navBtn =
-    "grid place-items-center w-[30px] h-[30px] rounded-lg text-ink2 hover:bg-hover hover:text-ink transition-colors";
   return (
-    <div className="flex items-center justify-between mb-2.5">
-      <button type="button" aria-label="Previous" onClick={onPrev} className={navBtn}>
+    <div className={`flex items-center justify-between ${ui.headGap}`}>
+      <button type="button" aria-label="Previous" onClick={onPrev} className={ui.headNav}>
         <LeftIcon />
       </button>
-      <button
-        type="button"
-        onClick={onHeading}
-        className="text-sm font-[650] px-2.5 py-1 rounded-lg text-ink hover:bg-hover transition-colors"
-      >
+      <button type="button" onClick={onHeading} className={ui.headTitle}>
         {heading}
       </button>
-      <button type="button" aria-label="Next" onClick={onNext} className={navBtn}>
+      <button type="button" aria-label="Next" onClick={onNext} className={ui.headNav}>
         <RightIcon />
       </button>
     </div>
   );
 }
 
-/* ---------------- popover helper ---------------- */
-function usePopover() {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+/* ---------------- popover helper (portaled, fixed to viewport) ---------------- */
+function usePopover(initialOpen = false) {
+  const [open, setOpen] = useState(initialOpen);
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
     const onDoc = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false);
+      const t = e.target as Node;
+      if (anchorRef.current?.contains(t) || popoverRef.current?.contains(t)) return;
+      setOpen(false);
     };
     const onEsc = (e: globalThis.KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
@@ -441,31 +497,158 @@ function usePopover() {
       document.removeEventListener("keydown", onEsc);
     };
   }, [open]);
-  return { open, setOpen, rootRef };
+
+  return { open, setOpen, anchorRef, popoverRef };
 }
 
-const fieldWrap = "flex flex-col gap-2 w-[260px]";
+function PopoverLayer({
+  open,
+  anchorRef,
+  popoverRef,
+  placement,
+  children,
+}: {
+  open: boolean;
+  anchorRef: React.RefObject<HTMLDivElement | null>;
+  popoverRef: React.RefObject<HTMLDivElement | null>;
+  placement: PopoverPlacement;
+  children: ReactNode;
+}) {
+  const [mounted, setMounted] = useState(false);
+  const [positioned, setPositioned] = useState(false);
+  const [style, setStyle] = useState<CSSProperties>({
+    position: "fixed",
+    top: -9999,
+    left: -9999,
+    zIndex: 200,
+    visibility: "hidden",
+  });
+
+  useEffect(() => setMounted(true), []);
+
+  const updatePosition = useCallback(() => {
+    const anchor = anchorRef.current;
+    const popover = popoverRef.current;
+    if (!anchor || !popover) return false;
+
+    const rect = anchor.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return false;
+
+    const popoverH = popover.offsetHeight;
+    const popoverW = popover.offsetWidth;
+    if (popoverH === 0 || popoverW === 0) return false;
+
+    const gap = 8;
+    const left = Math.min(rect.left, Math.max(8, window.innerWidth - popoverW - 8));
+
+    if (placement === "above") {
+      setStyle({
+        position: "fixed",
+        top: Math.max(8, rect.top - gap - popoverH),
+        left,
+        zIndex: 200,
+        visibility: "visible",
+      });
+    } else {
+      setStyle({
+        position: "fixed",
+        top: rect.bottom + gap,
+        left,
+        zIndex: 200,
+        visibility: "visible",
+      });
+    }
+
+    setPositioned(true);
+    return true;
+  }, [anchorRef, popoverRef, placement]);
+
+  const setPopoverNode = useCallback(
+    (node: HTMLDivElement | null) => {
+      popoverRef.current = node;
+      if (node && open) updatePosition();
+    },
+    [open, popoverRef, updatePosition],
+  );
+
+  useLayoutEffect(() => {
+    if (!open || !mounted) {
+      setPositioned(false);
+      setStyle({
+        position: "fixed",
+        top: -9999,
+        left: -9999,
+        zIndex: 200,
+        visibility: "hidden",
+      });
+      return;
+    }
+
+    setPositioned(false);
+    let attempts = 0;
+    let raf = 0;
+    const tryPosition = () => {
+      if (updatePosition() || attempts >= 8) return;
+      attempts += 1;
+      raf = requestAnimationFrame(tryPosition);
+    };
+    tryPosition();
+
+    const onReflow = () => updatePosition();
+    window.addEventListener("resize", onReflow);
+    window.addEventListener("scroll", onReflow, true);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onReflow);
+      window.removeEventListener("scroll", onReflow, true);
+    };
+  }, [open, mounted, updatePosition]);
+
+  if (!open || !mounted) return null;
+
+  return createPortal(
+    <div
+      ref={setPopoverNode}
+      style={{
+        ...style,
+        visibility: positioned ? style.visibility : "hidden",
+        pointerEvents: positioned ? "auto" : "none",
+      }}
+    >
+      {children}
+    </div>,
+    document.body,
+  );
+}
+
+const fieldWrap = (compact?: boolean) =>
+  compact ? "flex flex-col gap-2 w-[228px] max-w-full" : "flex flex-col gap-2 w-[260px]";
 const labelCls = "text-[13px] font-semibold text-accent";
 const inputCls =
   "flex-1 h-[42px] rounded-[10px] border border-line-strong bg-bg px-[13px] text-ink font-mono text-sm outline-none transition-[border-color,box-shadow] placeholder:text-faint focus:border-accent focus:shadow-[0_0_0_3px_var(--accent-soft)]";
 const triggerCls =
   "grid place-items-center w-[42px] h-[42px] shrink-0 rounded-[10px] border border-line-strong bg-bg text-ink2 cursor-pointer transition-colors hover:border-accent hover:text-accent aria-expanded:border-accent aria-expanded:text-accent aria-expanded:bg-accent-soft";
-const popoverCls =
-  "rounded-[14px] border border-line-strong bg-card p-3.5 w-[296px] shadow-pop animate-pop";
-
 /* ---------------- DatePicker ---------------- */
 export function DatePicker({
   locale = "en-US",
   label = "Date",
   defaultValue = null,
+  size = "default",
+  popoverPlacement = "below",
+  defaultOpen = false,
 }: {
   locale?: string;
   label?: string;
   defaultValue?: Date | null;
+  size?: CalSize;
+  popoverPlacement?: PopoverPlacement;
+  defaultOpen?: boolean;
 }) {
   const [value, setValue] = useState<Date | null>(defaultValue);
   const [text, setText] = useState(value ? formatDisplay(value, locale) : "");
-  const { open, setOpen, rootRef } = usePopover();
+  const { open, setOpen, anchorRef, popoverRef } = usePopover(defaultOpen);
+  const ui = CAL_UI[size];
+  const compact = size === "compact";
 
   const placeholder = useMemo(
     () =>
@@ -490,9 +673,9 @@ export function DatePicker({
   };
 
   return (
-    <div className={`${fieldWrap} relative`} ref={rootRef}>
+    <div className={fieldWrap(compact)}>
       <label className={labelCls}>{label}</label>
-      <div className="flex gap-2">
+      <div ref={anchorRef} className="flex gap-2">
         <input
           className={inputCls}
           value={text}
@@ -516,13 +699,21 @@ export function DatePicker({
           <CalIcon />
         </button>
       </div>
-      {open && (
-        <div className="absolute top-full left-0 mt-2 z-30">
-          <div className={popoverCls} role="dialog" aria-label={label}>
-            <Calendar locale={locale} mode="single" value={value} onPick={commit} />
-          </div>
+      <PopoverLayer
+        open={open}
+        anchorRef={anchorRef}
+        popoverRef={popoverRef}
+        placement={popoverPlacement}
+      >
+        <div
+          className={`${ui.shell} animate-pop`}
+          role="dialog"
+          aria-label={label}
+          data-cal-size={size}
+        >
+          <Calendar locale={locale} mode="single" value={value} onPick={commit} size={size} />
         </div>
-      )}
+      </PopoverLayer>
     </div>
   );
 }
@@ -532,14 +723,22 @@ export function DateRangePicker({
   locale = "en-US",
   label = "Stay",
   presets = true,
+  size = "default",
+  popoverPlacement = "below",
+  defaultOpen = false,
 }: {
   locale?: string;
   label?: string;
   presets?: boolean;
+  size?: CalSize;
+  popoverPlacement?: PopoverPlacement;
+  defaultOpen?: boolean;
 }) {
   const [range, setRange] = useState<[Date | null, Date | null]>([null, null]);
   const [hover, setHover] = useState<Date | null>(null);
-  const { open, setOpen, rootRef } = usePopover();
+  const { open, setOpen, anchorRef, popoverRef } = usePopover(defaultOpen);
+  const ui = CAL_UI[size];
+  const compact = size === "compact";
   const [start, end] = range;
 
   const pick = (d: Date) => {
@@ -560,9 +759,9 @@ export function DateRangePicker({
     "flex-1 text-[12.5px] py-1.5 rounded-lg border border-line bg-transparent text-ink2 cursor-pointer transition-colors hover:border-accent hover:text-accent";
 
   return (
-    <div className={`${fieldWrap} relative w-[280px]`} ref={rootRef}>
+    <div className={`${fieldWrap(compact)} ${compact ? "" : "w-[280px]"}`}>
       <label className={labelCls}>{label}</label>
-      <div className="flex gap-2">
+      <div ref={anchorRef} className="flex gap-2">
         <input
           className={`${inputCls} cursor-pointer whitespace-nowrap`}
           value={text}
@@ -580,33 +779,42 @@ export function DateRangePicker({
           <CalIcon />
         </button>
       </div>
-      {open && (
-        <div className="absolute top-full left-0 mt-2 z-30">
-          <div className={popoverCls} role="dialog" aria-label={label}>
-            <Calendar
-              locale={locale}
-              mode="range"
-              rangeValue={range}
-              hover={hover}
-              setHover={setHover}
-              onPick={pick}
-            />
-            {presets && (
-              <div className="flex gap-2 mt-2.5 pt-2.5 border-t border-line">
-                <button type="button" className={presetBtn} onClick={() => applyPreset(3)}>
-                  +3 nights
-                </button>
-                <button type="button" className={presetBtn} onClick={() => applyPreset(7)}>
-                  +1 week
-                </button>
-                <button type="button" className={presetBtn} onClick={() => setRange([null, null])}>
-                  Clear
-                </button>
-              </div>
-            )}
-          </div>
+      <PopoverLayer
+        open={open}
+        anchorRef={anchorRef}
+        popoverRef={popoverRef}
+        placement={popoverPlacement}
+      >
+        <div
+          className={`${ui.shell} animate-pop`}
+          role="dialog"
+          aria-label={label}
+          data-cal-size={size}
+        >
+          <Calendar
+            locale={locale}
+            mode="range"
+            rangeValue={range}
+            hover={hover}
+            setHover={setHover}
+            onPick={pick}
+            size={size}
+          />
+          {presets && (
+            <div className="flex gap-2 mt-2.5 pt-2.5 border-t border-line">
+              <button type="button" className={presetBtn} onClick={() => applyPreset(3)}>
+                +3 nights
+              </button>
+              <button type="button" className={presetBtn} onClick={() => applyPreset(7)}>
+                +1 week
+              </button>
+              <button type="button" className={presetBtn} onClick={() => setRange([null, null])}>
+                Clear
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </PopoverLayer>
     </div>
   );
 }
@@ -736,14 +944,17 @@ export function DateField({
 export function InlineCalendar({
   locale = "en-US",
   defaultValue = null,
+  size = "default",
 }: {
   locale?: string;
   defaultValue?: Date | null;
+  size?: CalSize;
 }) {
   const [value, setValue] = useState<Date | null>(defaultValue);
+  const ui = CAL_UI[size];
   return (
-    <div className="rounded-[14px] border border-line-strong bg-card p-3.5 w-[296px] shadow-pop">
-      <Calendar locale={locale} mode="single" value={value} onPick={setValue} />
+    <div className={ui.shell} data-cal-size={size}>
+      <Calendar locale={locale} mode="single" value={value} onPick={setValue} size={size} />
     </div>
   );
 }
