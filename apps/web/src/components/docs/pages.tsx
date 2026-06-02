@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { COMPONENTS, API, type DemoKind } from "../../lib/docs-data";
 import { CodeBlock } from "./CodeBlock";
+import { DocsHeroCard } from "./HeroCard";
+import { HomeCtaBand, HomeHighlights, HomeQualities, HomeWhySection } from "./HomeHighlights";
 import { ActionRow, Anatomy, ApiReference, CopyPage, DemoStage, Example, PageNav } from "./blocks";
 import {
-  CalIcon,
   DateField,
   InlineCalendar,
   DatePicker,
@@ -258,171 +259,14 @@ export function ApiPage({ slug }: { slug: string }) {
 }
 
 /* ================= OVERVIEW (home / landing) ================= */
-const ArrowRight = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={2}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 12h14M13 6l6 6-6 6" />
-  </svg>
-);
-
 export function Overview() {
-  const cards = [
-    {
-      route: "calendar",
-      title: "Calendar",
-      desc: "Month grid on the WAI-ARIA grid pattern with roving focus.",
-      k: "role",
-      v: "grid",
-    },
-    {
-      route: "date-picker",
-      title: "Date Picker",
-      desc: "Input + popover calendar for a single date.",
-      k: "parts",
-      v: "6",
-    },
-    {
-      route: "date-range-picker",
-      title: "Date Range Picker",
-      desc: "Start/end selection with live range preview.",
-      k: "mode",
-      v: "range",
-    },
-    {
-      route: "date-field",
-      title: "Date Field",
-      desc: "Segmented, locale-aware input — no calendar needed.",
-      k: "role",
-      v: "spinbutton",
-    },
-  ];
-  const principles = [
-    {
-      t: "Unstyled",
-      d: "Kairo renders only semantic HTML. You control every pixel via className and style props — zero CSS ships.",
-    },
-    {
-      t: "Composable",
-      d: "Each part of the UI is a separate primitive: Label, Input, Trigger, Grid, Day. Compose exactly what you need.",
-    },
-    {
-      t: "Locale-aware",
-      d: "Segment order, separators, weekday names and month labels all derive from Intl. Pass any BCP 47 tag.",
-    },
-    {
-      t: "Accessible",
-      d: "ARIA roles, aria-selected, keyboard navigation and focus management are handled for you.",
-    },
-  ];
   return (
     <>
-      {/* hero card */}
-      <div className="grid items-center gap-9 rounded-[18px] border border-line bg-card p-6 sm:p-[38px] lg:grid-cols-[0.92fr_1.08fr]">
-        <div>
-          <div className="mb-4 inline-flex items-center gap-2 text-[13px] text-ink2">
-            <span className="h-[7px] w-[7px] rounded-full bg-[#36c46a] shadow-[0_0_0_3px_color-mix(in_srgb,#36c46a_22%,transparent)]" />
-            v1.0 · React 19
-          </div>
-          <h1 className="mb-4 text-[length:var(--text-hero)] font-bold leading-[1.02] tracking-[-0.04em] text-ink text-balance">
-            Date primitives, <span className="font-normal text-muted">headless.</span>
-          </h1>
-          <p className="mb-6 max-w-[38ch] text-[16.5px] text-ink2">
-            A composable React library for date and scheduling UI. Zero CSS, no styling opinions,
-            built on the WAI-ARIA grid pattern.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              href="/quickstart"
-              className="inline-flex min-h-11 items-center gap-2 rounded-[11px] bg-ink px-[18px] text-sm font-semibold text-bg transition-opacity hover:opacity-90"
-            >
-              Quick Start <ArrowRight />
-            </Link>
-            <Link
-              href="/date-picker"
-              className="inline-flex min-h-11 items-center gap-2 rounded-[11px] border border-line-strong px-[18px] text-sm font-semibold text-ink transition-colors hover:bg-hover"
-            >
-              Browse primitives
-            </Link>
-          </div>
-        </div>
-        <div>
-          <CodeBlock
-            tabs={[
-              { label: "Install", lang: "bash", code: "npm install @at5/kairo" },
-              { label: "Usage", lang: "jsx", code: SAMPLE["date-field"] ?? "" },
-            ]}
-          />
-        </div>
-      </div>
-
-      {/* primitives */}
-      <h2
-        id="primitives"
-        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
-      >
-        Primitives
-      </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {cards.map((c) => (
-          <Link
-            key={c.route}
-            href={`/${c.route}`}
-            className="flex min-h-[168px] flex-col rounded-card border border-line bg-card p-[22px] transition-[border-color,transform] hover:-translate-y-0.5 hover:border-line-strong"
-          >
-            <div className="mb-1.5 flex items-start justify-between">
-              <div className="text-[17px] font-[650] tracking-[-0.01em] text-ink">{c.title}</div>
-              <span className="grid h-[34px] w-[34px] place-items-center rounded-[9px] border border-line bg-card2 text-ink2">
-                <CalIcon />
-              </span>
-            </div>
-            <div className="text-[13.5px] leading-normal text-muted">{c.desc}</div>
-            <div className="mt-auto flex items-center justify-between border-t border-line pt-4 text-[12.5px]">
-              <span className="text-muted">{c.k}</span>
-              <span className="font-mono text-xs text-ink">{c.v}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* try it */}
-      <h2
-        id="try-it"
-        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
-      >
-        Try it
-      </h2>
-      <P>
-        Headless means you bring the CSS — here&apos;s the Date Picker primitive with a dark skin.
-        Click the field, use arrow keys, type a date.
-      </P>
-      <DemoStage tall>
-        <DatePicker label="Pick a date" />
-      </DemoStage>
-
-      {/* principles */}
-      <h2
-        id="design-principles"
-        className="mb-6 mt-20 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
-      >
-        Design principles
-      </h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {principles.map((p) => (
-          <div key={p.t} className="rounded-card border border-line bg-card p-[22px]">
-            <div className="mb-2 text-[17px] font-[650] text-ink">{p.t}</div>
-            <div className="text-[13.5px] leading-normal text-muted">{p.d}</div>
-          </div>
-        ))}
-      </div>
-
+      <DocsHeroCard />
+      <HomeHighlights />
+      <HomeWhySection />
+      <HomeQualities />
+      <HomeCtaBand />
       <PageNav route="" />
     </>
   );
