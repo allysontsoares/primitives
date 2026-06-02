@@ -1,6 +1,8 @@
 "use client";
 
+import { cva, type VariantProps } from "class-variance-authority";
 import { useState } from "react";
+import { cn } from "../../lib/utils";
 
 /* ---------- tiny syntax highlighter (jsx / bash / css) ---------- */
 function esc(s: string) {
@@ -74,6 +76,36 @@ export function highlight(code: string, lang = ""): string {
   return out;
 }
 
+const codeBlockVariants = cva(
+  "min-w-0 w-full overflow-hidden rounded-card border border-line bg-code-bg",
+  {
+    variants: {
+      spacing: {
+        default: "my-[18px]",
+        none: "my-0",
+      },
+    },
+    defaultVariants: {
+      spacing: "default",
+    },
+  },
+);
+
+const tabVariants = cva(
+  "relative -bottom-px min-h-11 shrink-0 rounded-t-[7px] border-b-2 px-3 py-2 text-[12.5px] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+  {
+    variants: {
+      state: {
+        active: "border-accent text-[#f0f1f4]",
+        inactive: "border-transparent text-[#7d8089] hover:text-[#c9ccd3]",
+      },
+    },
+    defaultVariants: {
+      state: "inactive",
+    },
+  },
+);
+
 const CopyIcon = () => (
   <svg
     width="15"
@@ -106,23 +138,29 @@ const CheckIcon = () => (
 
 export type CodeTab = { label: string; lang?: string; code: string };
 
+export type CodeBlockProps = {
+  tabs?: CodeTab[];
+  code?: string;
+  lang?: string;
+  label?: string;
+  className?: string;
+} & VariantProps<typeof codeBlockVariants>;
+
 export function CodeBlock({
   tabs,
   code,
   lang,
   label,
-}: {
-  tabs?: CodeTab[];
-  code?: string;
-  lang?: string;
-  label?: string;
-}) {
+  className,
+  spacing,
+}: CodeBlockProps) {
   const resolved: CodeTab[] = tabs ?? [
     { label: label || lang || "code", lang: lang ?? "", code: code ?? "" },
   ];
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
   const cur = resolved[active] ?? resolved[0]!;
+  const tabId = (i: number) => `code-tab-${i}`;
 
   const copy = () => {
     navigator.clipboard?.writeText(cur.code);
@@ -131,35 +169,51 @@ export function CodeBlock({
   };
 
   return (
-    <div className="my-[18px] overflow-hidden rounded-card border border-line bg-code-bg">
-      <div className="flex items-center gap-1 border-b border-white/[0.07] px-3.5 pt-2">
+    <div className={cn(codeBlockVariants({ spacing }), className)}>
+      <div
+        role="tablist"
+        aria-label="Code example"
+        className="flex min-w-0 items-center gap-1 overflow-x-auto border-b border-white/[0.07] px-3.5 pt-2"
+      >
         {resolved.map((t, i) => (
           <button
-            key={i}
+            key={t.label}
+            type="button"
+            role="tab"
+            id={tabId(i)}
+            aria-selected={i === active}
+            aria-controls={`${tabId(i)}-panel`}
+            data-state={i === active ? "active" : "inactive"}
             onClick={() => setActive(i)}
-            className={`relative -bottom-px rounded-t-[7px] border-b-2 px-2.5 py-1.5 text-[12.5px] transition-colors ${
-              i === active
-                ? "border-accent text-[#f0f1f4]"
-                : "border-transparent text-[#7d8089] hover:text-[#c9ccd3]"
-            }`}
+            className={tabVariants({ state: i === active ? "active" : "inactive" })}
           >
             {t.label}
           </button>
         ))}
         <button
+          type="button"
           onClick={copy}
           aria-label="Copy code"
-          className="ml-auto rounded-md p-1.5 text-[#7d8089] transition-colors hover:bg-white/[0.06] hover:text-[#f0f1f4]"
+          className="ml-auto min-h-11 min-w-11 shrink-0 rounded-md p-2 text-[#7d8089] transition-colors hover:bg-white/[0.06] hover:text-[#f0f1f4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           {copied ? <CheckIcon /> : <CopyIcon />}
         </button>
       </div>
-      <pre className="m-0 overflow-x-auto p-[18px]">
-        <code
-          className="font-mono text-[13px] leading-[1.7] text-code-fg"
-          dangerouslySetInnerHTML={{ __html: highlight(cur.code.trim(), cur.lang) }}
-        />
-      </pre>
+      {resolved.map((t, i) => (
+        <pre
+          key={t.label}
+          id={`${tabId(i)}-panel`}
+          role="tabpanel"
+          aria-labelledby={tabId(i)}
+          hidden={i !== active}
+          className="code-panel-body m-0 font-mono whitespace-pre text-code-fg"
+        >
+          <code
+            className="block max-w-full min-w-0 @md/code:text-[13px]"
+            dangerouslySetInnerHTML={{ __html: highlight(t.code.trim(), t.lang) }}
+          />
+        </pre>
+      ))}
     </div>
   );
 }
