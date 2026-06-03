@@ -66,51 +66,45 @@ export const NAV: NavGroup[] = [
       { label: "Styling", route: "styling" },
     ],
   },
-  {
-    title: "Reference",
-    items: [
-      { label: "Calendar API", route: "calendar/api" },
-      { label: "Date Picker API", route: "date-picker/api" },
-      { label: "Date Range API", route: "date-range-picker/api" },
-      { label: "Date Field API", route: "date-field/api" },
-    ],
-  },
 ];
 
 export const COMPONENTS: Record<string, ComponentMeta> = {
   calendar: {
     name: "Calendar",
     eyebrow: "Primitive",
-    desc: "A composable month grid built on the WAI-ARIA grid pattern, with full keyboard navigation and roving focus.",
+    desc: "A composable month grid built on the WAI-ARIA grid pattern (via DatePicker.Root + calendar parts), with full keyboard navigation and roving focus. Use inside DatePicker.Root (even for standalone use).",
     demo: "calendar",
     parts: [
       {
-        tag: "Calendar.Root",
+        tag: "DatePicker.Root",
+        note: "state owner (mode, locale, value etc.)",
         children: [
           {
-            tag: "Calendar.Header",
+            tag: "DatePicker.ViewControl",
             children: [
-              { tag: "Calendar.PrevTrigger", leaf: true },
-              { tag: "Calendar.Heading", leaf: true },
-              { tag: "Calendar.NextTrigger", leaf: true },
+              { tag: "DatePicker.PrevTrigger", leaf: true },
+              { tag: "DatePicker.ViewTrigger", leaf: true },
+              { tag: "DatePicker.NextTrigger", leaf: true },
             ],
           },
           {
-            tag: "Calendar.Grid",
+            tag: "DatePicker.View view=\"day\"",
             children: [
-              { tag: "Calendar.GridHead", leaf: true, note: "row of weekday labels" },
               {
-                tag: "Calendar.GridBody",
+                tag: "DatePicker.Grid",
+                note: "table[role=grid]",
                 children: [
+                  { tag: "DatePicker.WeekDays", leaf: true },
                   {
-                    tag: "Calendar.Cell",
-                    note: "role=gridcell · one per day",
-                    children: [{ tag: "Calendar.CellTrigger", leaf: true }],
+                    tag: "DatePicker.Day (render prop)",
+                    note: "the cell (td[role=gridcell] with data-*); use children for custom content",
                   },
                 ],
               },
             ],
           },
+          { tag: "DatePicker.View view=\"month\"", note: "MonthGrid + MonthCell" },
+          { tag: "DatePicker.View view=\"year\"", note: "YearGrid + YearCell" },
         ],
       },
     ],
@@ -118,28 +112,20 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-picker": {
     name: "Date Picker",
     eyebrow: "Primitive",
-    desc: "An input paired with a popover calendar for selecting a single date. Renders only semantic HTML — you control every pixel.",
+    desc: "An input (segmented) paired with a popover calendar. Use DatePicker.Root + Input + Trigger + Content (positioning & state built-in). Zero CSS shipped.",
     demo: "date-picker",
     parts: [
       {
-        tag: "DatePicker.Root",
+        tag: "DatePicker.Root (mode=\"single\")",
         children: [
           { tag: "DatePicker.Label", leaf: true },
+          { tag: "DatePicker.Input", note: "the segmented field (timescape)" },
+          { tag: "DatePicker.Trigger", leaf: true },
           {
-            tag: "DatePicker.Control",
+            tag: "DatePicker.Content",
+            note: "popover (floating + focus trap + portal)",
             children: [
-              { tag: "DatePicker.Input", leaf: true },
-              { tag: "DatePicker.Trigger", leaf: true },
-            ],
-          },
-          {
-            tag: "DatePicker.Positioner",
-            children: [
-              {
-                tag: "DatePicker.Content",
-                note: "the popover",
-                children: [{ tag: "Calendar.Root", leaf: true, note: "nested calendar parts" }],
-              },
+              { tag: "DatePicker.Calendar", note: "shorthand, or manual ViewControl + Grid + Day etc." },
             ],
           },
         ],
@@ -149,31 +135,21 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-range-picker": {
     name: "Date Range Picker",
     eyebrow: "Primitive",
-    desc: "Select a start and end date with live range preview, optional presets, and dual-segment input.",
+    desc: "Select a start and end date with live range preview and dual-segment input (mode=\"range\" on the same Root). Presets are custom UI you compose.",
     demo: "date-range-picker",
     parts: [
       {
-        tag: "RangePicker.Root",
+        tag: "DatePicker.Root mode=\"range\"",
         children: [
-          { tag: "RangePicker.Label", leaf: true },
+          { tag: "DatePicker.Label", leaf: true },
+          { tag: "DatePicker.Input index={0}", note: "start segment" },
+          { tag: "DatePicker.Input index={1}", note: "end segment" },
+          { tag: "DatePicker.Trigger", leaf: true },
           {
-            tag: "RangePicker.Control",
+            tag: "DatePicker.Content",
+            note: "popover",
             children: [
-              { tag: "RangePicker.Input", note: "index={0} start", leaf: true },
-              { tag: "RangePicker.Input", note: "index={1} end", leaf: true },
-              { tag: "RangePicker.Trigger", leaf: true },
-            ],
-          },
-          {
-            tag: "RangePicker.Positioner",
-            children: [
-              {
-                tag: "RangePicker.Content",
-                children: [
-                  { tag: "Calendar.Root", leaf: true, note: "range mode" },
-                  { tag: "RangePicker.Presets", leaf: true },
-                ],
-              },
+              { tag: "DatePicker.Calendar", note: "range preview via hover + data-in-range etc." },
             ],
           },
         ],
@@ -183,21 +159,14 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-field": {
     name: "Date Field",
     eyebrow: "Primitive",
-    desc: "A segmented text input where each part (day, month, year) is independently editable and locale-aware — no calendar required.",
+    desc: "A segmented text input (powered by DatePicker.Input inside a minimal Root). Locale-aware order/separators via Intl. No calendar required — just omit Content/Trigger.",
     demo: "date-field",
     parts: [
       {
-        tag: "DateField.Root",
+        tag: "DatePicker.Root",
         children: [
-          { tag: "DateField.Label", leaf: true },
-          {
-            tag: "DateField.Control",
-            note: "role=group",
-            children: [
-              { tag: "DateField.Segment", note: "role=spinbutton · repeats per part", leaf: true },
-              { tag: "DateField.Literal", note: "separators from Intl", leaf: true },
-            ],
-          },
+          { tag: "DatePicker.Label", leaf: true },
+          { tag: "DatePicker.Input", note: "segmented spinbuttons (data-segment, role=spinbutton)" },
         ],
       },
     ],
@@ -212,65 +181,42 @@ export const API: Record<string, ApiGroup[]> = {
       ...rootGroup,
       props: [
         {
-          name: "value",
-          type: "Date | null",
-          def: "null",
-          desc: "The selected date in controlled mode.",
-        },
-        {
-          name: "defaultValue",
-          type: "Date | null",
-          def: "null",
-          desc: "The initial selected date in uncontrolled mode.",
-        },
-        {
-          name: "onValueChange",
-          type: "(date: Date) => void",
-          desc: "Called when the user selects a date.",
+          name: "value / defaultValue / onValueChange",
+          type: "Date | null (single) or DateRange / Date[] (range/multiple)",
+          desc: "Controlled/uncontrolled value. Use on the Root (mode controls shape).",
         },
         {
           name: "locale",
           type: "string",
-          def: '"en-US"',
-          desc: "Any BCP 47 tag. Drives weekday/month labels and week start.",
+          def: '"en-US" or navigator.language',
+          desc: "BCP 47 tag. Drives segment order, separators, weekday/month names, and week start.",
         },
         {
           name: "weekStartsOn",
           type: "0 – 6",
-          def: "derived from locale",
-          desc: "Override the first day of the week (0 = Sunday).",
+          def: "derived from locale via Intl",
+          desc: "Override first day of week.",
         },
-        { name: "min", type: "Date", desc: "Earliest selectable date. Earlier days are disabled." },
-        { name: "max", type: "Date", desc: "Latest selectable date." },
+        { name: "minDate / maxDate", type: "Date", desc: "Clamp the selectable range." },
         {
-          name: "isDateUnavailable",
-          type: "(date: Date) => boolean",
-          desc: "Return true to disable an individual date.",
+          name: "disabled",
+          type: "boolean | (date: Date) => boolean",
+          desc: "Disable specific dates or the whole picker.",
         },
-        {
-          name: "numberOfMonths",
-          type: "number",
-          def: "1",
-          desc: "Render multiple month panels side by side.",
-        },
+        { name: "readOnly", type: "boolean", desc: "Prevent edits via segments or grid." },
+        { name: "mode", type: '"single" | "range" | "multiple"', def: '"single"', desc: "Selection mode (affects value shape and Input index usage)." },
       ],
     },
     {
-      group: "Data attributes",
+      group: "Data attributes (on Day / gridcell)",
       attrs: true,
       props: [
-        { name: "[data-selected]", type: "CellTrigger", desc: "Present on the selected day." },
-        { name: "[data-today]", type: "CellTrigger", desc: "Present on the current date." },
-        {
-          name: "[data-outside-range]",
-          type: "CellTrigger",
-          desc: "Day belongs to an adjacent month.",
-        },
-        {
-          name: "[data-disabled]",
-          type: "CellTrigger",
-          desc: "Day is unavailable or out of min/max.",
-        },
+        { name: "[data-selected]", desc: "Selected day(s)." },
+        { name: "[data-today]", desc: "Current date." },
+        { name: "[data-outside-month]", desc: "Day belongs to adjacent month." },
+        { name: "[data-disabled]", desc: "Unavailable (min/max or disabled fn)." },
+        { name: "[data-in-range]", desc: "Inside current range selection (range mode)." },
+        { name: "[data-range-start] / [data-range-end]", desc: "Endpoints of range." },
       ],
     },
   ],
@@ -278,58 +224,23 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value", type: "Date | null", def: "null", desc: "Selected date (controlled)." },
-        {
-          name: "defaultValue",
-          type: "Date | null",
-          def: "null",
-          desc: "Initial date (uncontrolled).",
-        },
-        {
-          name: "onValueChange",
-          type: "(date: Date | null) => void",
-          desc: "Fires on selection or input parse.",
-        },
-        { name: "open", type: "boolean", desc: "Controls popover visibility." },
-        {
-          name: "onOpenChange",
-          type: "(open: boolean) => void",
-          desc: "Called when the popover opens or closes.",
-        },
-        {
-          name: "locale",
-          type: "string",
-          def: '"en-US"',
-          desc: "Locale tag for parsing, segments and labels.",
-        },
-        {
-          name: "format",
-          type: "Intl.DateTimeFormatOptions",
-          desc: "Override how the input renders the value.",
-        },
-        {
-          name: "closeOnSelect",
-          type: "boolean",
-          def: "true",
-          desc: "Close the popover after a date is chosen.",
-        },
-        {
-          name: "placement",
-          type: '"bottom-start" | "bottom-end" | …',
-          def: '"bottom-start"',
-          desc: "Popover placement relative to the control.",
-        },
+        { name: "value / defaultValue / onValueChange", type: "Date | null (single) etc.", desc: "Controlled value. Shape depends on mode." },
+        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Popover control (also auto via trigger/input)." },
+        { name: "locale", type: "string", def: '"en-US"', desc: "Drives segments order, separators, labels, week start." },
+        { name: "closeOnSelect", type: "boolean", def: "true for single", desc: "Auto-close after pick (false for range)." },
+        { name: "minDate / maxDate / disabled / readOnly", desc: "Standard constraints." },
+        { name: "mode", type: '"single" | "range" | "multiple"', desc: "Affects Input (index) and behavior." },
       ],
     },
     {
       group: "Keyboard",
       keys: true,
       props: [
-        { name: "Space / Enter", desc: "Open the popover · select the focused day." },
-        { name: "Arrow keys", desc: "Move focus by day (←→) or week (↑↓) within the grid." },
-        { name: "PageUp / PageDown", desc: "Previous / next month. Hold Shift for a year." },
-        { name: "Home / End", desc: "First / last day of the focused week." },
-        { name: "Escape", desc: "Close the popover and return focus to the trigger." },
+        { name: "Digits in segments", desc: "Type; auto-advance when full." },
+        { name: "Arrow ↑/↓ in segment", desc: "Inc/dec focused segment." },
+        { name: "Arrows in grid", desc: "Move focus by day/week." },
+        { name: "PageUp/Down, Home/End", desc: "Month/year nav in grid." },
+        { name: "Escape", desc: "Close popover, return focus to trigger." },
       ],
     },
   ],
@@ -337,30 +248,9 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value", type: "[Date, Date] | null", desc: "Selected range (controlled)." },
-        {
-          name: "defaultValue",
-          type: "[Date, Date] | null",
-          desc: "Initial range (uncontrolled).",
-        },
-        {
-          name: "onValueChange",
-          type: "(range) => void",
-          desc: "Fires once both endpoints are set.",
-        },
-        {
-          name: "minNights",
-          type: "number",
-          def: "0",
-          desc: "Minimum nights enforced between endpoints.",
-        },
-        { name: "maxNights", type: "number", desc: "Maximum selectable span." },
-        {
-          name: "presets",
-          type: "Preset[]",
-          desc: "Quick-select shortcuts rendered in the footer.",
-        },
-        { name: "locale", type: "string", def: '"en-US"', desc: "Locale tag." },
+        { name: "value / defaultValue / onValueChange", type: "DateRange {start,end}", desc: "Controlled range (mode=\"range\" on Root)." },
+        { name: "locale / minDate / maxDate / disabled / readOnly", desc: "Same as single + range preview on hover." },
+        { name: "closeOnSelect", type: "boolean", def: "false for range", desc: "Keep open until both ends chosen." },
       ],
     },
   ],
@@ -368,37 +258,20 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value", type: "Date | null", desc: "Parsed value (controlled)." },
-        { name: "defaultValue", type: "Date | null", desc: "Initial value (uncontrolled)." },
-        {
-          name: "onValueChange",
-          type: "(date: Date | null) => void",
-          desc: "Fires when all segments are complete.",
-        },
-        {
-          name: "locale",
-          type: "string",
-          def: '"en-US"',
-          desc: "Determines segment order and separators.",
-        },
-        {
-          name: "granularity",
-          type: '"day" | "month" | "year"',
-          def: '"day"',
-          desc: "Smallest editable segment.",
-        },
-        { name: "min", type: "Date", desc: "Clamp segment values to this lower bound." },
-        { name: "max", type: "Date", desc: "Clamp segment values to this upper bound." },
+        { name: "value / defaultValue / onValueChange", type: "Date | null", desc: "Use on Root; Input commits when segments are valid." },
+        { name: "locale", type: "string", desc: "Order + separator from Intl (e.g. en-GB = DD/MM/YYYY)." },
+        { name: "minDate / maxDate / disabled / readOnly", desc: "Constraints flow to the segments." },
       ],
     },
     {
-      group: "Keyboard",
+      group: "Keyboard (on segments)",
       keys: true,
       props: [
-        { name: "0–9", desc: "Type into the focused segment; auto-advances when full." },
-        { name: "Arrow ↑ / ↓", desc: "Increment / decrement the focused segment." },
-        { name: "Arrow ← / →", desc: "Move between segments." },
-        { name: "Backspace", desc: "Clear the focused segment." },
+        { name: "0–9", desc: "Type; auto-advance on full segment." },
+        { name: "Arrow ↑ / ↓", desc: "Inc/dec the focused segment (wraps)." },
+        { name: "Arrow ← / → / Tab", desc: "Move between segments." },
+        { name: "Backspace", desc: "Clear focused segment." },
+        { name: "Escape", desc: "If popover open, closes it." },
       ],
     },
   ],
@@ -408,7 +281,7 @@ export type SearchEntry = {
   title: string;
   route: string;
   crumb: string;
-  kind: "page" | "comp" | "api";
+  kind: "page" | "comp";
 };
 
 export const SEARCH: SearchEntry[] = [
@@ -422,10 +295,6 @@ export const SEARCH: SearchEntry[] = [
   { title: "Localization", route: "localization", crumb: "Guides", kind: "page" },
   { title: "Accessibility", route: "accessibility", crumb: "Guides", kind: "page" },
   { title: "Styling", route: "styling", crumb: "Guides", kind: "page" },
-  { title: "Calendar API", route: "calendar/api", crumb: "Reference", kind: "api" },
-  { title: "Date Picker API", route: "date-picker/api", crumb: "Reference", kind: "api" },
-  { title: "Date Range API", route: "date-range-picker/api", crumb: "Reference", kind: "api" },
-  { title: "Date Field API", route: "date-field/api", crumb: "Reference", kind: "api" },
   { title: "Changelog", route: "changelog", crumb: "Get Started", kind: "page" },
 ];
 
