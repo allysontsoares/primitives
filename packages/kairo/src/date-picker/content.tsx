@@ -70,10 +70,24 @@ export function Content({
   useLayoutEffect(() => {
     if (!isOpen) return;
 
-    const resolveAnchor = () =>
-      document.getElementById(ids.input) ||
-      document.getElementById(`${ids.input}-0`) ||
-      document.getElementById(ids.trigger);
+    const resolveAnchor = (): HTMLElement | null => {
+      const input =
+        document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`);
+      const trigger = document.getElementById(ids.trigger);
+
+      // When input and trigger share a row wrapper, anchor to the full control
+      // so the popover centers under input + trigger (not only the input).
+      if (input && trigger) {
+        const row = input.parentElement;
+        if (row && row === trigger.parentElement) return row;
+      }
+
+      return (
+        input ??
+        document.getElementById(`${ids.input}-1`) ??
+        trigger
+      );
+    };
 
     let current = resolveAnchor();
     setReference(current);

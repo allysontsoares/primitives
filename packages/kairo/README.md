@@ -39,17 +39,39 @@ function App() {
 
 ### Calendar
 
-Standalone month grid with keyboard navigation.
+Standalone month grid (composed via DatePicker.Root + calendar parts for full control, or the shorthand).
 
 ```tsx
-import { Calendar } from "@at5/kairo";
+import { DatePicker } from "@at5/kairo";
 
-<Calendar.Root locale="en-US" onValueChange={(date) => console.log(date)} />;
+<DatePicker.Root locale="en-US" onValueChange={(date) => console.log(date)}>
+  <DatePicker.ViewControl>
+    <DatePicker.PrevTrigger />
+    <DatePicker.ViewTrigger />
+    <DatePicker.NextTrigger />
+  </DatePicker.ViewControl>
+  <DatePicker.View view="day">
+    <DatePicker.Grid header={<DatePicker.WeekDays />}>
+      {({ weeks }) => weeks.map((week, i) => (
+        <tr key={i}>
+          {week.map((d, j) => <DatePicker.Day key={j} date={d} />)}
+        </tr>
+      ))}
+    </DatePicker.Grid>
+  </DatePicker.View>
+</DatePicker.Root>
+
+// Or shorthand inside a Root:
+<DatePicker.Root>
+  <DatePicker.Calendar />
+</DatePicker.Root>
 ```
 
-**Props:** `value`, `defaultValue`, `onValueChange`, `locale`, `weekStartsOn`, `min`, `max`, `isDateUnavailable`, `numberOfMonths`
+**Props on Root:** `value`, `defaultValue`, `onValueChange`, `locale`, `weekStartsOn`, `minDate`, `maxDate`, `disabled`, `mode`
 
-**Data attributes:** `[data-selected]`, `[data-today]`, `[data-outside-range]`, `[data-disabled]`
+**Data attributes (on Day):** `[data-selected]`, `[data-today]`, `[data-outside-month]`, `[data-disabled]`, `[data-in-range]`, `[data-range-start]`, `[data-range-end]`
+
+For the dedicated "Date Field" experience use a minimal Root + Input only.
 
 ---
 

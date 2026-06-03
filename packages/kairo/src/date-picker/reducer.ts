@@ -35,6 +35,7 @@ export type DatePickerAction =
   | { type: "EXTEND_RANGE"; date: Date }
   | { type: "TOGGLE_DATE"; date: Date }
   | { type: "HOVER_DATE"; date: Date | null }
+  | { type: "SET_RANGE"; start: Date | null; end: Date | null }
   | { type: "SET_INPUT"; value: string }
   | { type: "COMMIT_INPUT" }
   | { type: "SELECT_MONTH"; month: number }
@@ -208,6 +209,26 @@ export function datePickerReducer(
         ...state,
         hoverDate: action.date ? startOfDay(action.date) : null,
       };
+
+    case "SET_RANGE": {
+      const start = action.start ? startOfDay(action.start) : null;
+      const end = action.end ? startOfDay(action.end) : null;
+      const anchor = end ?? start;
+      return {
+        ...state,
+        rangeStart: start,
+        rangeEnd: end,
+        hoverDate: null,
+        ...(anchor
+          ? {
+              focusedDate: anchor,
+              focusedMonth: anchor.getMonth(),
+              focusedYear: anchor.getFullYear(),
+              yearPageStart: yearPageStart(anchor.getFullYear()),
+            }
+          : {}),
+      };
+    }
 
     case "SET_INPUT":
       return { ...state, inputValue: action.value };

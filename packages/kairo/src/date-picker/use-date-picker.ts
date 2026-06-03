@@ -27,11 +27,21 @@ function resolveConfig(props: DatePickerRootProps): DatePickerConfig {
 
 function resolveInitialValue(props: DatePickerRootProps) {
   if (!props.mode || props.mode === "single") {
-    const v = "defaultValue" in props ? props.defaultValue : undefined;
+    const v =
+      "value" in props && props.value !== undefined
+        ? props.value
+        : "defaultValue" in props
+          ? props.defaultValue
+          : undefined;
     return { selectedDate: v ?? null };
   }
   if (props.mode === "range") {
-    const v = "defaultValue" in props ? props.defaultValue : undefined;
+    const v =
+      "value" in props && props.value !== undefined
+        ? props.value
+        : "defaultValue" in props
+          ? props.defaultValue
+          : undefined;
     return { rangeStart: v?.start ?? null, rangeEnd: v?.end ?? null };
   }
   if (props.mode === "multiple") {
@@ -97,20 +107,53 @@ export function useDatePicker(props: DatePickerRootProps) {
     }
   }, [state.selectedDate]);
 
-  const prevRangeRef = useRef<{ start: Date | null; end: Date | null } | undefined>(undefined);
+  // Sync controlled range value into reducer state (props → state only; never react to
+  // internal state changes or stale parent value would overwrite in-flight updates).
+  const controlledRangeValue =
+    props.mode === "range" && "value" in props && props.value !== undefined
+      ? props.value
+      : undefined;
+  const lastSyncedPropRangeRef = useRef<{ startT: number | null; endT: number | null } | null>(
+    null,
+  );
+  const propRangeStartT = controlledRangeValue?.start?.getTime() ?? null;
+  const propRangeEndT = controlledRangeValue?.end?.getTime() ?? null;
+
+  useEffect(() => {
+    if (controlledRangeValue === undefined) return;
+
+    const last = lastSyncedPropRangeRef.current;
+    if (last?.startT === propRangeStartT && last?.endT === propRangeEndT) return;
+
+    lastSyncedPropRangeRef.current = { startT: propRangeStartT, endT: propRangeEndT };
+
+    const stateStartT = state.rangeStart?.getTime() ?? null;
+    const stateEndT = state.rangeEnd?.getTime() ?? null;
+    if (propRangeStartT === stateStartT && propRangeEndT === stateEndT) return;
+
+    dispatch({
+      type: "SET_RANGE",
+      start: controlledRangeValue.start ?? null,
+      end: controlledRangeValue.end ?? null,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only sync when the controlled prop changes
+  }, [propRangeStartT, propRangeEndT, dispatch]);
+
+  const prevRangeRef = useRef<{ startT: number | null; endT: number | null } | undefined>(
+    undefined,
+  );
   useEffect(() => {
     if (props.mode !== "range") return;
     const p = props as { onValueChange?: (r: { start: Date | null; end: Date | null }) => void };
+    const startT = state.rangeStart?.getTime() ?? null;
+    const endT = state.rangeEnd?.getTime() ?? null;
     if (prevRangeRef.current === undefined) {
-      prevRangeRef.current = { start: state.rangeStart, end: state.rangeEnd };
+      prevRangeRef.current = { startT, endT };
       return;
     }
-    if (
-      state.rangeStart !== prevRangeRef.current.start ||
-      state.rangeEnd !== prevRangeRef.current.end
-    ) {
+    if (startT !== prevRangeRef.current.startT || endT !== prevRangeRef.current.endT) {
       p.onValueChange?.({ start: state.rangeStart, end: state.rangeEnd });
-      prevRangeRef.current = { start: state.rangeStart, end: state.rangeEnd };
+      prevRangeRef.current = { startT, endT };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- props is a new object each render; mode/onValueChange accessed via closure intentionally
   }, [state.rangeStart, state.rangeEnd]);
