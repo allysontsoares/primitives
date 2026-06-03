@@ -3,16 +3,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
-  D,
   DateField,
   DatePicker,
   DateRangePicker,
   InlineCalendar,
-} from "../kairo/primitives";
+} from "./demos";
 
 const CheckIcon = () => (
   <span
-    className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent-soft text-accent"
+    className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-500/10 text-orange-500"
     aria-hidden
   >
     <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +36,7 @@ function HighlightDemoFrame({ children }: { children: ReactNode }) {
 function HighlightCalendar() {
   return (
     <HighlightDemoFrame>
-      <InlineCalendar size="compact" defaultValue={D.today()} />
+      <InlineCalendar size="compact" defaultValue={new Date()} />
     </HighlightDemoFrame>
   );
 }
@@ -61,9 +60,7 @@ function HighlightRangePicker() {
 function HighlightDateField() {
   return (
     <HighlightDemoFrame>
-      <div className="w-full max-w-[240px]">
-        <DateField label="Birth date" />
-      </div>
+      <DateField label="Birth date" />
     </HighlightDemoFrame>
   );
 }
@@ -142,41 +139,41 @@ export function HomeHighlights() {
     <section className="mt-14 sm:mt-16" aria-labelledby="home-highlights-title">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="landing-eyebrow mb-1">Primitives</p>
+          <p className="mb-1 text-[13px] font-semibold tracking-wide text-orange-500">Primitives</p>
           <h2
             id="home-highlights-title"
-            className="text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink"
+            className="text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100"
           >
             See what ships in the box
           </h2>
         </div>
         <Link
           href="/calendar"
-          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-ink transition-colors hover:text-accent"
+          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-orange-500"
         >
           View all docs
           <span aria-hidden>→</span>
         </Link>
       </div>
 
-      <div className="home-highlights-track -mx-5 px-5 sm:-mx-0 sm:px-0">
-        <div className="home-highlights-scroll flex gap-4 pb-2">
+      <div className="relative -mx-5 px-5 sm:-mx-0 sm:px-0">
+        <div className="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
           {HIGHLIGHTS.map((h) => (
             <article
               key={h.slug}
-              className="home-highlight-card isolate flex w-[min(100%,320px)] shrink-0 flex-col sm:w-[280px]"
+              className="isolate flex w-[min(100%,320px)] shrink-0 snap-start flex-col transition-transform duration-200 ease-[var(--ease-smooth)] hover:-translate-y-0.5 motion-reduce:transition-none sm:w-[280px]"
             >
-              <div className="overflow-hidden rounded-t-card border border-b-0 border-line bg-subtle">
+              <div className="overflow-hidden rounded-t-xl border border-b-0 border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800">
                 {h.demo}
               </div>
-              <div className="flex flex-1 flex-col rounded-b-card border border-line bg-card p-5">
-                <h3 className="mb-1 text-[17px] font-[650] tracking-[-0.01em] text-ink">
+              <div className="flex flex-1 flex-col rounded-b-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-5">
+                <h3 className="mb-1 text-[17px] font-[650] tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
                   {h.title}
                 </h3>
-                <p className="mb-4 flex-1 text-[13.5px] leading-normal text-muted">{h.desc}</p>
+                <p className="mb-4 flex-1 text-[13.5px] leading-normal text-zinc-500 dark:text-zinc-400">{h.desc}</p>
                 <Link
                   href={`/${h.slug}`}
-                  className="text-[13px] font-semibold text-ink transition-colors hover:text-accent"
+                  className="text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-orange-500"
                 >
                   Documentation →
                 </Link>
@@ -191,19 +188,19 @@ export function HomeHighlights() {
 
 export function HomeQualities() {
   return (
-    <section className="landing-qualities relative mt-20 overflow-hidden sm:mt-24" aria-labelledby="home-qualities-title">
+    <section className="relative mt-20 overflow-hidden sm:mt-24" aria-labelledby="home-qualities-title">
       <div className="relative z-[1]">
-        <p className="landing-eyebrow mb-1">Accessible by default</p>
+        <p className="mb-1 text-[13px] font-semibold tracking-wide text-orange-500">Accessible by default</p>
         <h2
           id="home-qualities-title"
-          className="mb-3 max-w-[20ch] text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink text-balance"
+          className="mb-3 max-w-[20ch] text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100 text-balance"
         >
           Built for real scheduling UI
         </h2>
-        <p className="mb-10 max-w-[52ch] text-[15px] leading-relaxed text-ink2">
+        <p className="mb-10 max-w-[52ch] text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
           Date components are easy to get wrong. Kairo handles semantics, keyboard support, and
           locale rules so your team can focus on visual design.{" "}
-          <Link href="/accessibility" className="font-semibold text-ink underline-offset-2 hover:underline">
+          <Link href="/accessibility" className="font-semibold text-zinc-900 dark:text-zinc-100 underline-offset-2 hover:underline">
             Accessibility guide →
           </Link>
         </p>
@@ -212,8 +209,8 @@ export function HomeQualities() {
             <li key={q.title} className="flex gap-3">
               <CheckIcon />
               <div className="min-w-0">
-                <h3 className="mb-1 text-[15px] font-[650] text-ink">{q.title}</h3>
-                <p className="text-[14px] leading-relaxed text-muted">{q.desc}</p>
+                <h3 className="mb-1 text-[15px] font-[650] text-zinc-900 dark:text-zinc-100">{q.title}</h3>
+                <p className="text-[14px] leading-relaxed text-zinc-500 dark:text-zinc-400">{q.desc}</p>
               </div>
             </li>
           ))}
@@ -236,18 +233,18 @@ export function HomeWhySection() {
   ];
   return (
     <section className="mt-20 sm:mt-24" aria-labelledby="home-why-title">
-      <p className="landing-eyebrow mb-1">Why Kairo</p>
+      <p className="mb-1 text-[13px] font-semibold tracking-wide text-orange-500">Why Kairo</p>
       <h2
         id="home-why-title"
-        className="mb-8 max-w-[22ch] text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink text-balance"
+        className="mb-8 max-w-[22ch] text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100 text-balance"
       >
         Spend less time on undifferentiated date logic
       </h2>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
         {items.map((item) => (
           <div key={item.title}>
-            <h3 className="mb-2 text-[17px] font-[650] text-ink">{item.title}</h3>
-            <p className="text-[15px] leading-relaxed text-ink2">{item.body}</p>
+            <h3 className="mb-2 text-[17px] font-[650] text-zinc-900 dark:text-zinc-100">{item.title}</h3>
+            <p className="text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">{item.body}</p>
           </div>
         ))}
       </div>
@@ -258,26 +255,26 @@ export function HomeWhySection() {
 export function HomeCtaBand() {
   return (
     <section
-      className="landing-cta mt-20 rounded-lg2 border border-line bg-card p-8 sm:mt-24 sm:p-10"
+      className="mt-20 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-8 sm:mt-24 sm:p-10"
       aria-labelledby="home-cta-title"
     >
-      <h2 id="home-cta-title" className="mb-2 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-ink">
+      <h2 id="home-cta-title" className="mb-2 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100">
         Ready to adopt?
       </h2>
-      <p className="mb-6 max-w-[48ch] text-[15px] leading-relaxed text-ink2">
+      <p className="mb-6 max-w-[48ch] text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
         Install from npm, follow the quick start, then browse per-primitive examples and API
         reference.
       </p>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link
           href="/installation"
-          className="inline-flex min-h-11 items-center justify-center rounded-[11px] bg-ink px-5 text-sm font-semibold text-bg transition-opacity hover:opacity-90"
+          className="inline-flex min-h-11 items-center justify-center rounded-[11px] bg-zinc-900 dark:bg-zinc-100 px-5 text-sm font-semibold text-white dark:text-zinc-900 transition-opacity hover:opacity-90"
         >
           Installation
         </Link>
         <Link
           href="/date-picker"
-          className="inline-flex min-h-11 items-center justify-center rounded-[11px] border border-line-strong px-5 text-sm font-semibold text-ink transition-colors hover:bg-hover"
+          className="inline-flex min-h-11 items-center justify-center rounded-[11px] border border-zinc-200 dark:border-zinc-800 px-5 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           Browse primitives
         </Link>

@@ -1,229 +1,59 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
 
-/* ============================================================
-   Kairo Docs — xAI-inspired design tokens
-   Tailwind v4 CSS-first config. Raw tokens live on :root /
-   [data-theme] so they switch at runtime; @theme maps them to
-   Tailwind color/utility names (bg-surface, text-accent, …).
-   Fonts: Geist Sans + Geist Mono (wired via next/font in layout).
-   ============================================================ */
-
+/* Docs layout + typography (used via arbitrary values in components/docs) */
 @theme {
   --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
-
-  /* semantic colors → resolve to runtime tokens */
-  --color-bg: var(--bg);
-  --color-subtle: var(--bg-subtle);
-  --color-card: var(--card);
-  --color-card2: var(--card-2);
-  --color-line: var(--border);
-  --color-line-strong: var(--border-strong);
-  --color-ink: var(--text);
-  --color-ink2: var(--text-2);
-  --color-muted: var(--text-muted);
-  --color-faint: var(--text-faint);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-accent-line: var(--accent-line);
-  --color-on-accent: var(--on-accent);
-  --color-hover: var(--hover);
-  --color-hover-strong: var(--hover-strong);
-  --color-code-bg: var(--code-bg);
-  --color-code-fg: var(--code-fg);
-
-  --radius-card: 12px;
-  --radius-lg2: 18px;
-
-  --shadow-pop: var(--shadow-pop-val);
-
-  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
-
-  /* fluid type for hero / page titles */
   --text-hero: clamp(2.125rem, 1.4rem + 3vw, 2.875rem);
   --text-page: clamp(2rem, 1.4rem + 2.6vw, 2.75rem);
   --text-section: clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem);
-}
-
-/* layout sizing tokens (not colors) */
-:root {
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-pop: kairo-pop 0.16s var(--ease-smooth);
+  --animate-fade: kairo-fade 0.12s ease;
   --sidebar-w: 264px;
-  --toc-w: 232px;
+  --toc-w: 248px;
   --topbar-h: 60px;
-
-  --accent: #ff5b29;
-  --accent-soft: rgba(255, 91, 41, 0.12);
-  --accent-line: rgba(255, 91, 41, 0.35);
 }
 
-/* ---------- Light (warm white) ---------- */
-:root,
-[data-theme="light"] {
-  --bg: #ffffff;
-  --bg-subtle: #f7f6f3;
-  --card: #f5f3f0;
-  --card-2: #efece7;
-  --code-bg: #0b0b0c;
-  --code-fg: #e9e9ec;
-  --border: rgba(20, 18, 15, 0.09);
-  --border-strong: rgba(20, 18, 15, 0.16);
-  --text: #1a1815;
-  --text-2: #4d4a45;
-  --text-muted: #86827b;
-  --text-faint: #aaa69e;
-  --on-accent: #ffffff;
-  --selection: rgba(255, 91, 41, 0.18);
-  --kbd-bg: #ffffff;
-  --hover: rgba(20, 18, 15, 0.045);
-  --hover-strong: rgba(20, 18, 15, 0.07);
-  --shadow-pop-val: 0 4px 12px rgba(0, 0, 0, 0.08), 0 18px 48px rgba(0, 0, 0, 0.14);
-  --syntax-key: #c678dd;
-  --syntax-str: #98c379;
-  --syntax-num: #d19a66;
-  --syntax-com: #6a6f7a;
-  --syntax-fn: #61afef;
-  --syntax-tag: #e06c75;
-  --syntax-punc: #abb2bf;
+/* Minimal vars for @/components/ui (radius scale, sonner, text-destructive) */
+:root {
+  --radius: 0.45rem;
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --border: oklch(0.922 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
 }
 
-/* ---------- Dark (near-black, xAI / Grok) ---------- */
+.dark,
 [data-theme="dark"] {
-  --bg: #000000;
-  --bg-subtle: #0a0a0a;
-  --card: #111112;
-  --card-2: #18181a;
-  --code-bg: #0b0b0c;
-  --code-fg: #e9e9ec;
-  --border: rgba(255, 255, 255, 0.09);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --text: #f4f3f1;
-  --text-2: #c4c2bd;
-  --text-muted: #8a8782;
-  --text-faint: #5e5c58;
-  --on-accent: #ffffff;
-  --selection: rgba(255, 91, 41, 0.26);
-  --kbd-bg: #18181a;
-  --hover: rgba(255, 255, 255, 0.05);
-  --hover-strong: rgba(255, 255, 255, 0.09);
-  --shadow-pop-val: 0 4px 12px rgba(0, 0, 0, 0.5), 0 18px 48px rgba(0, 0, 0, 0.7);
-  --syntax-key: #c678dd;
-  --syntax-str: #98c379;
-  --syntax-num: #d19a66;
-  --syntax-com: #6a6f7a;
-  --syntax-fn: #61afef;
-  --syntax-tag: #e06c75;
-  --syntax-punc: #9aa0ab;
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --destructive: oklch(0.704 0.191 22.216);
 }
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
-  html {
-    scroll-behavior: smooth;
-  }
-  body {
-    margin: 0;
-    font-family: var(--font-sans);
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-  ::selection {
-    background: var(--selection);
-  }
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* custom scrollbars */
-*::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
-}
-*::-webkit-scrollbar-thumb {
-  background: var(--border-strong);
-  border-radius: 99px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-*::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* ---- prose typography for rendered docs content ---- */
-.prose-docs :where(p) {
-  color: var(--text-2);
-  margin: 0 0 1rem;
-}
-.prose-docs :where(a) {
-  color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--border-strong);
-  cursor: pointer;
-}
-.prose-docs :where(a:hover) {
-  text-decoration-color: var(--accent);
-  color: var(--accent);
-}
-.prose-docs :where(ul) {
-  color: var(--text-2);
-  padding-left: 1.4rem;
-  margin: 0 0 1.1rem;
-}
-.prose-docs :where(li) {
-  margin-bottom: 0.5rem;
-}
-.prose-docs :where(li)::marker {
-  color: var(--text-faint);
-}
-.prose-docs :where(:not(pre) > code) {
-  font-family: var(--font-mono);
-  font-size: 0.86em;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 1.5px 5px;
-  border-radius: 5px;
-  white-space: nowrap;
-  font-weight: 500;
-}
-.prose-docs :where(strong) {
-  color: var(--text);
-  font-weight: 600;
-}
-
-/* ---- syntax highlight tokens ---- */
-.tok-key {
-  color: var(--syntax-key);
-}
-.tok-str {
-  color: var(--syntax-str);
-}
-.tok-num {
-  color: var(--syntax-num);
-}
-.tok-com {
-  color: var(--syntax-com);
-  font-style: italic;
-}
-.tok-fn {
-  color: var(--syntax-fn);
-}
-.tok-tag {
-  color: var(--syntax-tag);
-}
-.tok-punc {
-  color: var(--syntax-punc);
-}
-
-/* ---- keyframes for popovers / modals ---- */
 @keyframes kairo-pop {
   from {
     opacity: 0;
@@ -234,6 +64,7 @@
     transform: none;
   }
 }
+
 @keyframes kairo-fade {
   from {
     opacity: 0;
@@ -242,273 +73,46 @@
     opacity: 1;
   }
 }
-.animate-pop {
-  animation: kairo-pop 0.16s var(--ease-smooth);
-}
-.animate-fade {
-  animation: kairo-fade 0.12s ease;
-}
 
-/* ---- marketing landing (mobile-first) ---- */
-@layer components {
-  .landing-eyebrow {
-    width: max-content;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    color: var(--accent);
+@layer base {
+  * {
+    box-sizing: border-box;
   }
-
-  .landing-hero {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    border-radius: var(--radius-lg2);
-    border: 1px solid var(--border);
-    background: linear-gradient(
-      165deg,
-      color-mix(in srgb, var(--card) 88%, var(--accent) 12%) 0%,
-      var(--card) 42%,
-      color-mix(in srgb, var(--card) 94%, #000 6%) 100%
-    );
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, var(--accent) 18%, transparent),
-      0 24px 64px color-mix(in srgb, var(--accent) 8%, transparent);
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--topbar-h) + 1.25rem);
+    @apply font-sans;
   }
-
-  .landing-hero::before {
-    content: "";
-    position: absolute;
-    inset: -20% -10%;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse 110% 85% at 0% -15%, color-mix(in srgb, var(--accent) 38%, transparent), transparent 52%),
-      radial-gradient(ellipse 75% 65% at 100% 5%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 58%),
-      radial-gradient(ellipse 65% 55% at 78% 108%, color-mix(in srgb, #ff8f57 16%, transparent), transparent 50%),
-      radial-gradient(ellipse 45% 40% at 18% 92%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 48%);
-    opacity: 0.95;
+  body {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    @apply bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
   }
-
-  .landing-hero::after {
-    content: "";
-    position: absolute;
-    inset: -35% -25% -25%;
-    pointer-events: none;
-    background:
-      repeating-radial-gradient(
-        circle at 92% -8%,
-        transparent 0,
-        transparent 68px,
-        color-mix(in srgb, var(--accent) 9%, transparent) 69px,
-        transparent 70px
-      ),
-      linear-gradient(
-        118deg,
-        color-mix(in srgb, var(--accent) 10%, transparent) 0%,
-        transparent 38%,
-        color-mix(in srgb, var(--accent) 5%, transparent) 100%
-      );
-    opacity: 0.75;
-    mix-blend-mode: screen;
+  ::selection {
+    @apply bg-orange-500/20;
   }
-
-  [data-theme="dark"] .landing-hero {
-    border-color: color-mix(in srgb, var(--accent) 14%, var(--border));
-    background: linear-gradient(
-      165deg,
-      #14110f 0%,
-      #0c0c0d 38%,
-      #050505 100%
-    );
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, var(--accent) 28%, transparent),
-      0 28px 72px color-mix(in srgb, var(--accent) 14%, transparent);
+  a {
+    color: inherit;
+    text-decoration: none;
   }
-
-  [data-theme="dark"] .landing-hero::before {
-    background:
-      radial-gradient(ellipse 115% 90% at 0% -18%, color-mix(in srgb, var(--accent) 52%, transparent), transparent 50%),
-      radial-gradient(ellipse 80% 70% at 100% 0%, color-mix(in srgb, var(--accent) 32%, transparent), transparent 55%),
-      radial-gradient(ellipse 70% 60% at 82% 110%, color-mix(in srgb, #ff9a62 22%, transparent), transparent 48%),
-      radial-gradient(ellipse 50% 45% at 12% 95%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 46%);
-    opacity: 1;
-  }
-
-  [data-theme="dark"] .landing-hero::after {
-    opacity: 0.55;
-    mix-blend-mode: normal;
-  }
-
-  .landing-hero-accent {
-    background: linear-gradient(
-      100deg,
-      var(--accent) 0%,
-      #ff8f57 42%,
-      #ffb07a 78%,
-      color-mix(in srgb, var(--accent) 85%, #fff 15%) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  [data-theme="light"] .landing-hero-accent {
-    background: linear-gradient(100deg, #e84a18 0%, var(--accent) 45%, #ff7a45 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .landing-hero-inner {
-    position: relative;
-    z-index: 1;
-    padding: 1.5rem;
-  }
-
-  @media (min-width: 640px) {
-    .landing-hero-inner {
-      padding: 2.375rem;
-    }
-  }
-
-  .home-highlights-track {
-    position: relative;
-  }
-
-  .home-highlights-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-  }
-
-  .home-highlights-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .home-highlight-card {
-    scroll-snap-align: start;
-    transition: transform 0.2s var(--ease-smooth);
-  }
-
-  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-    .home-highlight-card:hover {
-      transform: translateY(-2px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .home-highlight-card {
-      transition: none;
-    }
-  }
-
-  .home-highlight-demo {
-    contain: layout paint;
-  }
-
-  .landing-qualities::before {
-    content: "";
-    position: absolute;
-    inset: -40% -20% -20%;
-    pointer-events: none;
-    background:
-      radial-gradient(circle 420px at 18% 40%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
-      repeating-radial-gradient(
-        circle at 50% 120%,
-        transparent 0,
-        transparent 72px,
-        color-mix(in srgb, var(--border) 55%, transparent) 73px,
-        transparent 74px
-      );
-    opacity: 0.85;
-  }
-
-  [data-theme="dark"] .landing-qualities::before {
-    opacity: 0.45;
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }
 
-/* ---- calendar day range states (data/utility driven) ---- */
-.cal-day {
-  font-variant-numeric: tabular-nums;
+*::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
 }
-.cal-day[aria-selected="true"] {
-  background: var(--accent);
-  color: var(--on-accent);
-  font-weight: 600;
-}
-.cal-day.in-range {
-  background: var(--accent-soft);
-  border-radius: 0;
-  color: var(--text);
-}
-.cal-day.range-start {
-  background: var(--accent);
-  color: var(--on-accent);
-  border-radius: 8px 0 0 8px;
-}
-.cal-day.range-end {
-  background: var(--accent);
-  color: var(--on-accent);
-  border-radius: 0 8px 8px 0;
-}
-.cal-day.range-start.range-end {
-  border-radius: 8px;
-}
-.cal-day.today::after {
-  content: "";
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+*::-webkit-scrollbar-thumb {
+  background: rgb(161 161 170 / 0.55);
   border-radius: 99px;
-  background: var(--accent);
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
-.cal-day[aria-selected="true"].today::after {
-  background: var(--on-accent);
-}
-
-[data-cal-size="compact"] .cal-day.today::after {
-  bottom: 3px;
-  width: 3px;
-  height: 3px;
-}
-
-/* data tables (API attrs, keyboard, guides) */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0;
-  font-size: 13.5px;
-}
-.data-table th {
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--border-strong);
-}
-.data-table td {
-  padding: 11px 14px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-2);
-  vertical-align: top;
-}
-.data-table td:first-child {
-  font-family: var(--font-mono);
-  color: var(--text);
-  white-space: nowrap;
-}
-
-/* segmented date-field active segment */
-.kf-seg:focus {
-  background: var(--accent);
-  color: var(--on-accent);
-  outline: none;
+*::-webkit-scrollbar-track {
+  background: transparent;
 }

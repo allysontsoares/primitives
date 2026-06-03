@@ -3,7 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { NAV, SEARCH, COMPONENTS, type SearchEntry } from "../../lib/docs-data";
+import { Badge } from "@/components/ui/badge";
+
+import { Kbd } from "@/components/ui/kbd";
+import { NAV, SEARCH, type SearchEntry } from "../../lib/docs-data";
+import { DocsTableOfContents } from "./docs-table-of-contents";
 
 /* ---------------- helpers ---------------- */
 function routeToHref(route: string) {
@@ -94,40 +98,35 @@ const CompIco = () => (
     <path d="M8 21h8M12 17v4" />
   </svg>
 );
-const ApiIco = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth={1.6}
-  >
-    <path d="M16 18l6-6-6-6M8 6l-6 6 6 6" />
-  </svg>
-);
-const kindIco = (k: SearchEntry["kind"]) =>
-  k === "comp" ? <CompIco /> : k === "api" ? <ApiIco /> : <DocIco />;
+const kindIco = (k: SearchEntry["kind"]) => (k === "comp" ? <CompIco /> : <DocIco />);
 
 /* ============================ THEME ============================ */
 function useTheme() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     const t = (document.documentElement.getAttribute("data-theme") as "dark" | "light") || "dark";
     setTheme(t);
+    setReady(true);
   }, []);
   const toggle = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "dark" ? "light" : "dark";
-      document.documentElement.setAttribute("data-theme", next);
+      const el = document.documentElement;
+      el.setAttribute("data-theme", next);
+      if (next === "dark") el.classList.add("dark");
+      else el.classList.remove("dark");
       try {
         localStorage.setItem("kairo-theme", next);
       } catch {}
       return next;
     });
   }, []);
-  return { theme, toggle };
+  return { theme, toggle, ready };
 }
+
+const topbarGithubLinkCls =
+  "hidden sm:inline-flex h-7 shrink-0 items-center justify-center rounded-2xl border border-transparent bg-zinc-900 px-3 text-sm font-medium text-white no-underline transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200";
 
 /* ============================ SEARCH MODAL ============================ */
 function SearchModal({ onClose }: { onClose: () => void }) {
@@ -183,10 +182,10 @@ function SearchModal({ onClose }: { onClose: () => void }) {
       onClick={onClose}
     >
       <div
-        className="w-[min(580px,92vw)] animate-pop overflow-hidden rounded-2xl border border-line-strong bg-card shadow-pop"
+        className="w-[min(580px,92vw)] animate-pop overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 border-b border-line px-[18px] py-4 text-muted">
+        <div className="flex items-center gap-3 border-b border-zinc-200 dark:border-zinc-800 px-[18px] py-4 text-zinc-500 dark:text-zinc-400">
           <Search />
           <input
             ref={inputRef}
@@ -196,21 +195,19 @@ function SearchModal({ onClose }: { onClose: () => void }) {
               setQ(e.target.value);
               setSel(0);
             }}
-            className="flex-1 border-none bg-transparent text-base text-ink outline-none"
+            className="flex-1 border-none bg-transparent text-base text-zinc-900 dark:text-zinc-100 outline-none"
           />
-          <kbd className="rounded-md border border-line bg-[var(--kbd-bg)] px-1.5 py-0.5 font-mono text-[11px] text-muted">
-            Esc
-          </kbd>
+          <Kbd>Esc</Kbd>
         </div>
         <div className="max-h-[52vh] overflow-y-auto p-2">
           {results.length === 0 ? (
-            <div className="p-10 text-center text-sm text-muted">
+            <div className="p-10 text-center text-sm text-zinc-500 dark:text-zinc-400">
               No results for &ldquo;{q}&rdquo;
             </div>
           ) : (
             Object.entries(groups).map(([crumb, items]) => (
               <div key={crumb}>
-                <div className="px-3 pb-1.5 pt-2.5 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                <div className="px-3 pb-1.5 pt-2.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                   {crumb}
                 </div>
                 {items.map((r) => {
@@ -221,15 +218,15 @@ function SearchModal({ onClose }: { onClose: () => void }) {
                       onMouseEnter={() => setSel(idx)}
                       onClick={() => go(r.route)}
                       className={`flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left ${
-                        idx === sel ? "bg-hover-strong" : ""
+                        idx === sel ? "bg-zinc-100 dark:bg-zinc-800" : ""
                       }`}
                     >
-                      <span className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg border border-line bg-subtle text-muted">
+                      <span className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
                         {kindIco(r.kind)}
                       </span>
                       <span>
-                        <span className="block text-sm font-medium text-ink">{r.title}</span>
-                        <span className="block text-xs text-muted">{r.crumb}</span>
+                        <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">{r.title}</span>
+                        <span className="block text-xs text-zinc-500 dark:text-zinc-400">{r.crumb}</span>
                       </span>
                     </button>
                   );
@@ -248,25 +245,27 @@ function Topbar({
   onSearch,
   onMenu,
   theme,
+  themeReady,
   toggleTheme,
 }: {
   onSearch: () => void;
   onMenu: () => void;
   theme: "dark" | "light";
+  themeReady: boolean;
   toggleTheme: () => void;
 }) {
   const iconBtn =
-    "grid min-h-9 min-w-9 place-items-center rounded-[9px] border border-transparent text-ink2 transition-colors hover:bg-hover hover:text-ink";
+    "grid min-h-9 min-w-9 place-items-center rounded-[9px] border border-transparent text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100";
   return (
-    <header className="sticky top-0 z-[60] grid h-[var(--topbar-h)] grid-cols-[1fr_auto] items-center border-b border-line bg-[color-mix(in_srgb,var(--bg)_82%,transparent)] px-3.5 backdrop-blur-[14px] backdrop-saturate-150 md:grid-cols-[var(--sidebar-w)_1fr_auto] md:px-[22px]">
+    <header className="sticky top-0 z-[60] grid h-[var(--topbar-h)] grid-cols-[1fr_auto] items-center border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 px-3.5 backdrop-blur-[14px] backdrop-saturate-150 md:grid-cols-[var(--sidebar-w)_1fr_auto] md:px-[22px]">
       <Link href="/" className="flex items-center gap-2.5 text-[17px] font-bold tracking-tight">
-        <span className="grid h-6 w-6 place-items-center rounded-[7px] bg-ink text-[14px] font-extrabold tracking-tighter text-bg">
+        <span className="grid h-6 w-6 place-items-center rounded-[7px] bg-zinc-900 dark:bg-zinc-100 text-[14px] font-extrabold tracking-tighter text-white dark:text-zinc-900">
           K
         </span>
         Kairo
-        <span className="ml-0.5 rounded-full border border-line px-1.5 py-px font-mono text-[11px] font-medium text-muted">
-          v1.0
-        </span>
+        <Badge variant="beta" className="ml-1 origin-left scale-[0.92]">
+          Beta
+        </Badge>
       </Link>
 
       <nav className="hidden items-center justify-center gap-1 md:flex">
@@ -278,7 +277,7 @@ function Topbar({
           <Link
             key={l.label}
             href={l.href}
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-ink2 transition-colors hover:bg-hover hover:text-ink"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
           >
             {l.label}
           </Link>
@@ -292,22 +291,26 @@ function Topbar({
         <button
           onClick={onSearch}
           aria-label="Search"
-          className="flex h-9 min-w-9 items-center gap-2.5 rounded-[10px] border border-line bg-subtle px-2 text-[13.5px] text-muted transition-colors hover:border-line-strong md:min-w-[230px] md:pl-3"
+          className="flex h-9 min-w-9 items-center gap-2.5 rounded-[10px] border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 px-2 text-[13.5px] text-zinc-500 dark:text-zinc-400 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700 md:min-w-[230px] md:pl-3"
         >
           <Search />
           <span className="hidden md:inline">Search docs…</span>
-          <kbd className="ml-auto hidden rounded-md border border-line bg-[var(--kbd-bg)] px-1.5 py-0.5 font-mono text-[11px] text-muted md:inline">
-            ⌘K
-          </kbd>
+          <Kbd className="ml-auto hidden md:inline">⌘K</Kbd>
         </button>
-        <button onClick={toggleTheme} className={iconBtn} aria-label="Toggle theme">
-          {theme === "dark" ? <Sun /> : <Moon />}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={iconBtn}
+          aria-label="Toggle theme"
+          suppressHydrationWarning
+        >
+          {themeReady ? (theme === "dark" ? <Sun /> : <Moon />) : <Sun />}
         </button>
         <a
           href="https://github.com/at5/kairo"
           target="_blank"
-          rel="noreferrer"
-          className="hidden h-9 items-center rounded-[10px] bg-ink px-4 text-[13.5px] font-semibold text-bg transition-opacity hover:opacity-90 sm:inline-flex"
+          rel="noopener noreferrer"
+          className={topbarGithubLinkCls}
         >
           GitHub
         </a>
@@ -322,53 +325,32 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
     <nav
       aria-label="Documentation"
-      className={`sticky top-[var(--topbar-h)] z-50 h-[calc(100vh-var(--topbar-h))] overflow-y-auto border-r border-line py-6 pl-[22px] pr-4 max-md:fixed max-md:left-0 max-md:w-[280px] max-md:bg-bg max-md:transition-transform ${
+      className={`sticky top-[var(--topbar-h)] z-50 h-[calc(100vh-var(--topbar-h))] overflow-y-auto border-r border-zinc-200 dark:border-zinc-800 py-6 pl-[22px] pr-4 max-md:fixed max-md:left-0 max-md:w-[280px] max-md:bg-white dark:bg-zinc-950 max-md:transition-transform ${
         open ? "max-md:translate-x-0" : "max-md:-translate-x-full"
       } md:block`}
     >
       {NAV.map((group) => (
         <div key={group.title} className="mb-[22px]">
-          <div className="mb-1 flex items-center gap-2 px-2.5 py-1 text-xs font-bold text-ink">
+          <div className="mb-1 flex items-center gap-2 px-2.5 py-1 text-xs font-bold text-zinc-900 dark:text-zinc-100">
             {group.title}
             {group.badge && (
-              <span className="rounded-full border border-accent-line px-1.5 text-[10px] font-semibold leading-normal text-accent">
+              <Badge variant="status" className="h-5 px-2 text-[10px]">
                 {group.badge}
-              </span>
+              </Badge>
             )}
           </div>
           {group.items.map((item) => {
-            const isComp = Object.keys(COMPONENTS).includes(item.route);
-            const active = route === item.route || route === item.route + "/api";
+            const active = route === item.route;
             const itemCls = (on: boolean) =>
               `flex min-h-9 items-center gap-2 rounded-lg px-2.5 text-[13.5px] transition-colors ${
                 on
-                  ? "bg-hover-strong font-semibold text-ink"
-                  : "text-muted hover:bg-hover hover:text-ink"
+                  ? "bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
               }`;
             return (
-              <div key={item.route}>
-                <Link href={routeToHref(item.route)} onClick={onClose} className={itemCls(active)}>
-                  {item.label}
-                </Link>
-                {active && isComp && (
-                  <div className="ml-[18px] mt-0.5 mb-1 flex flex-col gap-px border-l border-line pl-3">
-                    <Link
-                      href={routeToHref(item.route)}
-                      onClick={onClose}
-                      className={`${itemCls(route === item.route)} text-[13px]`}
-                    >
-                      Overview
-                    </Link>
-                    <Link
-                      href={routeToHref(item.route + "/api")}
-                      onClick={onClose}
-                      className={`${itemCls(route === item.route + "/api")} text-[13px]`}
-                    >
-                      API Reference
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <Link key={item.route} href={routeToHref(item.route)} onClick={onClose} className={itemCls(active)}>
+                {item.label}
+              </Link>
             );
           })}
         </div>
@@ -377,79 +359,13 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-/* ============================ TOC (right rail, scrollspy) ============================ */
-type TocItem = { id: string; text: string; level: number };
-
-function Toc() {
-  const pathname = usePathname();
-  const [items, setItems] = useState<TocItem[]>([]);
-  const [activeId, setActiveId] = useState("");
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      const main = document.getElementById("docs-content");
-      if (!main) return setItems([]);
-      const found: TocItem[] = [];
-      main.querySelectorAll("h2[id], h3[id]").forEach((h) => {
-        found.push({ id: h.id, text: h.textContent || "", level: h.tagName === "H3" ? 3 : 2 });
-      });
-      setItems(found);
-    }, 60);
-    return () => clearTimeout(t);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!items.length) return;
-    const onScroll = () => {
-      let cur = "";
-      items.forEach((it) => {
-        const el = document.getElementById(it.id);
-        if (el && el.getBoundingClientRect().top < 120) cur = it.id;
-      });
-      setActiveId(cur);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [items]);
-
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el)
-      window.scrollTo({
-        top: el.getBoundingClientRect().top + window.scrollY - 84,
-        behavior: "smooth",
-      });
-  };
-
-  if (!items.length) return <aside className="hidden xl:block" />;
-
-  return (
-    <aside className="sticky top-[var(--topbar-h)] hidden h-[calc(100vh-var(--topbar-h))] overflow-y-auto py-12 pl-1.5 pr-[22px] xl:block">
-      <div className="mb-3 text-[13px] font-bold text-ink">On this page</div>
-      <div className="flex flex-col gap-0.5 border-l border-line">
-        {items.map((it) => (
-          <button
-            key={it.id}
-            onClick={() => scrollTo(it.id)}
-            className={`-ml-px border-l py-1 text-left leading-snug transition-colors ${
-              it.level === 3 ? "pl-[26px] text-[12.5px]" : "pl-3.5 text-[13px]"
-            } ${it.id === activeId ? "border-accent font-medium text-accent" : "border-transparent text-muted hover:text-ink"}`}
-          >
-            {it.text}
-          </button>
-        ))}
-      </div>
-    </aside>
-  );
-}
-
 /* ============================ SHELL ============================ */
 export function DocsShell({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { theme, toggle } = useTheme();
+  const { theme, toggle, ready: themeReady } = useTheme();
   const pathname = usePathname();
+  const showTocRail = pathname !== "/";
 
   useEffect(() => {
     setSidebarOpen(false);
@@ -472,19 +388,22 @@ export function DocsShell({ children }: { children: ReactNode }) {
         onSearch={() => setSearchOpen(true)}
         onMenu={() => setSidebarOpen((o) => !o)}
         theme={theme}
+        themeReady={themeReady}
         toggleTheme={toggle}
       />
-      <div className="grid items-start md:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]">
+      <div className="grid items-start md:grid-cols-[var(--sidebar-w)_minmax(0,1fr)]">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="min-w-0">
+        <main
+          className={`relative min-w-0 ${showTocRail ? "min-[1180px]:pr-[var(--toc-w)]" : ""}`}
+        >
           <div
             id="docs-content"
             className="mx-auto max-w-[760px] px-5 pb-28 pt-10 sm:px-10 sm:pt-[46px]"
           >
             {children}
           </div>
+          <DocsTableOfContents />
         </main>
-        <Toc />
       </div>
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
     </div>

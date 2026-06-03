@@ -1,0 +1,11 @@
+.anatomy-diagram {
+  --anatomy-gradient-from: #c44a2e;
+  --anatomy-gradient-to: #8f3524;
+  --anatomy-label: #ffffff;
+  --anatomy-leader: #ff3333;
+  background: linear-gradient(
+    112deg,
+    var(--anatomy-gradient-from) 0%,
+    var(--anatomy-gradient-to) 100%
+  );
+}

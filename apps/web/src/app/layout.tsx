@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { DocsShell } from "../components/docs/Shell";
+import { DocsShell } from "../components/docs/shell";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -37,14 +40,15 @@ export const metadata: Metadata = {
   },
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem("kairo-theme")||"dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("kairo-theme")||"dark";var el=document.documentElement;el.setAttribute("data-theme",t);if(t==="dark")el.classList.add("dark");else el.classList.remove("dark");}catch(e){var el=document.documentElement;el.setAttribute("data-theme","dark");el.classList.add("dark");}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       data-theme="dark"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      data-scroll-behavior="smooth"
+      className={cn(geistSans.variable, geistMono.variable, "dark font-sans", "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <head>
