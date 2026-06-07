@@ -1,5 +1,5 @@
 import React from "react";
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 
 interface FieldProps {
   label: string;

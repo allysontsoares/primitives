@@ -1,6 +1,6 @@
 /* ============================================================
    Site data: navigation tree, component metadata, anatomy,
-   API reference, search index. Ported from the Kairo design.
+   API reference, search index. Kenos UI documentation site data.
    ============================================================ */
 
 export type AnatomyNode = {

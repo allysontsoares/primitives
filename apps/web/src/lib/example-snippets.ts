@@ -126,7 +126,7 @@ const rangeDayCss = `.cal-day[data-in-range] {
 
 export const EXAMPLE_SNIPPETS: Record<string, ExampleSnippets> = {
   calendar: {
-    unstyled: `import { DatePicker } from "@at5/kairo";
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
   <DatePicker.ViewControl>
@@ -156,7 +156,7 @@ ${calShellCss}
 ${calDayCss}
 
 /* index.tsx */
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
@@ -183,7 +183,7 @@ import "./styles.css";
   </div>
 </DatePicker.Root>`,
 
-    tailwind: `import { DatePicker } from "@at5/kairo";
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
   <div className="rounded-[14px] border border-white/15 bg-zinc-900 p-3.5 shadow-[0_18px_48px_rgba(0,0,0,0.7)]">
@@ -205,7 +205,7 @@ import "./styles.css";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-orange-500 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
+                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-zinc-100 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
                 />
               ))}
             </tr>
@@ -216,7 +216,7 @@ import "./styles.css";
   </div>
 </DatePicker.Root>`,
 
-    panda: `import { DatePicker } from "@at5/kairo";
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
 const shell = css({
@@ -284,7 +284,7 @@ const day = css({
   },
 
   "date-picker": {
-    unstyled: `import { DatePicker } from "@at5/kairo";
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
   <DatePicker.Label>Pick a date</DatePicker.Label>
@@ -305,7 +305,7 @@ ${pickerExtraCss}
 ${calDayCss}
 
 /* index.tsx */
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
@@ -337,13 +337,13 @@ import "./styles.css";
   </DatePicker.Content>
 </DatePicker.Root>`,
 
-    tailwind: `import { DatePicker } from "@at5/kairo";
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
-  <DatePicker.Label className="text-[13px] font-semibold text-orange-500">Pick a date</DatePicker.Label>
+  <DatePicker.Label className="text-[13px] font-semibold text-zinc-100">Pick a date</DatePicker.Label>
   <div className="mt-1.5 flex gap-2">
-    <DatePicker.Input className="h-[42px] flex-1 rounded-[10px] border border-white/15 bg-black px-3 font-mono text-sm text-zinc-100 outline-none focus:border-orange-500 focus:ring-[3px] focus:ring-orange-500/20" />
-    <DatePicker.Trigger className="grid size-[42px] shrink-0 place-items-center rounded-[10px] border border-white/15 bg-black text-zinc-400 transition-colors hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500 aria-expanded:border-orange-500 aria-expanded:bg-orange-500/10 aria-expanded:text-orange-500">
+    <DatePicker.Input className="h-[42px] flex-1 rounded-[10px] border border-white/15 bg-black px-3 font-mono text-sm text-zinc-100 outline-none focus:border-zinc-100 focus:ring-[3px] focus:ring-zinc-100/20" />
+    <DatePicker.Trigger className="grid size-[42px] shrink-0 place-items-center rounded-[10px] border border-white/15 bg-black text-zinc-400 transition-colors hover:border-zinc-100 hover:bg-zinc-100/10 hover:text-zinc-100 aria-expanded:border-zinc-100 aria-expanded:bg-zinc-100/10 aria-expanded:text-zinc-100">
       📅
     </DatePicker.Trigger>
   </div>
@@ -366,7 +366,7 @@ import "./styles.css";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-orange-500 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
+                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-zinc-100 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
                 />
               ))}
             </tr>
@@ -377,7 +377,7 @@ import "./styles.css";
   </DatePicker.Content>
 </DatePicker.Root>`,
 
-    panda: `import { DatePicker } from "@at5/kairo";
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
 const label = css({ fontSize: "13px", fontWeight: "semibold", color: "orange.500" });
@@ -482,8 +482,8 @@ const day = css({
   },
 
   "date-range-picker": {
-    unstyled: `import { DatePicker } from "@at5/kairo";
-import type { DateRange } from "@at5/kairo";
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
+import type { DateRange } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root mode="range" onValueChange={(r: DateRange) => save(r.start, r.end)}>
   <DatePicker.Label>Trip dates</DatePicker.Label>
@@ -509,8 +509,8 @@ ${calDayCss}
 ${rangeDayCss}
 
 /* index.tsx */
-import { DatePicker } from "@at5/kairo";
-import type { DateRange } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
+import type { DateRange } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root mode="range" onValueChange={(r: DateRange) => save(r.start, r.end)}>
@@ -544,16 +544,16 @@ import "./styles.css";
   </DatePicker.Content>
 </DatePicker.Root>`,
 
-    tailwind: `import { DatePicker } from "@at5/kairo";
-import type { DateRange } from "@at5/kairo";
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
+import type { DateRange } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root mode="range" onValueChange={(r: DateRange) => save(r.start, r.end)}>
-  <DatePicker.Label className="text-[13px] font-semibold text-orange-500">Trip dates</DatePicker.Label>
+  <DatePicker.Label className="text-[13px] font-semibold text-zinc-100">Trip dates</DatePicker.Label>
   <div className="mt-1.5 flex items-center gap-2">
     <DatePicker.Input index={0} className="h-[42px] flex-1 rounded-[10px] border border-white/15 bg-black px-3 font-mono text-sm text-zinc-100" />
     <span aria-hidden className="text-zinc-500">–</span>
     <DatePicker.Input index={1} className="h-[42px] flex-1 rounded-[10px] border border-white/15 bg-black px-3 font-mono text-sm text-zinc-100" />
-    <DatePicker.Trigger className="grid size-[42px] place-items-center rounded-[10px] border border-white/15 bg-black text-zinc-400 hover:border-orange-500 hover:text-orange-500">
+    <DatePicker.Trigger className="grid size-[42px] place-items-center rounded-[10px] border border-white/15 bg-black text-zinc-400 hover:border-zinc-100 hover:text-zinc-100">
       📅
     </DatePicker.Trigger>
   </div>
@@ -576,7 +576,7 @@ import type { DateRange } from "@at5/kairo";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-orange-500/10 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[selected]:bg-orange-500 data-[selected]:text-white"
+                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-zinc-100/10 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[selected]:bg-zinc-100 data-[selected]:text-white"
                 />
               ))}
             </tr>
@@ -587,8 +587,8 @@ import type { DateRange } from "@at5/kairo";
   </DatePicker.Content>
 </DatePicker.Root>`,
 
-    panda: `import { DatePicker } from "@at5/kairo";
-import type { DateRange } from "@at5/kairo";
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
+import type { DateRange } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
 const label = css({ fontSize: "13px", fontWeight: "semibold", color: "orange.500" });
@@ -664,7 +664,7 @@ const day = css({
   },
 
   "date-field": {
-    unstyled: `import { DatePicker } from "@at5/kairo";
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-GB">
   <DatePicker.Label>Date of birth</DatePicker.Label>
@@ -675,7 +675,7 @@ const day = css({
 ${fieldCss}
 
 /* index.tsx */
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root locale="en-GB">
@@ -683,16 +683,16 @@ import "./styles.css";
   <DatePicker.Input className="dp-input" />
 </DatePicker.Root>`,
 
-    tailwind: `import { DatePicker } from "@at5/kairo";
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-GB">
-  <DatePicker.Label className="text-[13px] font-semibold text-orange-500">Date of birth</DatePicker.Label>
+  <DatePicker.Label className="text-[13px] font-semibold text-zinc-100">Date of birth</DatePicker.Label>
   <DatePicker.Input
-    className="inline-flex items-center gap-0.5 rounded border border-white/15 bg-black px-3 py-2 font-mono text-sm text-zinc-100 focus-within:border-orange-500 focus-within:ring-[3px] focus-within:ring-orange-500/20 [&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:outline-none [&_[role=spinbutton]:focus]:bg-orange-900/60 [&_[role=spinbutton]:focus]:text-orange-200 [&_[data-placeholder]]:text-zinc-500 [&_[data-separator]]:text-zinc-500"
+    className="inline-flex items-center gap-0.5 rounded border border-white/15 bg-black px-3 py-2 font-mono text-sm text-zinc-100 focus-within:border-zinc-100 focus-within:ring-[3px] focus-within:ring-zinc-100/20 [&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:outline-none [&_[role=spinbutton]:focus]:bg-zinc-800/60 [&_[role=spinbutton]:focus]:text-zinc-200 [&_[data-placeholder]]:text-zinc-500 [&_[data-separator]]:text-zinc-500"
   />
 </DatePicker.Root>`,
 
-    panda: `import { DatePicker } from "@at5/kairo";
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
 const label = css({ fontSize: "13px", fontWeight: "semibold", color: "orange.500" });

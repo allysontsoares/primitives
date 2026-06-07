@@ -5,6 +5,7 @@ import { useState, type ReactNode } from "react";
 import { CodeBlock, type CodeTab } from "./code-block";
 import { type ExampleSnippets } from "../../lib/example-snippets";
 import { type AnatomyNode, type ApiGroup, ORDER, titleForRoute } from "../../lib/docs-data";
+import { routeToHref } from "../../lib/docs-routes";
 import { ANATOMY_DIAGRAMS } from "./anatomy";
 import { docsTableClass } from "./docs-prose";
 
@@ -260,7 +261,7 @@ export function ActionRow() {
 function AnatomyFallback({ parts }: { parts: AnatomyNode[] }) {
   const render = (node: AnatomyNode, depth = 0) => (
     <div key={node.tag + depth} className={depth ? "ml-4 mt-2" : ""}>
-      <code className="font-mono text-[12px] text-orange-500">{node.tag}</code>
+      <code className="font-mono text-[12px] text-zinc-500">{node.tag}</code>
       {node.note && <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">{node.note}</span>}
       {node.children?.map((c) => render(c, depth + 1))}
     </div>
@@ -284,7 +285,7 @@ export function PageNav({ route }: { route: string }) {
   if (idx === -1) return null;
   const prev = ORDER[idx - 1];
   const next = ORDER[idx + 1];
-  const href = (r: string) => (r === "" ? "/" : `/${r}`);
+  const href = (r: string) => routeToHref(r);
   const card = "rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700";
   return (
     <div className="mt-[72px] grid grid-cols-1 gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-7 sm:grid-cols-2">
@@ -400,7 +401,7 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
                       </span>
                     )}
                     {p.required && (
-                      <span className="text-[11px] font-semibold uppercase tracking-wide text-orange-500">
+                      <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
                         Required
                       </span>
                     )}

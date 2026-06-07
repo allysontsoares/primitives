@@ -122,11 +122,11 @@ const codeBlockVariants = cva("code-block min-w-0 w-full overflow-hidden bg-zinc
 });
 
 const tabVariants = cva(
-  "code-block-tab relative -mb-px shrink-0 border-b-2 px-3 pb-2.5 pt-3 text-[12.5px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500",
+  "code-block-tab relative -mb-px shrink-0 border-b-2 px-3 pb-2.5 pt-3 text-[12.5px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-100",
   {
     variants: {
       state: {
-        active: "border-orange-500 text-[#f0f1f4]",
+        active: "border-zinc-100 text-[#f0f1f4]",
         inactive: "border-transparent text-[#7d8089] hover:text-[#c9ccd3]",
       },
     },
@@ -249,12 +249,12 @@ export function CodeBlock({
               <span>Styled</span>
               <span
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
-                  styleTabsEnabled ? "bg-orange-500/30" : "bg-white/[0.08]"
+                  styleTabsEnabled ? "bg-zinc-100/30" : "bg-white/[0.08]"
                 }`}
               >
                 <span
                   className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full transition-transform ${
-                    styleTabsEnabled ? "translate-x-4 bg-orange-500" : "bg-[#7d8089]"
+                    styleTabsEnabled ? "translate-x-4 bg-zinc-100" : "bg-[#7d8089]"
                   }`}
                 />
               </span>
@@ -264,7 +264,7 @@ export function CodeBlock({
             type="button"
             onClick={copy}
             aria-label="Copy code"
-            className="grid min-h-9 min-w-9 place-items-center rounded-md text-[#7d8089] transition-colors hover:bg-white/[0.06] hover:text-[#f0f1f4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
+            className="grid min-h-9 min-w-9 place-items-center rounded-md text-[#7d8089] transition-colors hover:bg-white/[0.06] hover:text-[#f0f1f4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-100"
           >
             {copied ? <CheckIcon /> : <CopyIcon />}
           </button>

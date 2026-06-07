@@ -21,9 +21,9 @@ const ArrowRight = () => (
 );
 
 const HERO_PILLS = [
-  "WAI-ARIA grid",
-  "Zero CSS shipped",
-  "Intl locales",
+  "Unstyled by design",
+  "WAI-ARIA compliant",
+  "Fully composable",
   "React 19 compatible",
 ] as const;
 
@@ -38,19 +38,18 @@ export function DocsHeroCard() {
         <Badge variant="beta" className="mb-4">
           Beta
         </Badge>
+        <p className="mb-3 font-mono text-[13px] font-medium tracking-[0.08em] text-zinc-500 dark:text-zinc-400">
+          kenos
+        </p>
         <h1
           id="home-hero-title"
-          className="mb-4 max-w-[14ch] text-[length:var(--text-hero)] font-bold leading-[1.02] tracking-[-0.04em] text-zinc-900 text-balance dark:text-zinc-100"
+          className="mb-4 max-w-[18ch] text-[length:var(--text-hero)] font-bold leading-[1.02] tracking-[-0.04em] text-zinc-900 text-balance dark:text-zinc-100"
         >
-          Headless{" "}
-          <span className="bg-gradient-to-r from-zinc-900 to-zinc-500 bg-clip-text text-transparent dark:from-zinc-100 dark:to-zinc-400">
-            Date Picker
-          </span>
+          The space before design.
         </h1>
-        <p className="mb-6 max-w-[42ch] text-base leading-relaxed text-zinc-500 sm:text-[17px] dark:text-zinc-400">
-          Bring your own styles! Kairo is a Unstyled, accessible, composable React primitives for calendars, pickers, and segmented
-          fields — built for design systems that need locale-aware scheduling without the CSS
-          baggage.
+        <p className="mb-6 max-w-[48ch] text-base leading-relaxed text-zinc-500 sm:text-[17px] dark:text-zinc-400">
+          Composable, accessible and unstyled React components. Start with structure. Finish with
+          style.
         </p>
         <ul className="mb-8 flex flex-wrap gap-2" aria-label="Highlights">
           {HERO_PILLS.map((label) => (
@@ -61,16 +60,16 @@ export function DocsHeroCard() {
         </ul>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Link
-            href="/installation"
+            href="/docs/installation"
             className={cn(buttonVariants({ variant: "brand", size: "lg" }), "w-full sm:w-auto")}
           >
             Get started <ArrowRight />
           </Link>
           <Link
-            href="/quickstart"
+            href="/docs/calendar"
             className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto")}
           >
-            Quick start
+            Components
           </Link>
         </div>
       </div>

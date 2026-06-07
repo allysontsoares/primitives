@@ -1,6 +1,6 @@
 {
   "name": "@primitives/playground",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@at5/kairo": "workspace:*",
+    "@kenos-ui/react-datepicker": "workspace:*",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

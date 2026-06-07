@@ -20,8 +20,8 @@ const badgeVariants = cva(
           "hover:bg-oklch(0.97 0 0) hover:text-oklch(0.556 0 0) dark:hover:bg-oklch(0.97 0 0)/50 dark:hover:bg-oklch(0.269 0 0) dark:hover:text-oklch(0.708 0 0) dark:dark:hover:bg-oklch(0.269 0 0)/50",
         link: "text-oklch(0.205 0 0) underline-offset-4 hover:underline dark:text-oklch(0.922 0 0)",
         brand:
-          "border-orange-500/35 bg-orange-500/10 text-orange-600 [a]:hover:bg-orange-500/15 dark:border-orange-400/40 dark:bg-orange-500/15 dark:text-orange-400 dark:[a]:hover:bg-orange-500/20",
-        beta: "border-sky-500/30 bg-sky-500/10 text-sky-600 dark:border-sky-400/30 dark:bg-sky-400/10 dark:text-sky-400",
+          "border-zinc-300/50 bg-zinc-100 text-zinc-700 [a]:hover:bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:[a]:hover:bg-zinc-700",
+        beta: "border-zinc-300/50 bg-zinc-100 text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
         status:
           "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-400",
         pill: "h-8 rounded-full border-zinc-200 bg-zinc-100 px-3 text-[12.5px] text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",

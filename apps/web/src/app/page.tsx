@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Overview } from "../components/docs/pages";
+import { LandingComponentShowcase } from "@/components/landing/component-showcase";
+import { LandingCtaFooter } from "@/components/landing/cta-footer";
+import { LandingFeatures } from "@/components/landing/features";
+import { LandingHero } from "@/components/landing/hero";
+import { LandingNavbar } from "@/components/landing/navbar";
+import { LandingStats } from "@/components/landing/stats";
 
-const title = "Kairo — Headless date primitives for React";
+const title = "kenos — Unstyled React primitives";
 const description =
-  "Unstyled, accessible React primitives for calendars, date pickers, range selection, and locale-aware date fields. Zero CSS, WAI-ARIA grid pattern, Intl-ready.";
+  "The space before design. Composable, accessible and unstyled React primitives for date UI. Start with structure. Finish with style.";
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -12,7 +17,7 @@ export const metadata: Metadata = {
     title,
     description,
     type: "website",
-    siteName: "Kairo",
+    siteName: "kenos",
   },
   twitter: {
     card: "summary_large_image",
@@ -25,5 +30,14 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <Overview />;
+  return (
+    <div className="landing-page min-h-screen bg-[#09090b] text-zinc-100">
+      <LandingNavbar />
+      <LandingHero />
+      <LandingFeatures />
+      <LandingComponentShowcase />
+      <LandingStats />
+      <LandingCtaFooter />
+    </div>
+  );
 }

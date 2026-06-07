@@ -5,14 +5,14 @@ import {
   type ReactNode,
 } from "react";
 import {
-  DatePicker as KairoDatePicker,
+  DatePicker as KenosDatePicker,
   useDatePickerContext,
   type DateRange,
-} from "@at5/kairo";
+} from "@kenos-ui/react-datepicker";
 
 
 /* ============================================================
-   Real @at5/kairo-powered demo components.
+   Real @kenos-ui/react-datepicker-powered demo components.
    These replace the old self-contained fake primitives.
    They compose the official headless parts + apply the site's
    exact visual styling (shells, sizes, colors, states) so the
@@ -56,13 +56,13 @@ const calTableLayout =
   "[&_table]:!table-fixed [&_table]:!w-full [&_table]:!border-collapse [&_table]:!border-spacing-0 [&_tr]:!table-row [&_td]:!table-cell [&_td]:!p-0 [&_td]:!text-center [&_th]:!table-cell [&_th]:!p-0 [&_th]:!text-center [&_thead]:!table-header-group [&_tbody]:!table-row-group";
 
 const focusRing =
-  "outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900";
+  "outline-none focus-visible:ring-2 focus-visible:ring-zinc-100 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900";
 
 const segmentFocus =
-  "[&_input]:rounded-md [&_input]:transition-[background-color,color,box-shadow] [&_input:focus]:!bg-orange-500 [&_input:focus]:!text-white [&_input:focus]:shadow-sm [&_input::placeholder]:text-zinc-500 dark:[&_input::placeholder]:text-zinc-400 [&_[data-separator]]:font-medium [&_[data-separator]]:text-zinc-500 dark:[&_[data-separator]]:text-zinc-400";
+  "[&_input]:rounded-md [&_input]:transition-[background-color,color,box-shadow] [&_input:focus]:!bg-zinc-100 [&_input:focus]:!text-white [&_input:focus]:shadow-sm [&_input::placeholder]:text-zinc-500 dark:[&_input::placeholder]:text-zinc-400 [&_[data-separator]]:font-medium [&_[data-separator]]:text-zinc-500 dark:[&_[data-separator]]:text-zinc-400";
 
 const inputFocusWithin =
-  "transition-[border-color,box-shadow,background-color] duration-150 focus-within:border-orange-500 focus-within:bg-white dark:focus-within:bg-zinc-950 focus-within:shadow-[0_0_0_3px_oklch(0.705_0.213_47.604/0.22)] dark:focus-within:shadow-[0_0_0_3px_oklch(0.705_0.213_47.604/0.18)]";
+  "transition-[border-color,box-shadow,background-color] duration-150 focus-within:border-zinc-100 focus-within:bg-white dark:focus-within:bg-zinc-950 focus-within:shadow-[0_0_0_3px_rgb(250 250 250 / 0.15)] dark:focus-within:shadow-[0_0_0_3px_rgb(250 250 250 / 0.12)]";
 
 const DEMO_SHELL: Record<CalSize, string> = {
   default: `rounded-[14px] border border-zinc-200/90 dark:border-zinc-700/80 bg-zinc-50 dark:bg-zinc-900 p-3.5 shadow-lg shadow-zinc-900/5 dark:shadow-black/30 ${calTableLayout}`,
@@ -153,7 +153,7 @@ const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
     "hover:bg-zinc-200/90 dark:hover:bg-zinc-700/90",
     "active:scale-[0.98] aria-selected:active:scale-100",
     focusRing,
-    "aria-selected:bg-orange-500 aria-selected:!text-white aria-selected:font-semibold",
+    "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
     "disabled:pointer-events-none disabled:opacity-35",
   ].join(" "),
   compact: [
@@ -163,7 +163,7 @@ const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
     "hover:bg-zinc-200/90 dark:hover:bg-zinc-700/90",
     "active:scale-[0.98] aria-selected:active:scale-100",
     focusRing,
-    "aria-selected:bg-orange-500 aria-selected:!text-white aria-selected:font-semibold",
+    "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
     "disabled:pointer-events-none disabled:opacity-35",
   ].join(" "),
 };
@@ -181,7 +181,7 @@ function demoMonthLabel(locale: string, monthIndex: number) {
   return new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2024, monthIndex, 1));
 }
 
-const labelCls = "text-[13px] font-semibold text-orange-600 dark:text-orange-400";
+const labelCls = "text-[13px] font-semibold text-zinc-200 dark:text-zinc-300";
 const fieldWrap = (compact?: boolean) =>
   compact ? "flex flex-col gap-2 w-[228px] max-w-full" : "flex flex-col gap-2 w-[260px]";
 
@@ -220,9 +220,9 @@ const triggerCls = [
   "grid h-[42px] w-[42px] shrink-0 cursor-pointer place-items-center rounded-[10px]",
   "border border-zinc-300/90 bg-white text-zinc-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300",
   "transition-[border-color,background-color,color,transform,box-shadow] duration-150",
-  "hover:border-orange-500 hover:bg-orange-500/5 hover:text-orange-600 dark:hover:text-orange-400",
+  "hover:border-zinc-100 hover:bg-zinc-100/5 hover:text-zinc-200 dark:hover:text-zinc-300",
   "active:scale-[0.97]",
-  "aria-expanded:border-orange-500 aria-expanded:bg-orange-500/12 aria-expanded:text-orange-600 dark:aria-expanded:text-orange-400",
+  "aria-expanded:border-zinc-100 aria-expanded:bg-zinc-100/12 aria-expanded:text-zinc-200 dark:aria-expanded:text-zinc-300",
   focusRing,
   "disabled:pointer-events-none disabled:opacity-40",
 ].join(" ");
@@ -231,8 +231,8 @@ const presetBtn = [
   "min-h-[34px] flex-1 cursor-pointer rounded-lg border py-1.5 text-[12.5px] font-medium",
   "border-zinc-300/90 bg-zinc-100 text-zinc-800 dark:border-zinc-700 dark:bg-zinc-800/90 dark:text-zinc-200",
   "transition-[border-color,background-color,color,transform,box-shadow] duration-150",
-  "hover:border-orange-500 hover:bg-orange-500/12 hover:text-orange-700 dark:hover:text-orange-300",
-  "active:scale-[0.98] active:bg-orange-500/18",
+  "hover:border-zinc-100 hover:bg-zinc-100/12 hover:text-zinc-200 dark:hover:text-zinc-300",
+  "active:scale-[0.98] active:bg-zinc-100/18",
   focusRing,
 ].join(" ");
 
@@ -242,16 +242,16 @@ const popoverAlign = {
   sideOffset: 8,
 };
 
-/** Today accent only when the cell is not selected — avoids orange-on-orange when picking today. */
+/** Today accent only when the cell is not selected — avoids clashing with the selected state. */
 const demoTodayUnselected =
-  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-orange-600 dark:data-[today]:[&:not([aria-selected=true])]:text-orange-400 data-[today]:[&:not([aria-selected=true])]:ring-1 data-[today]:[&:not([aria-selected=true])]:ring-orange-500/50 data-[today]:[&:not([aria-selected=true])]:ring-inset";
+  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-zinc-200 dark:data-[today]:[&:not([aria-selected=true])]:text-zinc-300 data-[today]:[&:not([aria-selected=true])]:ring-1 data-[today]:[&:not([aria-selected=true])]:ring-zinc-100/50 data-[today]:[&:not([aria-selected=true])]:ring-inset";
 
 const demoDayStates = [
   "text-zinc-800 dark:text-zinc-100",
   "data-disabled:cursor-not-allowed data-disabled:opacity-30 data-disabled:hover:bg-transparent",
-  "aria-selected:bg-orange-500 aria-selected:!text-white aria-selected:font-semibold",
-  "aria-selected:hover:bg-orange-600 dark:aria-selected:hover:bg-orange-500",
-  "aria-selected:focus-visible:ring-offset-orange-500",
+  "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
+  "aria-selected:hover:bg-zinc-200 dark:aria-selected:hover:bg-zinc-100",
+  "aria-selected:focus-visible:ring-offset-zinc-100",
   demoTodayUnselected,
   "aria-selected:data-[today]:!text-white aria-selected:data-[today]:ring-2 aria-selected:data-[today]:ring-white/70 aria-selected:data-[today]:ring-inset",
   "data-[outside-month]:text-zinc-400 dark:data-[outside-month]:text-zinc-500",
@@ -262,15 +262,15 @@ const demoDayCls = (size: CalSize) => `${DEMO_DAY_BASE[size]} ${demoDayStates}`;
 const demoRangeDayCls = (size: CalSize) =>
   [
     demoDayCls(size),
-    "data-[in-range]:bg-orange-500/28 data-[in-range]:text-orange-950 dark:data-[in-range]:bg-orange-500/22 dark:data-[in-range]:text-orange-50",
-    "data-[in-range]:hover:bg-orange-500/36 dark:data-[in-range]:hover:bg-orange-500/30",
+    "data-[in-range]:bg-zinc-100/28 data-[in-range]:text-zinc-900 dark:data-[in-range]:bg-zinc-100/22 dark:data-[in-range]:text-zinc-100",
+    "data-[in-range]:hover:bg-zinc-100/36 dark:data-[in-range]:hover:bg-zinc-100/30",
     "data-[in-range]:rounded-none",
     "data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:data-[range-end]:rounded-lg",
     "data-[range-start]:z-[1] data-[range-end]:z-[1]",
-    "data-[range-start]:bg-orange-500 data-[range-end]:bg-orange-500",
+    "data-[range-start]:bg-zinc-100 data-[range-end]:bg-zinc-100",
     "data-[range-start]:!text-white data-[range-end]:!text-white data-[range-start]:font-semibold data-[range-end]:font-semibold",
     "data-[range-start]:data-[today]:!text-white data-[range-end]:data-[today]:!text-white",
-    "data-[range-start]:hover:bg-orange-600 data-[range-end]:hover:bg-orange-600",
+    "data-[range-start]:hover:bg-zinc-200 data-[range-end]:hover:bg-zinc-200",
   ].join(" ");
 
 /* ---------------- helpers ---------------- */
@@ -340,7 +340,7 @@ export function InlineCalendar({
 
   // We use low-level composition for full control over classes + to wrap in the demo shell
   return (
-    <KairoDatePicker.Root
+    <KenosDatePicker.Root
       mode="single"
       locale={locale}
       defaultValue={value}
@@ -348,27 +348,27 @@ export function InlineCalendar({
     >
       <div className={shell} data-cal-size={size}>
         <div className={`flex items-center justify-between ${size === "default" ? "mb-2.5" : "mb-2"}`}>
-          <KairoDatePicker.PrevTrigger className={headNav} aria-label="Previous">
+          <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
             <LeftIcon />
-          </KairoDatePicker.PrevTrigger>
-          <KairoDatePicker.ViewTrigger className={headTitle} />
-          <KairoDatePicker.NextTrigger className={headNav} aria-label="Next">
+          </KenosDatePicker.PrevTrigger>
+          <KenosDatePicker.ViewTrigger className={headTitle} />
+          <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
             <RightIcon />
-          </KairoDatePicker.NextTrigger>
+          </KenosDatePicker.NextTrigger>
         </div>
 
-        <KairoDatePicker.View view="day">
-          <KairoDatePicker.Grid
+        <KenosDatePicker.View view="day">
+          <KenosDatePicker.Grid
             className="w-full border-collapse table-fixed"
             header={
-              <KairoDatePicker.WeekDays className={weekdayCls} />
+              <KenosDatePicker.WeekDays className={weekdayCls} />
             }
           >
             {({ weeks }) =>
               weeks.map((week, wi) => (
                 <tr key={wi}>
                   {week.map((date, di) => (
-                    <KairoDatePicker.Day
+                    <KenosDatePicker.Day
                       key={di}
                       date={date}
                       className={demoDayCls(size)}
@@ -377,16 +377,16 @@ export function InlineCalendar({
                 </tr>
               ))
             }
-          </KairoDatePicker.Grid>
-        </KairoDatePicker.View>
+          </KenosDatePicker.Grid>
+        </KenosDatePicker.View>
 
         {/* Month / Year views for full parity with old demo (switch via ViewTrigger) */}
-        <KairoDatePicker.View view="month">
-          <KairoDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+        <KenosDatePicker.View view="month">
+          <KenosDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
             {({ months }) => (
               <>
                 {months.map((m) => (
-                  <KairoDatePicker.MonthCell
+                  <KenosDatePicker.MonthCell
                     key={m.value}
                     value={m.value}
                     disabled={m.isDisabled}
@@ -394,33 +394,33 @@ export function InlineCalendar({
                     className={DEMO_MONTH_YEAR_CELL[size]}
                   >
                     {demoMonthLabel(locale, m.value)}
-                  </KairoDatePicker.MonthCell>
+                  </KenosDatePicker.MonthCell>
                 ))}
               </>
             )}
-          </KairoDatePicker.MonthGrid>
-        </KairoDatePicker.View>
+          </KenosDatePicker.MonthGrid>
+        </KenosDatePicker.View>
 
-        <KairoDatePicker.View view="year">
-          <KairoDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+        <KenosDatePicker.View view="year">
+          <KenosDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
             {({ years }) => (
               <>
                 {years.map((y) => (
-                  <KairoDatePicker.YearCell
+                  <KenosDatePicker.YearCell
                     key={y.value}
                     value={y.value}
                     disabled={y.isDisabled}
                     className={DEMO_YEAR_CELL[size]}
                   >
                     {y.value}
-                  </KairoDatePicker.YearCell>
+                  </KenosDatePicker.YearCell>
                 ))}
               </>
             )}
-          </KairoDatePicker.YearGrid>
-        </KairoDatePicker.View>
+          </KenosDatePicker.YearGrid>
+        </KenosDatePicker.View>
       </div>
-    </KairoDatePicker.Root>
+    </KenosDatePicker.Root>
   );
 }
 
@@ -445,7 +445,7 @@ export function DatePicker({
   const headTitle = DEMO_HEAD_TITLE[size];
 
   return (
-    <KairoDatePicker.Root
+    <KenosDatePicker.Root
       mode="single"
       locale={locale}
       defaultValue={defaultValue}
@@ -454,13 +454,13 @@ export function DatePicker({
       <div className={fieldWrap(compact)}>
         <label className={labelCls}>{label}</label>
         <div className="flex items-center gap-2">
-          <KairoDatePicker.Input className={inputCls} />
-          <KairoDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+          <KenosDatePicker.Input className={inputCls} />
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
             <CalIcon />
-          </KairoDatePicker.Trigger>
+          </KenosDatePicker.Trigger>
         </div>
 
-        <KairoDatePicker.Content
+        <KenosDatePicker.Content
           portal
           {...popoverAlign}
           className={shell}
@@ -469,25 +469,25 @@ export function DatePicker({
           data-cal-size={size}
         >
           <div className={`flex items-center justify-between ${compact ? "mb-2" : "mb-2.5"}`}>
-            <KairoDatePicker.PrevTrigger className={headNav} aria-label="Previous">
+            <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
               <LeftIcon />
-            </KairoDatePicker.PrevTrigger>
-            <KairoDatePicker.ViewTrigger className={headTitle} />
-            <KairoDatePicker.NextTrigger className={headNav} aria-label="Next">
+            </KenosDatePicker.PrevTrigger>
+            <KenosDatePicker.ViewTrigger className={headTitle} />
+            <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
               <RightIcon />
-            </KairoDatePicker.NextTrigger>
+            </KenosDatePicker.NextTrigger>
           </div>
 
-          <KairoDatePicker.View view="day">
-            <KairoDatePicker.Grid
+          <KenosDatePicker.View view="day">
+            <KenosDatePicker.Grid
               className="w-full border-collapse table-fixed"
-              header={<KairoDatePicker.WeekDays className={weekdayCls} />}
+              header={<KenosDatePicker.WeekDays className={weekdayCls} />}
             >
               {({ weeks }) =>
                 weeks.map((week, wi) => (
                   <tr key={wi}>
                     {week.map((date, di) => (
-                      <KairoDatePicker.Day
+                      <KenosDatePicker.Day
                         key={di}
                         date={date}
                         className={demoDayCls(size)}
@@ -496,16 +496,16 @@ export function DatePicker({
                   </tr>
                 ))
               }
-            </KairoDatePicker.Grid>
-          </KairoDatePicker.View>
+            </KenosDatePicker.Grid>
+          </KenosDatePicker.View>
 
           {/* Support month/year panes like the old demo */}
-          <KairoDatePicker.View view="month">
-            <KairoDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+          <KenosDatePicker.View view="month">
+            <KenosDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
               {({ months }) => (
                 <>
                   {months.map((m) => (
-                    <KairoDatePicker.MonthCell
+                    <KenosDatePicker.MonthCell
                       key={m.value}
                       value={m.value}
                       disabled={m.isDisabled}
@@ -513,34 +513,34 @@ export function DatePicker({
                       className={DEMO_MONTH_YEAR_CELL[size]}
                     >
                       {demoMonthLabel(locale, m.value)}
-                    </KairoDatePicker.MonthCell>
+                    </KenosDatePicker.MonthCell>
                   ))}
                 </>
               )}
-            </KairoDatePicker.MonthGrid>
-          </KairoDatePicker.View>
+            </KenosDatePicker.MonthGrid>
+          </KenosDatePicker.View>
 
-          <KairoDatePicker.View view="year">
-            <KairoDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+          <KenosDatePicker.View view="year">
+            <KenosDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
               {({ years }) => (
                 <>
                   {years.map((y) => (
-                    <KairoDatePicker.YearCell
+                    <KenosDatePicker.YearCell
                       key={y.value}
                       value={y.value}
                       disabled={y.isDisabled}
                       className={DEMO_YEAR_CELL[size]}
                     >
                       {y.value}
-                    </KairoDatePicker.YearCell>
+                    </KenosDatePicker.YearCell>
                   ))}
                 </>
               )}
-            </KairoDatePicker.YearGrid>
-          </KairoDatePicker.View>
-        </KairoDatePicker.Content>
+            </KenosDatePicker.YearGrid>
+          </KenosDatePicker.View>
+        </KenosDatePicker.Content>
       </div>
-    </KairoDatePicker.Root>
+    </KenosDatePicker.Root>
   );
 }
 
@@ -566,7 +566,7 @@ export function DateRangePicker({
   const headTitle = DEMO_HEAD_TITLE[size];
 
   return (
-    <KairoDatePicker.Root
+    <KenosDatePicker.Root
       mode="range"
       locale={locale}
       onValueChange={setRange}
@@ -592,22 +592,22 @@ export function DateRangePicker({
             </div>
           ) : (
             <>
-              <KairoDatePicker.Input index={0} className={rangeInputCls} />
+              <KenosDatePicker.Input index={0} className={rangeInputCls} />
               <span
                 className="shrink-0 font-medium text-zinc-500 dark:text-zinc-400"
                 aria-hidden
               >
                 →
               </span>
-              <KairoDatePicker.Input index={1} className={rangeInputCls} />
+              <KenosDatePicker.Input index={1} className={rangeInputCls} />
             </>
           )}
-          <KairoDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
             <CalIcon />
-          </KairoDatePicker.Trigger>
+          </KenosDatePicker.Trigger>
         </div>
 
-        <KairoDatePicker.Content
+        <KenosDatePicker.Content
           portal
           {...popoverAlign}
           className={shell}
@@ -616,25 +616,25 @@ export function DateRangePicker({
           data-cal-size={size}
         >
           <div className={`flex items-center justify-between ${compact ? "mb-2" : "mb-2.5"}`}>
-            <KairoDatePicker.PrevTrigger className={headNav} aria-label="Previous">
+            <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
               <LeftIcon />
-            </KairoDatePicker.PrevTrigger>
-            <KairoDatePicker.ViewTrigger className={headTitle} />
-            <KairoDatePicker.NextTrigger className={headNav} aria-label="Next">
+            </KenosDatePicker.PrevTrigger>
+            <KenosDatePicker.ViewTrigger className={headTitle} />
+            <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
               <RightIcon />
-            </KairoDatePicker.NextTrigger>
+            </KenosDatePicker.NextTrigger>
           </div>
 
-          <KairoDatePicker.View view="day">
-            <KairoDatePicker.Grid
+          <KenosDatePicker.View view="day">
+            <KenosDatePicker.Grid
               className="w-full border-collapse table-fixed"
-              header={<KairoDatePicker.WeekDays className={weekdayCls} />}
+              header={<KenosDatePicker.WeekDays className={weekdayCls} />}
             >
               {({ weeks }) =>
                 weeks.map((week, wi) => (
                   <tr key={wi}>
                     {week.map((date, di) => (
-                      <KairoDatePicker.Day
+                      <KenosDatePicker.Day
                         key={di}
                         date={date}
                         className={demoRangeDayCls(size)}
@@ -643,13 +643,13 @@ export function DateRangePicker({
                   </tr>
                 ))
               }
-            </KairoDatePicker.Grid>
-          </KairoDatePicker.View>
+            </KenosDatePicker.Grid>
+          </KenosDatePicker.View>
 
           {presets && <RangePresets />}
-        </KairoDatePicker.Content>
+        </KenosDatePicker.Content>
       </div>
-    </KairoDatePicker.Root>
+    </KenosDatePicker.Root>
   );
 }
 
@@ -664,16 +664,16 @@ export function DateField({
   defaultValue?: Date | null;
 }) {
   return (
-    <KairoDatePicker.Root
+    <KenosDatePicker.Root
       mode="single"
       locale={locale}
       defaultValue={defaultValue}
     >
       <div className={`${dateFieldWrap} mx-auto`}>
         <label className={labelCls}>{label}</label>
-        <KairoDatePicker.Input className={dateFieldInputCls} />
+        <KenosDatePicker.Input className={dateFieldInputCls} />
       </div>
-    </KairoDatePicker.Root>
+    </KenosDatePicker.Root>
   );
 }
 

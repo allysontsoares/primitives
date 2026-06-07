@@ -1,32 +1,69 @@
 # @at5/kairo
 
-Headless date & scheduling primitives for React. Built on top of the native `Intl` API, timescape and Floating UI — with full keyboard navigation and WAI-ARIA compliance.
+> **Deprecated.** This package is no longer maintained. Use [`@kenos-ui/react-datepicker`](https://www.npmjs.com/package/@kenos-ui/react-datepicker) instead.
 
-## Features
+`@at5/kairo` is a thin compatibility shim that re-exports `@kenos-ui/react-datepicker`. Existing installs keep working, but new projects should install Kenos directly.
 
-- **Calendar** — WAI-ARIA grid pattern with roving focus and full keyboard navigation
-- **Date Picker** — Input + popover calendar, semantic HTML only
-- **Date Range Picker** — Dual-endpoint selection with live hover preview and optional presets
-- **Date Field** — Segmented spinbutton input (day/month/year), no calendar required
-- Locale-aware: respects week start day, date format order, and RTL scripts
-- Unstyled — bring your own CSS
-- React 19+, TypeScript-first
+## Migrate
 
-## Installation
+### From `@at5/kairo`
 
 ```bash
-npm install @at5/kairo
+pnpm remove @at5/kairo
+pnpm add @kenos-ui/react-datepicker
 ```
 
-## Quick Start
+```diff
+- import { DatePicker } from "@at5/kairo";
++ import { DatePicker } from "@kenos-ui/react-datepicker";
+```
+
+No API changes — same `DatePicker.*` compound components, props, and behavior.
+
+### From `@torq-ui/*` (removed)
+
+The interim `@torq-ui/react-date-picker` and `@torq-ui/react` packages were deleted from npm. Replace them with Kenos:
+
+```bash
+pnpm remove @torq-ui/react-date-picker @torq-ui/react
+pnpm add @kenos-ui/react-datepicker
+```
+
+```diff
+- import { DatePicker } from "@torq-ui/react-date-picker";
+- import { DatePicker } from "@torq-ui/react";
++ import { DatePicker } from "@kenos-ui/react-datepicker";
+```
+
+### From `@at5/axis-datepicker` or `@at5/axis`
+
+```bash
+pnpm remove @at5/axis-datepicker @at5/axis
+pnpm add @kenos-ui/react-datepicker
+```
+
+```diff
+- import { DatePicker } from "@at5/axis-datepicker";
++ import { DatePicker } from "@kenos-ui/react-datepicker";
+```
+
+## Install (new projects)
+
+```bash
+pnpm add @kenos-ui/react-datepicker
+# or
+npm install @kenos-ui/react-datepicker
+```
 
 ```tsx
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 
-function App() {
+export function MyDatePicker() {
   return (
-    <DatePicker.Root>
-      <DatePicker.Trigger>Pick a date</DatePicker.Trigger>
+    <DatePicker.Root onValueChange={(date) => console.log(date)}>
+      <DatePicker.Label>Pick a date</DatePicker.Label>
+      <DatePicker.Input />
+      <DatePicker.Trigger />
       <DatePicker.Content>
         <DatePicker.Calendar />
       </DatePicker.Content>
@@ -35,126 +72,11 @@ function App() {
 }
 ```
 
-## Components
+## Docs
 
-### Calendar
+- [kenos.at5.dev](https://kenos.at5.dev) — installation, API, examples
+- [@kenos-ui/react](https://www.npmjs.com/package/@kenos-ui/react) — aggregator package (optional)
 
-Standalone month grid (composed via DatePicker.Root + calendar parts for full control, or the shorthand).
+## Why Kenos?
 
-```tsx
-import { DatePicker } from "@at5/kairo";
-
-<DatePicker.Root locale="en-US" onValueChange={(date) => console.log(date)}>
-  <DatePicker.ViewControl>
-    <DatePicker.PrevTrigger />
-    <DatePicker.ViewTrigger />
-    <DatePicker.NextTrigger />
-  </DatePicker.ViewControl>
-  <DatePicker.View view="day">
-    <DatePicker.Grid header={<DatePicker.WeekDays />}>
-      {({ weeks }) => weeks.map((week, i) => (
-        <tr key={i}>
-          {week.map((d, j) => <DatePicker.Day key={j} date={d} />)}
-        </tr>
-      ))}
-    </DatePicker.Grid>
-  </DatePicker.View>
-</DatePicker.Root>
-
-// Or shorthand inside a Root:
-<DatePicker.Root>
-  <DatePicker.Calendar />
-</DatePicker.Root>
-```
-
-**Props on Root:** `value`, `defaultValue`, `onValueChange`, `locale`, `weekStartsOn`, `minDate`, `maxDate`, `disabled`, `mode`
-
-**Data attributes (on Day):** `[data-selected]`, `[data-today]`, `[data-outside-month]`, `[data-disabled]`, `[data-in-range]`, `[data-range-start]`, `[data-range-end]`
-
-For the dedicated "Date Field" experience use a minimal Root + Input only.
-
----
-
-### Date Picker
-
-Text input paired with a calendar popover.
-
-```tsx
-import { DatePicker } from "@at5/kairo";
-
-<DatePicker.Root locale="en-US" onValueChange={(date) => console.log(date)}>
-  <DatePicker.Trigger />
-  <DatePicker.Content>
-    <DatePicker.Calendar />
-  </DatePicker.Content>
-</DatePicker.Root>;
-```
-
-**Props:** `value`, `defaultValue`, `onValueChange`, `open`, `onOpenChange`, `locale`, `format`, `closeOnSelect`, `placement`
-
-**Keyboard:** `Enter`/`Space` opens popover, `Escape` closes, arrow keys navigate calendar.
-
----
-
-### Date Range Picker
-
-Selects a start and end date with optional night presets.
-
-```tsx
-import { DateRangePicker } from "@at5/kairo";
-
-<DateRangePicker.Root locale="en-US" onValueChange={({ start, end }) => console.log(start, end)}>
-  <DateRangePicker.Trigger />
-  <DateRangePicker.Content>
-    <DateRangePicker.Calendar />
-  </DateRangePicker.Content>
-</DateRangePicker.Root>;
-```
-
-**Props:** `value`, `defaultValue`, `onValueChange`, `minNights`, `maxNights`, `presets`, `locale`
-
----
-
-### Date Field
-
-Segmented spinbutton input — no popover, locale-aware segment order.
-
-```tsx
-import { DateField } from "@at5/kairo";
-
-<DateField.Root locale="en-US" onValueChange={(date) => console.log(date)}>
-  <DateField.Segment segment="month" />
-  <DateField.Literal>/</DateField.Literal>
-  <DateField.Segment segment="day" />
-  <DateField.Literal>/</DateField.Literal>
-  <DateField.Segment segment="year" />
-</DateField.Root>;
-```
-
-**Props:** `value`, `defaultValue`, `onValueChange`, `locale`, `granularity`, `min`, `max`
-
-**Keyboard:** `↑`/`↓` increments/decrements the focused segment, `Tab` advances to next segment.
-
-## Localization
-
-All components accept a `locale` prop compatible with `Intl.Locale`. Week start day, month/day/year order, and calendar display adapt automatically.
-
-```tsx
-// Arabic RTL
-<DatePicker.Root locale="ar" />
-
-// Brazilian Portuguese
-<DatePicker.Root locale="pt-BR" />
-
-// Japanese
-<DatePicker.Root locale="ja-JP" />
-```
-
-## Requirements
-
-- React `>=19.0.0`
-- Node.js `>=22`
-
-## License
-
-MIT
+Kenos UI (`@kenos-ui`) is the current home for these primitives. `@at5/kairo` remains published only so existing lockfiles and dependents can transition without a breaking release.

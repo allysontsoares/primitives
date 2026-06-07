@@ -36,25 +36,25 @@ export function Installation() {
         <Eyebrow>Get Started</Eyebrow>
         <PageTitle>Installation</PageTitle>
         <Lead>
-          Kairo ships as a single package with no runtime dependencies. React 19 and React DOM 19 are
+          Kenos UI ships headless primitives with no runtime dependencies. React 19 and React DOM 19 are
           peer dependencies.
         </Lead>
       </PageIntro>
       <H2 id="install">Install the package</H2>
       <CodeBlock
         tabs={[
-          { label: "npm", lang: "bash", code: "npm install @at5/kairo" },
-          { label: "pnpm", lang: "bash", code: "pnpm add @at5/kairo" },
-          { label: "yarn", lang: "bash", code: "yarn add @at5/kairo" },
-          { label: "bun", lang: "bash", code: "bun add @at5/kairo" },
+          { label: "npm", lang: "bash", code: "npm install @kenos-ui/react-datepicker" },
+          { label: "pnpm", lang: "bash", code: "pnpm add @kenos-ui/react-datepicker" },
+          { label: "yarn", lang: "bash", code: "yarn add @kenos-ui/react-datepicker" },
+          { label: "bun", lang: "bash", code: "bun add @kenos-ui/react-datepicker" },
         ]}
       />
       <Callout icon={<InfoIcon />}>
-        Kairo has <strong className="font-semibold text-zinc-900 dark:text-zinc-100">zero CSS</strong>. Nothing renders
+        Kenos has <strong className="font-semibold text-zinc-900 dark:text-zinc-100">zero CSS</strong>. Nothing renders
         styled out of the box — you attach classes to each part. See the{" "}
         <Link
-          href="/styling"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-orange-500 hover:decoration-accent"
+          href="/docs/styling"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
         >
           Styling guide
         </Link>
@@ -82,7 +82,7 @@ export function Installation() {
       <H2 id="import">Import primitives</H2>
       <CodeBlock
         lang="jsx"
-        code={`import { DatePicker } from "@at5/kairo";\n\n// Calendar grid, segmented input, range etc. are all under DatePicker.*\n// <DatePicker.Root mode="range"> ... <DatePicker.Input index={0} /> ...`}
+        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\n// or: import { DatePicker } from "@kenos-ui/react";\n\n// Calendar grid, segmented input, range etc. are all under DatePicker.*\n// <DatePicker.Root mode="range"> ... <DatePicker.Input index={0} /> ...`}
       />
     </>
   );
@@ -103,11 +103,11 @@ export function QuickStart() {
       </P>
       <CodeBlock
         lang="jsx"
-        code={`import { DatePicker } from "@at5/kairo";\nimport "./date-picker.css";\n\nexport function MyDatePicker() {\n  return (\n    <DatePicker.Root onValueChange={(d) => console.log(d)}>\n      <DatePicker.Label className="label">Pick a date</DatePicker.Label>\n      <div className="control">\n        <DatePicker.Input className="input" />\n        <DatePicker.Trigger className="trigger">📅</DatePicker.Trigger>\n      </div>\n      <DatePicker.Content className="popover">\n        <DatePicker.Calendar />\n      </DatePicker.Content>\n    </DatePicker.Root>\n  );\n}`}
+        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\nimport "./date-picker.css";\n\nexport function MyDatePicker() {\n  return (\n    <DatePicker.Root onValueChange={(d) => console.log(d)}>\n      <DatePicker.Label className="label">Pick a date</DatePicker.Label>\n      <div className="control">\n        <DatePicker.Input className="input" />\n        <DatePicker.Trigger className="trigger">📅</DatePicker.Trigger>\n      </div>\n      <DatePicker.Content className="popover">\n        <DatePicker.Calendar />\n      </DatePicker.Content>\n    </DatePicker.Root>\n  );\n}`}
       />
       <H2 id="style">2. Bring your CSS</H2>
       <P>
-        Style parts directly, or target the <InlineCode>[data-*]</InlineCode> attributes Kairo sets
+        Style parts directly, or target the <InlineCode>[data-*]</InlineCode> attributes Kenos sets
         for state (<InlineCode>[data-selected]</InlineCode>, <InlineCode>[data-today]</InlineCode>,{" "}
         <InlineCode>[data-disabled]</InlineCode>).
       </P>
@@ -122,15 +122,15 @@ export function QuickStart() {
       <Callout>
         Next, explore each{" "}
         <Link
-          href="/date-picker"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-orange-500 hover:decoration-accent"
+          href="/docs/date-picker"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
         >
           primitive
         </Link>{" "}
         or read the{" "}
         <Link
-          href="/accessibility"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-orange-500 hover:decoration-accent"
+          href="/docs/accessibility"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
         >
           accessibility guide
         </Link>
@@ -149,7 +149,7 @@ export function Localization() {
         <Eyebrow>Guides</Eyebrow>
         <PageTitle>Localization</PageTitle>
         <Lead>
-          Pass any BCP 47 locale tag and Kairo derives everything from the platform{" "}
+          Pass any BCP 47 locale tag and Kenos derives everything from the platform{" "}
           <InlineCode>Intl</InlineCode> APIs — no locale data to bundle.
         </Lead>
       </PageIntro>
@@ -186,7 +186,7 @@ export function Localization() {
             onClick={() => setLocale(v)}
             className={`min-h-9 rounded-lg border px-3 font-mono text-[12.5px] transition-colors ${
               v === locale
-                ? "border-orange-500 text-orange-500"
+                ? "border-zinc-400 text-zinc-500"
                 : "border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
             }`}
           >
@@ -216,7 +216,7 @@ export function Accessibility() {
         <Eyebrow>Guides</Eyebrow>
         <PageTitle>Accessibility</PageTitle>
         <Lead>
-          Kairo implements the WAI-ARIA grid pattern. Roles, labels, selection state and focus
+          Kenos implements the WAI-ARIA grid pattern. Roles, labels, selection state and focus
           management are handled for you.
         </Lead>
       </PageIntro>
@@ -287,7 +287,7 @@ export function Styling() {
         <Eyebrow>Guides</Eyebrow>
         <PageTitle>Styling</PageTitle>
         <Lead>
-          Kairo ships no CSS. Style parts however you like — plain CSS, CSS Modules, Tailwind, or
+          Kenos ships no CSS. Style parts however you like — plain CSS, CSS Modules, Tailwind, or
           styled-components.
         </Lead>
       </PageIntro>
@@ -311,7 +311,7 @@ export function Styling() {
       <H2 id="tailwind">Tailwind</H2>
       <CodeBlock
         lang="jsx"
-        code={`<DatePicker.Day\n  date={day}\n  className="size-9 rounded-lg hover:bg-zinc-800\n             data-[selected]:bg-orange-500\n             data-[today]:font-bold" />`}
+        code={`<DatePicker.Day\n  date={day}\n  className="size-9 rounded-lg hover:bg-zinc-800\n             data-[selected]:bg-zinc-100\n             data-[today]:font-bold" />`}
       />
     </>
   );
@@ -344,7 +344,7 @@ export function Changelog() {
         <Eyebrow>Get Started</Eyebrow>
         <PageTitle>Changelog</PageTitle>
         <Lead>
-          Notable changes to <InlineCode>@at5/kairo</InlineCode>.
+          Notable changes to <InlineCode>@kenos-ui/react-datepicker</InlineCode>.
         </Lead>
       </PageIntro>
       {rel.map((r) => (
