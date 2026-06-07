@@ -1,4 +1,4 @@
-# @primitives/playground
+# @kenos-ui/playground
 
 ## 0.0.4
 

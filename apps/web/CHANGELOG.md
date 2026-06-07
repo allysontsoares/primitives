@@ -1,4 +1,4 @@
-# @primitives/web
+# @kenos-ui/web
 
 ## 0.0.4
 
