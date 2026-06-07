@@ -6,13 +6,15 @@ import { EXAMPLE_SNIPPETS } from "../../lib/example-snippets";
 import { CodeBlock } from "./code-block";
 import { DocsHeroCard } from "./hero-card";
 import { HomeCtaBand, HomeHighlights, HomeQualities, HomeWhySection } from "./home-highlights";
-import { ActionRow, ApiReference, CopyPage, DemoStage, Example, PageNav } from "./blocks";
+import { ActionRow, Anatomy, ApiReference, CopyPage, DemoStage, Example, PageNav } from "./blocks";
 import {
   DateField,
   InlineCalendar,
   DatePicker,
   DateRangePicker,
   LiveDemo,
+  SelectDialogDemo,
+  SelectFormDemo,
 } from "./demos";
 
 /* ---------------- shared typography ---------------- */
@@ -78,11 +80,49 @@ const localeOpts: [string, string][] = [
   ["ar-EG", "العربية"],
 ];
 
+const DIALOG_INTEROP_SNIPPET = `import { Select } from "@kenos-ui/react-select";
+
+// Inside any Dialog.Content — keep portal={false} (default)
+<Dialog.Content>
+  <Select.Root name="country">
+    <Select.Label>Country</Select.Label>
+    <Select.Trigger>
+      <Select.Value placeholder="Choose…" />
+    </Select.Trigger>
+    <Select.Content>
+      <Select.List>
+        <Select.Item value="pt">Portugal</Select.Item>
+        <Select.Item value="br">Brazil</Select.Item>
+      </Select.List>
+    </Select.Content>
+    <Select.HiddenSelect />
+  </Select.Root>
+</Dialog.Content>`;
+
+const SELECT_FORMS_SNIPPET = `import { Select } from "@kenos-ui/react-select";
+
+<form action="/api/profile" method="post">
+  <Select.Root name="framework" required>
+    <Select.Trigger>
+      <Select.Value placeholder="Framework" />
+    </Select.Trigger>
+    <Select.Content>
+      <Select.List>
+        <Select.Item value="react">React</Select.Item>
+      </Select.List>
+    </Select.Content>
+    <Select.HiddenSelect />
+  </Select.Root>
+  <button type="submit">Save</button>
+</form>`;
+
 /* ================= COMPONENT PAGE ================= */
 export function ComponentPage({ slug }: { slug: string }) {
   const c = COMPONENTS[slug];
   const [locale, setLocale] = useState("en-US");
   if (!c) return null;
+
+  const features = c.features ?? {};
 
   return (
     <>
@@ -92,6 +132,15 @@ export function ComponentPage({ slug }: { slug: string }) {
         <Lead>{c.desc}</Lead>
         <ActionRow />
       </PageIntro>
+
+      <H2 id="anatomy">Anatomy</H2>
+      <P>
+        <InlineCode>{c.name}</InlineCode> is composed of independent parts. Import{" "}
+        <InlineCode>{`{ ${c.importName} }`}</InlineCode> from{" "}
+        <InlineCode>{c.npmPackage}</InlineCode> (or <InlineCode>@kenos-ui/react</InlineCode>) and
+        assemble only the pieces you need.
+      </P>
+      <Anatomy slug={slug} parts={c.parts} />
 
       <H2 id="examples">Examples</H2>
       <P>
@@ -112,35 +161,73 @@ export function ComponentPage({ slug }: { slug: string }) {
         </Example>
       )}
 
-      <H3 id="localized">Locale-aware</H3>
-      <P>
-        Segment order, separators, weekday names and the first day of the week all derive from{" "}
-        <InlineCode>Intl</InlineCode>. Switch the locale to see the same primitive adapt.
-      </P>
-      <div className="mb-3.5 flex flex-wrap gap-2">
-        {localeOpts.map(([v, l]) => (
-          <button
-            key={v}
-            onClick={() => setLocale(v)}
-            className={`min-h-9 rounded-lg border px-3 text-[12.5px] transition-colors ${
-              v === locale
-                ? "border-zinc-400 text-zinc-500"
-                : "border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
-            }`}
-          >
-            {l}
-          </button>
-        ))}
-      </div>
-      <DemoStage tall key={locale}>
-        <LiveDemo kind={c.demo as DemoKind} locale={locale} />
-      </DemoStage>
+      {features.localeExamples && (
+        <>
+          <H3 id="localized">Locale-aware</H3>
+          <P>
+            Segment order, separators, weekday names and the first day of the week all derive from{" "}
+            <InlineCode>Intl</InlineCode>. Switch the locale to see the same primitive adapt.
+          </P>
+          <div className="mb-3.5 flex flex-wrap gap-2">
+            {localeOpts.map(([v, l]) => (
+              <button
+                key={v}
+                onClick={() => setLocale(v)}
+                className={`min-h-9 rounded-lg border px-3 text-[12.5px] transition-colors ${
+                  v === locale
+                    ? "border-zinc-400 text-zinc-500"
+                    : "border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+          </div>
+          <DemoStage tall key={locale}>
+            <LiveDemo kind={c.demo as DemoKind} locale={locale} />
+          </DemoStage>
+        </>
+      )}
+
+      {features.dialogInterop && slug === "select" && (
+        <>
+          <H3 id="dialog-interop">Inside a Dialog</H3>
+          <P>
+            Kenos defaults to <InlineCode>portal=&#123;false&#125;</InlineCode> and{" "}
+            <InlineCode>modal=&#123;false&#125;</InlineCode> so the listbox stays in the Dialog
+            subtree. Escape closes the Select only (<InlineCode>stopPropagation</InlineCode>) — the
+            parent dialog stays open.
+          </P>
+          <Example code={DIALOG_INTEROP_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <SelectDialogDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.forms && slug === "select" && (
+        <>
+          <H3 id="forms">Forms</H3>
+          <P>
+            Add <InlineCode>name</InlineCode> on <InlineCode>Select.Root</InlineCode> and render{" "}
+            <InlineCode>Select.HiddenSelect</InlineCode> for native HTML submit and constraint
+            validation. Works with React Hook Form and TanStack Form via controlled{" "}
+            <InlineCode>value</InlineCode> + <InlineCode>onValueChange</InlineCode>.
+          </P>
+          <Example code={SELECT_FORMS_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <SelectFormDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
 
       <H2 id="api-reference">API Reference</H2>
       <P>
-        Props, data attributes, and keyboard interactions for <InlineCode>{c.name}</InlineCode>. Import from{" "}
-        <InlineCode>@kenos-ui/react-datepicker</InlineCode>; parts use <InlineCode>data-part</InlineCode> and{" "}
-        <InlineCode>data-*</InlineCode> attributes for styling.
+        Props, data attributes, and keyboard interactions for <InlineCode>{c.name}</InlineCode>.
+        Import from <InlineCode>{c.npmPackage}</InlineCode>; parts use{" "}
+        <InlineCode>data-part</InlineCode> and <InlineCode>data-*</InlineCode> attributes for styling.
       </P>
       <ApiReference groups={API[slug] || []} />
 

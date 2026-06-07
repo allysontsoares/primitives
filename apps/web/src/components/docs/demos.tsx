@@ -696,23 +696,40 @@ const selectItemCls = [
   "data-[disabled]:pointer-events-none data-[disabled]:opacity-40",
 ].join(" ");
 
-export function SelectDemo({ label = "Framework" }: { label?: string }) {
+const selectFrameworkOptions = [
+  ["react", "React"],
+  ["vue", "Vue"],
+  ["svelte", "Svelte"],
+] as const;
+
+const selectThemeOptions = [
+  ["light", "Light"],
+  ["dark", "Dark"],
+] as const;
+
+export function SelectDemo({
+  label = "Framework",
+  name = "framework",
+  defaultValue = "react",
+  options = selectFrameworkOptions,
+}: {
+  label?: string;
+  name?: string;
+  defaultValue?: string;
+  options?: ReadonlyArray<readonly [string, string]>;
+}) {
   return (
-    <KenosSelect.Root name="framework" defaultValue="react">
-      <label className="mb-1.5 block text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+    <KenosSelect.Root name={name} defaultValue={defaultValue}>
+      <KenosSelect.Label className="mb-1.5 block text-sm font-semibold text-zinc-700 dark:text-zinc-200">
         {label}
-      </label>
+      </KenosSelect.Label>
       <KenosSelect.Trigger className={selectTriggerCls}>
         <KenosSelect.Value placeholder="Choose…" />
         <KenosSelect.Icon />
       </KenosSelect.Trigger>
       <KenosSelect.Content className={selectContentCls} sameWidth>
         <KenosSelect.List>
-          {[
-            ["react", "React"],
-            ["vue", "Vue"],
-            ["svelte", "Svelte"],
-          ].map(([value, text]) => (
+          {options.map(([value, text]) => (
             <KenosSelect.Item key={value} value={value} className={selectItemCls}>
               <KenosSelect.ItemText>{text}</KenosSelect.ItemText>
             </KenosSelect.Item>
@@ -721,6 +738,44 @@ export function SelectDemo({ label = "Framework" }: { label?: string }) {
       </KenosSelect.Content>
       <KenosSelect.HiddenSelect />
     </KenosSelect.Root>
+  );
+}
+
+export function SelectDialogDemo() {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Settings"
+      className="w-full max-w-sm rounded-xl border border-zinc-200/90 bg-zinc-50 p-4 shadow-lg dark:border-zinc-700/80 dark:bg-zinc-900"
+    >
+      <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Settings</h3>
+      <SelectDemo
+        label="Theme"
+        name="theme"
+        defaultValue="light"
+        options={selectThemeOptions}
+      />
+    </div>
+  );
+}
+
+export function SelectFormDemo() {
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <SelectDemo label="Country" name="country" defaultValue="react" />
+      <button
+        type="submit"
+        className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+      >
+        Submit
+      </button>
+    </form>
   );
 }
 
