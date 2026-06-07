@@ -767,7 +767,26 @@ const input = css({
 
 .select-item[data-selected] {
   font-weight: 600;
-}`,
+}
+
+/* index.tsx */
+import { Select } from "@kenos-ui/react-select";
+import "./select.css";
+
+<Select.Root name="framework" onValueChange={setValue}>
+  <Select.Label className="label">Framework</Select.Label>
+  <Select.Trigger className="select-trigger">
+    <Select.Value placeholder="Choose…" />
+    <Select.Icon />
+  </Select.Trigger>
+  <Select.Content className="select-content">
+    <Select.List>
+      <Select.Item value="react" className="select-item">React</Select.Item>
+      <Select.Item value="vue" className="select-item">Vue</Select.Item>
+    </Select.List>
+  </Select.Content>
+  <Select.HiddenSelect />
+</Select.Root>`,
 
     tailwind: `import { Select } from "@kenos-ui/react-select";
 

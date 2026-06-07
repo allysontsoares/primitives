@@ -25,12 +25,26 @@ export type ApiGroup = {
   props: ApiProp[];
 };
 
+export type ComponentDocFeatures = {
+  /** Show locale switcher + localized demo (datepicker family). */
+  localeExamples?: boolean;
+  /** Dialog interop example section (inline Content inside a modal). */
+  dialogInterop?: boolean;
+  /** Native form + HiddenSelect example. */
+  forms?: boolean;
+};
+
 export type ComponentMeta = {
   name: string;
   eyebrow: string;
   desc: string;
   demo: DemoKind;
   parts: AnatomyNode[];
+  /** npm package for install/import copy. */
+  npmPackage: string;
+  /** Public namespace (DatePicker, Select, …). */
+  importName: string;
+  features?: ComponentDocFeatures;
 };
 
 export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field" | "select";
@@ -75,6 +89,9 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     eyebrow: "Primitive",
     desc: "A composable month grid built on the WAI-ARIA grid pattern (via DatePicker.Root + calendar parts), with full keyboard navigation and roving focus. Use inside DatePicker.Root (even for standalone use).",
     demo: "calendar",
+    npmPackage: "@kenos-ui/react-datepicker",
+    importName: "DatePicker",
+    features: { localeExamples: true },
     parts: [
       {
         tag: "DatePicker.Root",
@@ -115,6 +132,9 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     eyebrow: "Primitive",
     desc: "An input (segmented) paired with a popover calendar. Use DatePicker.Root + Input + Trigger + Content (positioning & state built-in). Zero CSS shipped.",
     demo: "date-picker",
+    npmPackage: "@kenos-ui/react-datepicker",
+    importName: "DatePicker",
+    features: { localeExamples: true, dialogInterop: true },
     parts: [
       {
         tag: "DatePicker.Root (mode=\"single\")",
@@ -138,6 +158,9 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     eyebrow: "Primitive",
     desc: "Select a start and end date with live range preview and dual-segment input (mode=\"range\" on the same Root). Presets are custom UI you compose.",
     demo: "date-range-picker",
+    npmPackage: "@kenos-ui/react-datepicker",
+    importName: "DatePicker",
+    features: { localeExamples: true },
     parts: [
       {
         tag: "DatePicker.Root mode=\"range\"",
@@ -162,6 +185,9 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     eyebrow: "Primitive",
     desc: "A headless single-select with combobox + listbox pattern. Interop-first defaults: modal={false}, portal={false}. Use Select.HiddenSelect for native form submission.",
     demo: "select",
+    npmPackage: "@kenos-ui/react-select",
+    importName: "Select",
+    features: { dialogInterop: true, forms: true },
     parts: [
       {
         tag: "Select.Root",
@@ -194,6 +220,9 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     eyebrow: "Primitive",
     desc: "A segmented text input (powered by DatePicker.Input inside a minimal Root). Locale-aware order/separators via Intl. No calendar required — just omit Content/Trigger.",
     demo: "date-field",
+    npmPackage: "@kenos-ui/react-datepicker",
+    importName: "DatePicker",
+    features: { localeExamples: true },
     parts: [
       {
         tag: "DatePicker.Root",

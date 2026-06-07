@@ -7,6 +7,7 @@ import {
   DatePicker,
   DateRangePicker,
   InlineCalendar,
+  SelectDemo,
 } from "./demos";
 
 const CheckIcon = () => (
@@ -65,6 +66,14 @@ function HighlightDateField() {
   );
 }
 
+function HighlightSelect() {
+  return (
+    <HighlightDemoFrame>
+      <SelectDemo label="Framework" />
+    </HighlightDemoFrame>
+  );
+}
+
 type Highlight = {
   slug: string;
   title: string;
@@ -96,6 +105,12 @@ const HIGHLIGHTS: Highlight[] = [
     title: "Date Field",
     desc: "Locale-aware segmented input with spinbutton semantics — no popover required.",
     demo: <HighlightDateField />,
+  },
+  {
+    slug: "select",
+    title: "Select",
+    desc: "Combobox + listbox with dialog-safe defaults — inline Content, Escape interop, HiddenSelect for forms.",
+    demo: <HighlightSelect />,
   },
 ];
 
