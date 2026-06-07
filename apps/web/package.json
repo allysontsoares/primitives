@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@kenos-ui/react-datepicker": "workspace:*",
+    "@kenos-ui/react-select": "workspace:*",
     "@base-ui/react": "^1.5.0",
     "@hookform/resolvers": "^5.4.0",
     "@phosphor-icons/react": "^2.1.10",

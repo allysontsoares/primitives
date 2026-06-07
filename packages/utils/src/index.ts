@@ -14,3 +14,15 @@ export { useEscapeKey, type UseEscapeKeyOptions } from "./dismiss/use-escape-key
 export { useFocusTrap } from "./focus/use-focus-trap";
 export { getFocusableElements } from "./focus/get-focusable-elements";
 export { restoreFocus, type RestoreFocusOptions, type OpenSource } from "./focus/restore-focus";
+
+export {
+  useListNavigation,
+  type UseListNavigationOptions,
+  type ListNavigationItem,
+} from "./composite/use-list-navigation";
+
+export {
+  useTypeahead,
+  type UseTypeaheadOptions,
+  type TypeaheadItem,
+} from "./composite/use-typeahead";

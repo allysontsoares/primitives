@@ -33,7 +33,7 @@ export type ComponentMeta = {
   parts: AnatomyNode[];
 };
 
-export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field";
+export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field" | "select";
 
 export type NavItem = { label: string; route: string };
 export type NavGroup = { title: string; badge?: string; items: NavItem[] };
@@ -56,6 +56,7 @@ export const NAV: NavGroup[] = [
       { label: "Date Picker", route: "date-picker" },
       { label: "Date Range Picker", route: "date-range-picker" },
       { label: "Date Field", route: "date-field" },
+      { label: "Select", route: "select" },
     ],
   },
   {
@@ -152,6 +153,38 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
               { tag: "DatePicker.Calendar", note: "range preview via hover + data-in-range etc." },
             ],
           },
+        ],
+      },
+    ],
+  },
+  select: {
+    name: "Select",
+    eyebrow: "Primitive",
+    desc: "A headless single-select with combobox + listbox pattern. Interop-first defaults: modal={false}, portal={false}. Use Select.HiddenSelect for native form submission.",
+    demo: "select",
+    parts: [
+      {
+        tag: "Select.Root",
+        children: [
+          { tag: "Select.Label", leaf: true },
+          {
+            tag: "Select.Trigger",
+            children: [
+              { tag: "Select.Value", leaf: true },
+              { tag: "Select.Icon", leaf: true },
+            ],
+          },
+          {
+            tag: "Select.Content",
+            note: "listbox container (inline default)",
+            children: [
+              {
+                tag: "Select.List",
+                children: [{ tag: "Select.Item value=…", note: "registers in store" }],
+              },
+            ],
+          },
+          { tag: "Select.HiddenSelect", note: "native <select> for forms" },
         ],
       },
     ],
@@ -254,6 +287,47 @@ export const API: Record<string, ApiGroup[]> = {
       ],
     },
   ],
+  select: [
+    {
+      ...rootGroup,
+      props: [
+        { name: "value / defaultValue / onValueChange", type: "string | null", desc: "Controlled/uncontrolled selected value." },
+        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
+        { name: "name", type: "string", desc: "Forwarded to Select.HiddenSelect for form submit." },
+        { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
+        { name: "modal", type: "boolean", def: "false", desc: "Opt-in focus trap + aria-modal on Content." },
+      ],
+    },
+    {
+      group: "Content props",
+      props: [
+        { name: "portal", type: "boolean", def: "false", desc: "Portal to document.body — avoid inside Dialogs." },
+        { name: "side / align / sameWidth", desc: "Floating UI positioning via @kenos-ui/utils." },
+        { name: "lazyMount", type: "boolean", def: "true", desc: "Skip DOM until first open." },
+      ],
+    },
+    {
+      group: "Data attributes",
+      attrs: true,
+      props: [
+        { name: "[data-open]", desc: "On trigger when listbox is open." },
+        { name: "[data-selected]", desc: "On selected option." },
+        { name: "[data-highlighted]", desc: "Keyboard/hover highlight." },
+        { name: "[data-disabled]", desc: "Disabled trigger or option." },
+      ],
+    },
+    {
+      group: "Keyboard",
+      keys: true,
+      props: [
+        { name: "Arrow ↑ / ↓", desc: "Move highlight; skips disabled items." },
+        { name: "Home / End", desc: "First / last enabled option." },
+        { name: "Type characters", desc: "Typeahead match on textValue." },
+        { name: "Enter / Space", desc: "Select highlighted option." },
+        { name: "Escape", desc: "Close listbox; stopPropagation for Dialog interop." },
+      ],
+    },
+  ],
   "date-field": [
     {
       ...rootGroup,
@@ -292,6 +366,7 @@ export const SEARCH: SearchEntry[] = [
   { title: "Date Picker", route: "date-picker", crumb: "Primitives", kind: "comp" },
   { title: "Date Range Picker", route: "date-range-picker", crumb: "Primitives", kind: "comp" },
   { title: "Date Field", route: "date-field", crumb: "Primitives", kind: "comp" },
+  { title: "Select", route: "select", crumb: "Primitives", kind: "comp" },
   { title: "Localization", route: "localization", crumb: "Guides", kind: "page" },
   { title: "Accessibility", route: "accessibility", crumb: "Guides", kind: "page" },
   { title: "Styling", route: "styling", crumb: "Guides", kind: "page" },

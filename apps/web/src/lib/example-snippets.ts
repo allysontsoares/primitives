@@ -722,4 +722,82 @@ const input = css({
   <DatePicker.Input className={input} />
 </DatePicker.Root>`,
   },
+
+  select: {
+    unstyled: `import { Select } from "@kenos-ui/react-select";
+
+<Select.Root name="framework" onValueChange={setValue}>
+  <Select.Label>Framework</Select.Label>
+  <Select.Trigger>
+    <Select.Value placeholder="Choose…" />
+    <Select.Icon />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.List>
+      <Select.Item value="react">React</Select.Item>
+      <Select.Item value="vue">Vue</Select.Item>
+    </Select.List>
+  </Select.Content>
+  <Select.HiddenSelect />
+</Select.Root>`,
+
+    css: `.select-trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #000;
+  color: #f4f3f1;
+}
+
+.select-content {
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #111112;
+  padding: 4px;
+}
+
+.select-item[data-highlighted] {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.select-item[data-selected] {
+  font-weight: 600;
+}`,
+
+    tailwind: `import { Select } from "@kenos-ui/react-select";
+
+<Select.Root name="framework">
+  <Select.Label className="text-sm font-semibold">Framework</Select.Label>
+  <Select.Trigger className="flex w-full items-center justify-between rounded-lg border px-3 py-2">
+    <Select.Value placeholder="Choose…" />
+    <Select.Icon />
+  </Select.Trigger>
+  <Select.Content className="mt-1 rounded-lg border bg-white p-1 shadow-lg" sameWidth>
+    <Select.List>
+      <Select.Item value="react" className="rounded px-2 py-1.5 data-[highlighted]:bg-zinc-100">
+        React
+      </Select.Item>
+    </Select.List>
+  </Select.Content>
+</Select.Root>`,
+
+    panda: `import { Select } from "@kenos-ui/react-select";
+import { css } from "../styled-system/css";
+
+const trigger = css({ display: "flex", w: "full", px: "3", py: "2", borderRadius: "md", borderWidth: "1px" });
+
+<Select.Root name="framework">
+  <Select.Trigger className={trigger}>
+    <Select.Value placeholder="Choose…" />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.Item value="react">React</Select.Item>
+  </Select.Content>
+</Select.Root>`,
+  },
 };

@@ -14,3 +14,13 @@ export {
   type ViewMode,
   type SelectionMode,
 } from "@kenos-ui/react-datepicker";
+
+export * as Select from "@kenos-ui/react-select";
+export {
+  useSelectContext,
+  type SelectRootProps,
+  type SelectContentProps,
+  type SelectItemRecord,
+  type SelectStoreState,
+  type SelectContextValue,
+} from "@kenos-ui/react-select";

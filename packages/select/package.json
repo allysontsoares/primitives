@@ -1,16 +1,15 @@
 {
-  "name": "@kenos-ui/react",
-  "version": "0.2.1",
-  "description": "Kenos UI headless primitives for React — aggregator",
+  "name": "@kenos-ui/react-select",
+  "version": "0.1.0",
+  "description": "Headless Select primitive for React — Kenos UI",
   "repository": {
     "type": "git",
     "url": "https://github.com/allysontsoares/kenos-ui",
-    "directory": "packages/react"
+    "directory": "packages/select"
   },
   "files": [
     "dist",
-    "README.md",
-    "CHANGELOG.md"
+    "README.md"
   ],
   "type": "module",
   "sideEffects": false,
@@ -30,16 +29,30 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@kenos-ui/react-datepicker": "workspace:*",
-    "@kenos-ui/react-select": "workspace:*"
+    "@kenos-ui/utils": "workspace:*"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.0",
     "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitest/coverage-v8": "^4.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tsup": "^8.0.0",
-    "typescript": "^6.0.0"
+    "typescript": "^6.0.0",
+    "vite": "^8.0.0",
+    "vitest": "^4.0.0",
+    "vitest-axe": "^0.1.0"
   },
   "peerDependencies": {
     "react": ">=19.0.0",
