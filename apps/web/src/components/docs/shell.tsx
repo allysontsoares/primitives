@@ -7,15 +7,9 @@ import { Badge } from "@/components/ui/badge";
 
 import { Kbd } from "@/components/ui/kbd";
 import { NAV, SEARCH, type SearchEntry } from "../../lib/docs-data";
+import { pathToRoute, routeToHref } from "../../lib/docs-routes";
 import { DocsTableOfContents } from "./docs-table-of-contents";
-
-/* ---------------- helpers ---------------- */
-function routeToHref(route: string) {
-  return route === "" ? "/" : `/${route}`;
-}
-function pathToRoute(pathname: string) {
-  return pathname === "/" ? "" : pathname.replace(/^\//, "");
-}
+import { KenosMark } from "./kenos-mark";
 
 /* ---------------- icons ---------------- */
 const Search = ({ s = 16 }: { s?: number }) => (
@@ -117,7 +111,7 @@ function useTheme() {
       if (next === "dark") el.classList.add("dark");
       else el.classList.remove("dark");
       try {
-        localStorage.setItem("kairo-theme", next);
+        localStorage.setItem("kenos-theme", next);
       } catch {}
       return next;
     });
@@ -258,11 +252,13 @@ function Topbar({
     "grid min-h-9 min-w-9 place-items-center rounded-[9px] border border-transparent text-zinc-500 dark:text-zinc-400 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100";
   return (
     <header className="sticky top-0 z-[60] grid h-[var(--topbar-h)] grid-cols-[1fr_auto] items-center border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 px-3.5 backdrop-blur-[14px] backdrop-saturate-150 md:grid-cols-[var(--sidebar-w)_1fr_auto] md:px-[22px]">
-      <Link href="/" className="flex items-center gap-2.5 text-[17px] font-bold tracking-tight">
-        <span className="grid h-6 w-6 place-items-center rounded-[7px] bg-zinc-900 dark:bg-zinc-100 text-[14px] font-extrabold tracking-tighter text-white dark:text-zinc-900">
-          K
+      <Link href="/" className="flex items-center gap-2.5 text-[17px] font-semibold tracking-tight">
+        <span className="text-[var(--kenos-mark)]">
+          <KenosMark size={22} strokeWidth={2.5} />
         </span>
-        Kairo
+        <span className="font-mono text-[16px] tracking-[0.04em] text-zinc-900 dark:text-zinc-100">
+          kenos
+        </span>
         <Badge variant="beta" className="ml-1 origin-left scale-[0.92]">
           Beta
         </Badge>
@@ -270,9 +266,9 @@ function Topbar({
 
       <nav className="hidden items-center justify-center gap-1 md:flex">
         {[
-          { label: "Docs", href: "/" },
-          { label: "GitHub", href: "https://github.com/at5/kairo" },
-          { label: "npm", href: "https://www.npmjs.com/package/@at5/kairo" },
+          { label: "Docs", href: "/docs" },
+          { label: "GitHub", href: "https://github.com/allysontsoares/primitives" },
+          { label: "npm", href: "https://www.npmjs.com/org/kenos-ui" },
         ].map((l) => (
           <Link
             key={l.label}
@@ -307,7 +303,7 @@ function Topbar({
           {themeReady ? (theme === "dark" ? <Sun /> : <Moon />) : <Sun />}
         </button>
         <a
-          href="https://github.com/at5/kairo"
+          href="https://github.com/allysontsoares/primitives"
           target="_blank"
           rel="noopener noreferrer"
           className={topbarGithubLinkCls}
@@ -321,7 +317,8 @@ function Topbar({
 
 /* ============================ SIDEBAR ============================ */
 function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const route = pathToRoute(usePathname());
+  const pathname = usePathname();
+  const route = pathToRoute(pathname) ?? "";
   return (
     <nav
       aria-label="Documentation"
@@ -365,7 +362,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggle, ready: themeReady } = useTheme();
   const pathname = usePathname();
-  const showTocRail = pathname !== "/";
+  const showTocRail = pathname !== "/docs" && pathname !== "/docs/";
 
   useEffect(() => {
     setSidebarOpen(false);

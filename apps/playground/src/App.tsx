@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 import { Calendar } from "./components/Calendar";
 import { Field } from "./components/Field";
 
@@ -107,7 +107,7 @@ export function App() {
     <div className="min-h-screen p-8">
       <div className="mx-auto max-w-xl space-y-8">
         <div>
-          <h1 className="text-xl font-semibold text-zinc-100">Kairo Playground</h1>
+          <h1 className="text-xl font-semibold text-zinc-100">Kenos Playground</h1>
           <p className="mt-1 text-sm text-zinc-500">
             Headless date picker primitive — zero dependencies on styling.
           </p>

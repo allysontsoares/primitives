@@ -1,16 +1,7 @@
-export * as DatePicker from "./date-picker/index";
-export { useDatePickerContext } from "./date-picker/context";
-export type {
-  DatePickerRootProps,
-  DatePickerSingleProps,
-  DatePickerRangeProps,
-  DatePickerMultipleProps,
-  DatePickerConfig,
-  DateRange,
-  DayCellMeta,
-  MonthItem,
-  YearItem,
-  WeekDayItem,
-  ViewMode,
-  SelectionMode,
-} from "./types";
+/**
+ * @deprecated Use `@kenos-ui/react-datepicker` instead.
+ * @see https://kenos.at5.dev
+ *
+ * This package re-exports `@kenos-ui/react-datepicker` for backward compatibility only.
+ */
+export * from "@kenos-ui/react-datepicker";

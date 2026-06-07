@@ -61,7 +61,7 @@ export const H3 = ({ id, children }: { id: string; children: ReactNode }) => (
   </h3>
 );
 const InlineCode = ({ children }: { children: ReactNode }) => (
-  <code className="rounded-md bg-orange-600/10 px-1.5 py-0.5 font-mono text-[0.86em] font-medium text-orange-700 dark:bg-orange-400/15 dark:text-orange-300">
+  <code className="rounded-md bg-zinc-500/10 px-1.5 py-0.5 font-mono text-[0.86em] font-medium text-zinc-800 dark:text-zinc-200 dark:bg-zinc-500/15 dark:text-zinc-200">
     {children}
   </code>
 );
@@ -124,7 +124,7 @@ export function ComponentPage({ slug }: { slug: string }) {
             onClick={() => setLocale(v)}
             className={`min-h-9 rounded-lg border px-3 text-[12.5px] transition-colors ${
               v === locale
-                ? "border-orange-500 text-orange-500"
+                ? "border-zinc-400 text-zinc-500"
                 : "border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
             }`}
           >
@@ -139,7 +139,7 @@ export function ComponentPage({ slug }: { slug: string }) {
       <H2 id="api-reference">API Reference</H2>
       <P>
         Props, data attributes, and keyboard interactions for <InlineCode>{c.name}</InlineCode>. Import from{" "}
-        <InlineCode>@at5/kairo</InlineCode>; parts use <InlineCode>data-part</InlineCode> and{" "}
+        <InlineCode>@kenos-ui/react-datepicker</InlineCode>; parts use <InlineCode>data-part</InlineCode> and{" "}
         <InlineCode>data-*</InlineCode> attributes for styling.
       </P>
       <ApiReference groups={API[slug] || []} />

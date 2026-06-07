@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { COMPONENTS, COMPONENT_ROUTES, GUIDE_ROUTES, titleForRoute } from "../../lib/docs-data";
-import { ComponentPage } from "../../components/docs/pages";
+import { COMPONENTS, COMPONENT_ROUTES, GUIDE_ROUTES, titleForRoute } from "@/lib/docs-data";
+import { ComponentPage } from "@/components/docs/pages";
 import {
   Installation,
   QuickStart,
@@ -9,7 +9,7 @@ import {
   Accessibility,
   Styling,
   Changelog,
-} from "../../components/docs/guides";
+} from "@/components/docs/guides";
 
 const GUIDES: Record<string, () => React.ReactElement> = {
   installation: Installation,
@@ -36,7 +36,7 @@ export async function generateMetadata({
   return {};
 }
 
-export default async function SlugPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function DocsSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (COMPONENTS[slug]) return <ComponentPage slug={slug} />;
   const Guide = GUIDES[slug];

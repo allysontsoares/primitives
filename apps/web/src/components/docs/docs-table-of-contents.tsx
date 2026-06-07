@@ -47,7 +47,7 @@ function scrollToHeading(id: string, smooth = true) {
  */
 export function DocsTableOfContents() {
   const pathname = usePathname();
-  const isOverview = pathname === "/";
+  const isOverview = pathname === "/docs" || pathname === "/docs/";
   const [headings, setHeadings] = useState<TocHeading[]>([]);
   const [activeId, setActiveId] = useState("");
 
@@ -160,7 +160,7 @@ export function DocsTableOfContents() {
                     "-ml-px block border-l py-1.5 leading-snug transition-colors",
                     heading.level === 3 ? "pl-7 pr-2 text-[12.5px]" : "pl-4 pr-2 text-[13px]",
                     active
-                      ? "border-orange-500 font-medium text-orange-500"
+                      ? "border-zinc-400 font-medium text-zinc-500"
                       : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
                   ].join(" ")}
                 >

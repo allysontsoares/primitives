@@ -6,7 +6,7 @@
 @plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/typography";
 
-/* Docs layout + typography (used via arbitrary values in components/docs) */
+/* Kenos UI — docs layout + void tokens (see docs/brand.md) */
 @theme {
   --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
@@ -14,16 +14,26 @@
   --text-page: clamp(2rem, 1.4rem + 2.6vw, 2.75rem);
   --text-section: clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem);
   --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
-  --animate-pop: kairo-pop 0.16s var(--ease-smooth);
-  --animate-fade: kairo-fade 0.12s ease;
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);
+  --animate-pop: kenos-pop 0.16s var(--ease-smooth);
+  --animate-fade: kenos-fade 0.12s ease;
   --sidebar-w: 264px;
   --toc-w: 248px;
   --topbar-h: 60px;
+  --color-kenos-mark: #fafafa;
+  --color-kenos-grid: rgb(255 255 255 / 0.06);
 }
 
-/* Minimal vars for @/components/ui (radius scale, sonner, text-destructive) */
 :root {
   --radius: 0.45rem;
+  --kenos-bg: #fafafa;
+  --kenos-surface: #ffffff;
+  --kenos-text: #09090b;
+  --kenos-muted: #71717a;
+  --kenos-border: rgb(24 24 27 / 0.12);
+  --kenos-grid: rgb(24 24 27 / 0.06);
+  --kenos-mark: #18181b;
+  --kenos-accent-muted: rgb(24 24 27 / 0.06);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --border: oklch(0.922 0 0);
@@ -32,6 +42,14 @@
 
 .dark,
 [data-theme="dark"] {
+  --kenos-bg: #09090b;
+  --kenos-surface: #18181b;
+  --kenos-text: #fafafa;
+  --kenos-muted: #a1a1aa;
+  --kenos-border: rgb(255 255 255 / 0.08);
+  --kenos-grid: rgb(255 255 255 / 0.06);
+  --kenos-mark: #fafafa;
+  --kenos-accent-muted: rgb(250 250 250 / 0.08);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
@@ -54,7 +72,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@keyframes kairo-pop {
+@keyframes kenos-pop {
   from {
     opacity: 0;
     transform: translateY(-6px) scale(0.98);
@@ -65,12 +83,23 @@
   }
 }
 
-@keyframes kairo-fade {
+@keyframes kenos-fade {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes kenos-corner-in {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -91,7 +120,8 @@
     @apply bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
   }
   ::selection {
-    @apply bg-orange-500/20;
+    background: var(--kenos-accent-muted);
+    color: inherit;
   }
   a {
     color: inherit;
@@ -103,6 +133,22 @@
   }
 }
 
+.kenos-hero-grid {
+  background-image:
+    linear-gradient(var(--kenos-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--kenos-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.kenos-corner-mark {
+  animation: kenos-corner-in 0.85s var(--ease-spring) both;
+}
+
+.kenos-corner-mark:hover {
+  transform: scale(1.04);
+  transition: transform 0.35s var(--ease-spring);
+}
+
 *::-webkit-scrollbar {
   width: 9px;
   height: 9px;
@@ -112,6 +158,36 @@
   border-radius: 99px;
   border: 2px solid transparent;
   background-clip: padding-box;
+}
+
+/* Landing page utilities (based on docs/web-site-example/torq-ui-library) */
+.landing-page {
+  font-family: var(--font-sans);
+}
+
+.kenos-landing-dot-bg {
+  background-image: radial-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.kenos-landing-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: #71717a;
+  text-transform: uppercase;
+}
+
+.landing-code-keyword {
+  color: #a1a1aa;
+}
+
+.landing-code-highlight {
+  color: #d4d4d8;
+}
+
+.landing-code-string {
+  color: #a1a1aa;
 }
 *::-webkit-scrollbar-track {
   background: transparent;

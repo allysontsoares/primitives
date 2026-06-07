@@ -1,6 +1,6 @@
-# Kairo
+# Kenos UI
 
-Headless date & scheduling primitives for React. Built on top of the native Intl API, timescape and Floating UI — with full keyboard navigation and WAI-ARIA compliance.
+The space before design. Composable, accessible, unstyled React primitives — start with structure, finish with style. Built on top of the native Intl API, timescape and Floating UI — with full keyboard navigation and WAI-ARIA compliance.
 
 - **Truly headless** — no default styles; bring your own CSS (Tailwind, Panda CSS, CSS modules, inline styles)
 - **Fully accessible** — WAI-ARIA date picker pattern, keyboard navigation, screen reader support
@@ -22,9 +22,9 @@ Headless date & scheduling primitives for React. Built on top of the native Intl
 ## Installation
 
 ```bash
-pnpm add @at5/kairo
+pnpm add @kenos-ui/react-datepicker
 # or
-npm install @at5/kairo
+npm install @kenos-ui/react-datepicker
 ```
 
 Requires React ≥ 19.
@@ -34,7 +34,7 @@ Requires React ≥ 19.
 ## Quick start
 
 ```tsx
-import { DatePicker } from "@at5/kairo";
+import { DatePicker } from "@kenos-ui/react-datepicker";
 
 function MyDatePicker() {
   return (

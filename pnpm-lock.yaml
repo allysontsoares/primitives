@@ -23,9 +23,9 @@ importers:
 
   apps/playground:
     dependencies:
-      '@at5/kairo':
+      '@kenos-ui/react-datepicker':
         specifier: workspace:*
-        version: link:../../packages/kairo
+        version: link:../../packages/datepicker
       react:
         specifier: ^19.1.0
         version: 19.2.6
@@ -57,15 +57,15 @@ importers:
 
   apps/web:
     dependencies:
-      '@at5/kairo':
-        specifier: workspace:*
-        version: link:../../packages/kairo
       '@base-ui/react':
         specifier: ^1.5.0
         version: 1.5.0(@date-fns/tz@1.5.0)(@types/react@19.2.15)(date-fns@4.4.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@hookform/resolvers':
         specifier: ^5.4.0
         version: 5.4.0(react-hook-form@7.76.1(react@19.2.6))
+      '@kenos-ui/react-datepicker':
+        specifier: workspace:*
+        version: link:../../packages/datepicker
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -164,7 +164,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.3
 
-  packages/kairo:
+  packages/datepicker:
     dependencies:
       '@floating-ui/react-dom':
         specifier: ^2.1.8
@@ -239,6 +239,47 @@ importers:
       vitest:
         specifier: ^4.0.0
         version: 4.1.7(@types/node@24.12.4)(@vitest/coverage-v8@4.1.7)(jsdom@26.1.0)(msw@2.14.6(@types/node@24.12.4)(typescript@6.0.3))(vite@8.0.14(@types/node@24.12.4)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))
+
+  packages/kairo:
+    dependencies:
+      '@kenos-ui/react-datepicker':
+        specifier: workspace:*
+        version: link:../datepicker
+      react:
+        specifier: '>=19.0.0'
+        version: 19.2.6
+      react-dom:
+        specifier: '>=19.0.0'
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.15)(typescript@6.0.3)(yaml@2.9.0)
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
+
+  packages/react:
+    dependencies:
+      '@kenos-ui/react-datepicker':
+        specifier: workspace:*
+        version: link:../datepicker
+      react:
+        specifier: '>=19.0.0'
+        version: 19.2.6
+      react-dom:
+        specifier: '>=19.0.0'
+        version: 19.2.6(react@19.2.6)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.15
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.15)(typescript@6.0.3)(yaml@2.9.0)
+      typescript:
+        specifier: ^6.0.0
+        version: 6.0.3
 
 packages:
 

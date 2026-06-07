@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import { DocsShell } from "../components/docs/shell";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -10,28 +9,27 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kairo.at5.dev"),
+  metadataBase: new URL("https://kenos.at5.dev"),
   title: {
-    default: "Kairo — Headless date primitives for React",
-    template: "%s · Kairo",
+    default: "kenos — Unstyled React primitives",
+    template: "%s · kenos",
   },
   description:
-    "Unstyled, accessible React primitives for calendars, date pickers, range selection, and locale-aware date fields. Zero CSS, WAI-ARIA grid pattern, Intl-ready.",
+    "The space before design. Composable, accessible and unstyled React primitives. Start with structure. Finish with style.",
   keywords: [
-    "react date picker",
-    "headless calendar",
-    "date range picker",
-    "WAI-ARIA date grid",
-    "locale date field",
-    "design system dates",
-    "kairo",
+    "kenos ui",
+    "headless react",
+    "unstyled components",
+    "react datepicker",
+    "accessible primitives",
+    "composable ui",
   ],
   openGraph: {
-    title: "Kairo — Headless date primitives for React",
+    title: "kenos — Unstyled React primitives",
     description:
-      "Unstyled, accessible React primitives for calendars, date pickers, range selection, and locale-aware date fields.",
+      "The space before design. Composable, accessible and unstyled React primitives.",
     type: "website",
-    siteName: "Kairo",
+    siteName: "kenos",
     locale: "en_US",
   },
   robots: {
@@ -40,7 +38,7 @@ export const metadata: Metadata = {
   },
 };
 
-const themeScript = `(function(){try{var t=localStorage.getItem("kairo-theme")||"dark";var el=document.documentElement;el.setAttribute("data-theme",t);if(t==="dark")el.classList.add("dark");else el.classList.remove("dark");}catch(e){var el=document.documentElement;el.setAttribute("data-theme","dark");el.classList.add("dark");}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem("kenos-theme")||localStorage.getItem("torq-theme")||localStorage.getItem("kairo-theme")||"dark";var el=document.documentElement;el.setAttribute("data-theme",t);if(t==="dark")el.classList.add("dark");else el.classList.remove("dark");if(!localStorage.getItem("kenos-theme")&&(localStorage.getItem("torq-theme")||localStorage.getItem("kairo-theme")))localStorage.setItem("kenos-theme",t);}catch(e){var el=document.documentElement;el.setAttribute("data-theme","dark");el.classList.add("dark");}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -54,9 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body>
-        <DocsShell>{children}</DocsShell>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
