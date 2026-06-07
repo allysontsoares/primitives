@@ -31,6 +31,25 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "kenos",
     locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "kenos — The space before design",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "kenos — Unstyled React primitives",
+    description:
+      "The space before design. Composable, accessible and unstyled React primitives.",
+    images: ["/twitter-image"],
+  },
+  icons: {
+    icon: [{ url: "/icon", type: "image/png", sizes: "32x32" }],
+    apple: [{ url: "/apple-icon", type: "image/png", sizes: "180x180" }],
   },
   robots: {
     index: true,

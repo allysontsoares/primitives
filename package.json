@@ -17,7 +17,9 @@
     "format:check": "oxfmt --check .",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "turbo run build --filter=./packages/* && changeset publish"
+    "release": "turbo run build --filter=./packages/* && changeset publish",
+    "storybook": "turbo run storybook",
+    "build-storybook": "turbo run build-storybook"
   },
   "devDependencies": {
     "@changesets/cli": "latest",

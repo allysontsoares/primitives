@@ -7,5 +7,6 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "onlyUpdatePeerDependentsWhenOutOfRange": true,
+  "ignore": ["@kenos-ui/web", "@kenos-ui/playground", "@kenos-ui/storybook"]
 }
