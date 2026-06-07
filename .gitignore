@@ -1,7 +1,8 @@
 # Dependencies
 node_modules/
 
-# Internal docs
+# Internal planning docs at repo root only — never commit
+# (apps/web/src/app/docs is the Next.js site route and stays tracked)
 /docs/
 
 # Build outputs
