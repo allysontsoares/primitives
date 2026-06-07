@@ -40,13 +40,28 @@ export function Installation() {
           peer dependencies.
         </Lead>
       </PageIntro>
-      <H2 id="install">Install the package</H2>
+      <H2 id="install">Install a package</H2>
+      <P>
+        Install per primitive, or use the aggregator <InlineCode>@kenos-ui/react</InlineCode> for
+        multiple primitives in one dependency.
+      </P>
       <CodeBlock
         tabs={[
-          { label: "npm", lang: "bash", code: "npm install @kenos-ui/react-datepicker" },
-          { label: "pnpm", lang: "bash", code: "pnpm add @kenos-ui/react-datepicker" },
-          { label: "yarn", lang: "bash", code: "yarn add @kenos-ui/react-datepicker" },
-          { label: "bun", lang: "bash", code: "bun add @kenos-ui/react-datepicker" },
+          {
+            label: "DatePicker",
+            lang: "bash",
+            code: "pnpm add @kenos-ui/react-datepicker",
+          },
+          {
+            label: "Select",
+            lang: "bash",
+            code: "pnpm add @kenos-ui/react-select",
+          },
+          {
+            label: "Aggregator",
+            lang: "bash",
+            code: "pnpm add @kenos-ui/react",
+          },
         ]}
       />
       <Callout icon={<InfoIcon />}>
@@ -82,7 +97,7 @@ export function Installation() {
       <H2 id="import">Import primitives</H2>
       <CodeBlock
         lang="jsx"
-        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\n// or: import { DatePicker } from "@kenos-ui/react";\n\n// Calendar grid, segmented input, range etc. are all under DatePicker.*\n// <DatePicker.Root mode="range"> ... <DatePicker.Input index={0} /> ...`}
+        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\nimport { Select } from "@kenos-ui/react-select";\n// or: import { DatePicker, Select } from "@kenos-ui/react";\n\n// <DatePicker.Root> ... <DatePicker.Calendar />\n// <Select.Root name="x"> ... <Select.HiddenSelect />`}
       />
     </>
   );

@@ -9,6 +9,7 @@ import {
   useDatePickerContext,
   type DateRange,
 } from "@kenos-ui/react-datepicker";
+import { Select as KenosSelect } from "@kenos-ui/react-select";
 
 
 /* ============================================================
@@ -20,7 +21,7 @@ import {
    the real library code (reducer, timescape, floating-ui, Intl, etc.).
    ============================================================ */
 
-export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field";
+export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field" | "select";
 export type CalSize = "default" | "compact";
 
 /* ---------------- icons (ported from old fake for visual match) ---------------- */
@@ -677,6 +678,107 @@ export function DateField({
   );
 }
 
+const selectTriggerCls = [
+  "flex w-full min-w-[240px] items-center justify-between gap-2 rounded-[10px] border border-zinc-200/90 bg-white px-3 py-2.5 text-sm text-zinc-900 shadow-sm",
+  "transition-[border-color,box-shadow] duration-150",
+  "hover:border-zinc-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40",
+  "dark:border-zinc-700/80 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:border-zinc-600",
+].join(" ");
+
+const selectContentCls = [
+  "z-50 mt-1 max-h-60 overflow-auto rounded-[10px] border border-zinc-200/90 bg-white p-1 shadow-lg",
+  "dark:border-zinc-700/80 dark:bg-zinc-950",
+].join(" ");
+
+const selectItemCls = [
+  "cursor-default rounded-md px-2.5 py-2 text-sm text-zinc-800 outline-none",
+  "data-[highlighted]:bg-zinc-100 data-[selected]:font-medium dark:text-zinc-100 dark:data-[highlighted]:bg-zinc-800",
+  "data-[disabled]:pointer-events-none data-[disabled]:opacity-40",
+].join(" ");
+
+const selectFrameworkOptions = [
+  ["react", "React"],
+  ["vue", "Vue"],
+  ["svelte", "Svelte"],
+] as const;
+
+const selectThemeOptions = [
+  ["light", "Light"],
+  ["dark", "Dark"],
+] as const;
+
+export function SelectDemo({
+  label = "Framework",
+  name = "framework",
+  defaultValue = "react",
+  options = selectFrameworkOptions,
+}: {
+  label?: string;
+  name?: string;
+  defaultValue?: string;
+  options?: ReadonlyArray<readonly [string, string]>;
+}) {
+  return (
+    <KenosSelect.Root name={name} defaultValue={defaultValue}>
+      <KenosSelect.Label className="mb-1.5 block text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+        {label}
+      </KenosSelect.Label>
+      <KenosSelect.Trigger className={selectTriggerCls}>
+        <KenosSelect.Value placeholder="Choose…" />
+        <KenosSelect.Icon />
+      </KenosSelect.Trigger>
+      <KenosSelect.Content className={selectContentCls} sameWidth>
+        <KenosSelect.List>
+          {options.map(([value, text]) => (
+            <KenosSelect.Item key={value} value={value} className={selectItemCls}>
+              <KenosSelect.ItemText>{text}</KenosSelect.ItemText>
+            </KenosSelect.Item>
+          ))}
+        </KenosSelect.List>
+      </KenosSelect.Content>
+      <KenosSelect.HiddenSelect />
+    </KenosSelect.Root>
+  );
+}
+
+export function SelectDialogDemo() {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Settings"
+      className="w-full max-w-sm rounded-xl border border-zinc-200/90 bg-zinc-50 p-4 shadow-lg dark:border-zinc-700/80 dark:bg-zinc-900"
+    >
+      <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Settings</h3>
+      <SelectDemo
+        label="Theme"
+        name="theme"
+        defaultValue="light"
+        options={selectThemeOptions}
+      />
+    </div>
+  );
+}
+
+export function SelectFormDemo() {
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+      }}
+    >
+      <SelectDemo label="Country" name="country" defaultValue="react" />
+      <button
+        type="submit"
+        className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+      >
+        Submit
+      </button>
+    </form>
+  );
+}
+
 /* ---------------- LiveDemo dispatcher (used by component pages) ---------------- */
 export function LiveDemo({ kind, locale = "en-US" }: { kind: DemoKind; locale?: string }) {
   if (kind === "calendar") {
@@ -687,6 +789,9 @@ export function LiveDemo({ kind, locale = "en-US" }: { kind: DemoKind; locale?: 
   }
   if (kind === "date-range-picker") {
     return <DateRangePicker locale={locale} label="Trip dates" />;
+  }
+  if (kind === "select") {
+    return <SelectDemo />;
   }
   return <DateField locale={locale} label="Date of birth" />;
 }

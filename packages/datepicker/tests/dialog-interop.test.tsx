@@ -2,25 +2,14 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
+import { MockDialog } from "./fixtures/mock-dialog";
 import * as DatePicker from "../src/date-picker/index";
-
-/**
- * Minimal mock dialog container — simulates an overlay that owns focus scope
- * (e.g. Radix Dialog.Content) without pulling in a third-party dialog primitive.
- * Smoke test for popup-policy: inline content stays inside the dialog subtree.
- */
-function MockDialog({ children }: { children: React.ReactNode }) {
-  return (
-    <div role="dialog" aria-modal="true" aria-label="Schedule event" data-testid="mock-dialog">
-      <h2 id="dialog-title">Schedule event</h2>
-      <div data-testid="dialog-body">{children}</div>
-    </div>
-  );
-}
 
 function PickerInDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
   return (
-    <MockDialog>
+    <MockDialog label="Schedule event">
+      <h2 id="dialog-title">Schedule event</h2>
+      <div data-testid="dialog-body">
       <DatePicker.Root defaultValue={new Date(2024, 5, 15)} defaultOpen={defaultOpen}>
         <DatePicker.Label>Event date</DatePicker.Label>
         <DatePicker.Input />
@@ -29,6 +18,7 @@ function PickerInDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
           <DatePicker.Calendar />
         </DatePicker.Content>
       </DatePicker.Root>
+      </div>
     </MockDialog>
   );
 }
