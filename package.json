@@ -1,7 +1,12 @@
 {
-  "name": "primitives",
+  "name": "kenos-ui",
+  "description": "Kenos UI monorepo — composable, accessible, unstyled React primitives (@kenos-ui/*).",
   "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/allysontsoares/kenos-ui"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
