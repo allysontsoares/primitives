@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
+import {
+  useClickOutside,
+  useEscapeKey,
+  useFocusTrap,
+  restoreFocus,
+} from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
-import { useClickOutside } from "./use-click-outside";
-import { useFocusTrap } from "./use-focus-trap";
 import { formatMonthYear, formatYear } from "../utils/locale";
 import { useDatePickerFloating } from "./use-floating";
 
@@ -115,12 +119,30 @@ export function Content({
     [setFloating],
   );
 
+  const close = useCallback(() => {
+    const source = state.openSource;
+    dispatch({ type: "CLOSE" });
+    restoreFocus({
+      openSource: source === "input" ? "input" : source === "trigger" ? "trigger" : "unknown",
+      trigger: document.getElementById(ids.trigger),
+      input:
+        document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`),
+    });
+  }, [dispatch, ids.input, ids.trigger, state.openSource]);
+
   useClickOutside(
     [contentRef, triggerRef, inputRef, input0Ref, input1Ref],
-    () => dispatch({ type: "CLOSE" }),
+    close,
     isOpen,
   );
-  useFocusTrap(contentRef, isOpen);
+
+  useEscapeKey({
+    enabled: isOpen,
+    stopPropagation: true,
+    onEscape: close,
+  });
+
+  useFocusTrap(contentRef, isOpen && config.modal);
 
   // Floating UI computes the position one frame after mount, so the element
   // briefly sits at (0,0) before jumping to the anchor. If the consumer applies
@@ -164,7 +186,7 @@ export function Content({
       ref={mergedRef}
       id={ids.content}
       role="dialog"
-      aria-modal="true"
+      aria-modal={config.modal ? "true" : undefined}
       aria-labelledby={ids.label}
       data-state={isOpen ? "open" : "closed"}
       style={{
@@ -178,14 +200,7 @@ export function Content({
         ...(isOpen && !transitionsReady ? { transition: "none" } : undefined),
         ...style,
       }}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") {
-          e.preventDefault();
-          dispatch({ type: "CLOSE" });
-          document.getElementById(ids.trigger)?.focus();
-        }
-        onKeyDown?.(e);
-      }}
+      onKeyDown={onKeyDown}
       {...props}
     >
       <span
