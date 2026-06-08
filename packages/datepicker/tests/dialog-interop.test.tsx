@@ -2,28 +2,33 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { MockDialog } from "./fixtures/mock-dialog";
+import {
+  MockDialog,
+  MockDialogBody,
+  MockDialogNextField,
+} from "../../utils/tests/fixtures/dialog-interop";
 import * as DatePicker from "../src/date-picker/index";
 
 function PickerInDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
   return (
     <MockDialog label="Schedule event">
       <h2 id="dialog-title">Schedule event</h2>
-      <div data-testid="dialog-body">
-      <DatePicker.Root defaultValue={new Date(2024, 5, 15)} defaultOpen={defaultOpen}>
-        <DatePicker.Label>Event date</DatePicker.Label>
-        <DatePicker.Input />
-        <DatePicker.Trigger>Open</DatePicker.Trigger>
-        <DatePicker.Content forceMount data-testid="picker-content">
-          <DatePicker.Calendar />
-        </DatePicker.Content>
-      </DatePicker.Root>
-      </div>
+      <MockDialogBody>
+        <DatePicker.Root defaultValue={new Date(2024, 5, 15)} defaultOpen={defaultOpen}>
+          <DatePicker.Label>Event date</DatePicker.Label>
+          <DatePicker.Input />
+          <DatePicker.Trigger>Open</DatePicker.Trigger>
+          <DatePicker.Content forceMount data-testid="picker-content">
+            <DatePicker.Calendar />
+          </DatePicker.Content>
+        </DatePicker.Root>
+        <MockDialogNextField />
+      </MockDialogBody>
     </MockDialog>
   );
 }
 
-describe("DatePicker dialog interop (popup-policy smoke)", () => {
+describe("DatePicker dialog interop (popup-policy matrix)", () => {
   it("renders inline content inside the mock dialog container", async () => {
     const user = userEvent.setup();
     render(<PickerInDialog />);
@@ -38,20 +43,17 @@ describe("DatePicker dialog interop (popup-policy smoke)", () => {
     expect(within(dialog).getByTestId("picker-content")).toBeInTheDocument();
   });
 
-  it("keeps the parent mock dialog mounted when the picker closes via Escape", async () => {
+  it("Escape closes DatePicker but NOT the parent dialog (stopPropagation)", async () => {
     const user = userEvent.setup();
     render(<PickerInDialog defaultOpen />);
 
-    const parentDialog = screen.getByTestId("mock-dialog");
-    expect(parentDialog).toBeInTheDocument();
-
+    expect(screen.getByTestId("mock-dialog")).toBeInTheDocument();
     await user.keyboard("{Escape}");
-
     expect(screen.getByTestId("mock-dialog")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Open" })).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("does not portal content to document.body by default", async () => {
+  it("does not portal content outside the mock dialog by default", async () => {
     const user = userEvent.setup();
     render(<PickerInDialog />);
 
@@ -61,7 +63,33 @@ describe("DatePicker dialog interop (popup-policy smoke)", () => {
     const parentDialog = screen.getByTestId("mock-dialog");
 
     expect(parentDialog.contains(pickerContent)).toBe(true);
-    expect(document.body.contains(pickerContent)).toBe(true);
     expect(pickerContent.parentElement?.closest('[data-testid="mock-dialog"]')).toBe(parentDialog);
+  });
+
+  it("does not set aria-modal on content when modal=false (popup-policy default)", async () => {
+    const user = userEvent.setup();
+    render(<PickerInDialog />);
+
+    await user.click(screen.getByRole("button", { name: "Open" }));
+
+    const pickerDialog = screen.getByRole("dialog", { name: /event date/i });
+    expect(pickerDialog).not.toHaveAttribute("aria-modal", "true");
+  });
+
+  it("Tab eventually reaches the next field without unmounting the parent dialog", async () => {
+    const user = userEvent.setup();
+    render(<PickerInDialog defaultOpen />);
+
+    const content = screen.getByTestId("picker-content");
+    content.focus();
+
+    const nextField = screen.getByTestId("next-field");
+    for (let i = 0; i < 40; i++) {
+      if (document.activeElement === nextField) break;
+      await user.tab();
+    }
+
+    expect(nextField).toHaveFocus();
+    expect(screen.getByTestId("mock-dialog")).toBeInTheDocument();
   });
 });

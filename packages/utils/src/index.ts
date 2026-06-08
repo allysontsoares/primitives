@@ -1,3 +1,5 @@
+export { POPUP_POLICY_DEFAULTS, type PopupPolicyDefaults } from "./popup-policy";
+
 export {
   useFloating,
   type UseFloatingOptions,

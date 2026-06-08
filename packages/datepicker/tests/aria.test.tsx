@@ -140,8 +140,22 @@ describe("Content", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it('has aria-modal="true"', () => {
+  it('omits aria-modal when modal=false (popup-policy default)', () => {
     render(<BasicPicker defaultOpen />);
+    expect(screen.getByRole("dialog")).not.toHaveAttribute("aria-modal", "true");
+  });
+
+  it('has aria-modal="true" when modal={true}', () => {
+    render(
+      <DatePicker.Root defaultOpen modal>
+        <DatePicker.Label>Date</DatePicker.Label>
+        <DatePicker.Input />
+        <DatePicker.Trigger>Open</DatePicker.Trigger>
+        <DatePicker.Content forceMount>
+          <DatePicker.Calendar />
+        </DatePicker.Content>
+      </DatePicker.Root>,
+    );
     expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
   });
 

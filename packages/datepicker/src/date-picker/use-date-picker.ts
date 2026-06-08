@@ -16,6 +16,7 @@ function resolveConfig(props: DatePickerRootProps): DatePickerConfig {
     mode: props.mode ?? "single",
     locale: props.locale ?? (typeof navigator !== "undefined" ? navigator.language : "en-US"),
     readOnly: props.readOnly ?? false,
+    modal: props.modal ?? false,
     closeOnSelect: props.closeOnSelect ?? (props.mode !== "range" && props.mode !== "multiple"),
     ...(props.weekStartsOn !== undefined && { weekStartsOn: props.weekStartsOn }),
     ...(props.minDate !== undefined && { minDate: props.minDate }),
@@ -53,7 +54,8 @@ function resolveInitialValue(props: DatePickerRootProps) {
 
 export function useDatePicker(props: DatePickerRootProps) {
   const uid = useId();
-  const { mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect } = props;
+  const { mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal } =
+    props;
   const config = useMemo(
     () =>
       resolveConfig({
@@ -65,8 +67,9 @@ export function useDatePicker(props: DatePickerRootProps) {
         disabled,
         readOnly,
         closeOnSelect,
+        modal,
       } as DatePickerRootProps),
-    [mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect],
+    [mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal],
   );
 
   const initialValue = resolveInitialValue(props);

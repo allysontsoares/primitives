@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@floating-ui/react-dom": "^2.1.8",
+    "@kenos-ui/utils": "workspace:*",
     "timescape": "^0.8.0"
   },
   "devDependencies": {
