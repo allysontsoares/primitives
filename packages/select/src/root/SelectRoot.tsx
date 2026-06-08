@@ -3,22 +3,49 @@ import { restoreFocus } from "@kenos-ui/utils";
 import { SelectStore } from "../store";
 import { SelectContext } from "../context";
 import type { SelectRootProps } from "../types";
+import { extractItemsFromChildren } from "../utils/extract-items";
+import { scrollToIndexInState } from "../utils/scroll-to-index";
+import type { ScrollToIndexOptions } from "../types";
 
-export function Root({
-  children,
-  value,
-  defaultValue,
-  onValueChange,
-  open,
-  defaultOpen,
-  onOpenChange,
-  name,
-  disabled = false,
-  required = false,
-  readOnly = false,
-  modal = false,
-  id,
-}: SelectRootProps) {
+const defaultIsItemEqualToValue = (a: string, b: string) => a === b;
+
+function valuesEqual(
+  a: string | string[] | null | undefined,
+  b: string | string[] | null | undefined,
+): boolean {
+  if (a === b) return true;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  return false;
+}
+
+export function Root(props: SelectRootProps) {
+  const {
+    children,
+    value,
+    defaultValue,
+    onValueChange,
+    open,
+    defaultOpen,
+    onOpenChange,
+    onOpenChangeComplete,
+    name,
+    disabled = false,
+    required = false,
+    readOnly = false,
+    modal = false,
+    id,
+    items = {},
+    isItemEqualToValue = defaultIsItemEqualToValue,
+    multiple = false,
+    openOnFocus = false,
+  } = props;
+
   const uid = useId();
   const prefix = id ?? `sel-${uid.replace(/:/g, "")}`;
 
@@ -39,10 +66,18 @@ export function Root({
   const isControlledValue = value !== undefined;
   const isControlledOpen = open !== undefined;
 
+  const initialValue = isControlledValue
+    ? multiple
+      ? (value ?? [])
+      : (value ?? null)
+    : multiple
+      ? (defaultValue ?? [])
+      : (defaultValue ?? null);
+
   const storeRef = useRef<SelectStore | null>(null);
   if (!storeRef.current) {
     storeRef.current = new SelectStore({
-      value: isControlledValue ? (value ?? null) : (defaultValue ?? null),
+      value: initialValue,
       open: isControlledOpen ? (open ?? false) : (defaultOpen ?? false),
     });
   }
@@ -51,10 +86,15 @@ export function Root({
   const prevControlledValue = useRef(value);
   useEffect(() => {
     if (!isControlledValue) return;
-    if (value === prevControlledValue.current) return;
+    if (valuesEqual(value, prevControlledValue.current)) return;
     prevControlledValue.current = value;
-    store.setValue(value ?? null);
-  }, [isControlledValue, value, store]);
+
+    if (multiple) {
+      store.setValues(Array.isArray(value) ? value : []);
+    } else {
+      store.setValue(typeof value === "string" ? value : null);
+    }
+  }, [isControlledValue, value, store, multiple]);
 
   const prevControlledOpen = useRef(open);
   useEffect(() => {
@@ -71,12 +111,20 @@ export function Root({
   useEffect(() => {
     return store.subscribe(() => {
       const state = store.getState();
-      if (state.value !== prevStoreValue.current) {
+      if (!valuesEqual(state.value, prevStoreValue.current)) {
         prevStoreValue.current = state.value;
-        onValueChangeRef.current?.(state.value);
+        if (multiple) {
+          (onValueChangeRef.current as ((value: string[]) => void) | undefined)?.(
+            Array.isArray(state.value) ? state.value : [],
+          );
+        } else {
+          (onValueChangeRef.current as ((value: string | null) => void) | undefined)?.(
+            typeof state.value === "string" ? state.value : null,
+          );
+        }
       }
     });
-  }, [store]);
+  }, [store, multiple]);
 
   const onOpenChangeRef = useRef(onOpenChange);
   onOpenChangeRef.current = onOpenChange;
@@ -102,17 +150,48 @@ export function Root({
     });
   }, [store]);
 
-  const selectAndClose = useCallback(
+  const selectValue = useCallback(
     (itemValue: string) => {
+      if (multiple) {
+        store.toggleValue(itemValue, isItemEqualToValue);
+        return;
+      }
       store.setValue(itemValue);
       close();
     },
-    [store, close],
+    [store, close, multiple, isItemEqualToValue],
+  );
+
+  const clearValue = useCallback(() => {
+    store.clearValue(multiple);
+  }, [store, multiple]);
+
+  const scrollToIndex = useCallback(
+    (index: number, options?: ScrollToIndexOptions) => {
+      scrollToIndexInState(store.getState(), index, options);
+    },
+    [store],
+  );
+
+  const discoveredItems = useMemo(() => extractItemsFromChildren(children), [children]);
+  const mergedItems = useMemo(
+    () => ({ ...discoveredItems, ...items }),
+    [discoveredItems, items],
   );
 
   const config = useMemo(
-    () => ({ disabled, required, readOnly, modal, name }),
-    [disabled, required, readOnly, modal, name],
+    () => ({
+      disabled,
+      required,
+      readOnly,
+      modal,
+      name,
+      multiple,
+      items: mergedItems,
+      isItemEqualToValue,
+      openOnFocus,
+    }),
+    [disabled, required, readOnly, modal, name, multiple, mergedItems, isItemEqualToValue, openOnFocus],
   );
 
   const ctx = useMemo(
@@ -123,10 +202,25 @@ export function Root({
       config,
       isControlledValue,
       isControlledOpen,
+      onOpenChangeComplete,
       close,
-      selectAndClose,
+      selectValue,
+      selectAndClose: selectValue,
+      clearValue,
+      scrollToIndex,
     }),
-    [store, ids, config, isControlledValue, isControlledOpen, close, selectAndClose],
+    [
+      store,
+      ids,
+      config,
+      isControlledValue,
+      isControlledOpen,
+      onOpenChangeComplete,
+      close,
+      selectValue,
+      clearValue,
+      scrollToIndex,
+    ],
   );
 
   return <SelectContext.Provider value={ctx}>{children}</SelectContext.Provider>;

@@ -8,6 +8,8 @@ export interface ItemProps extends React.HTMLAttributes<HTMLLIElement> {
   textValue?: string | undefined;
 }
 
+Item.displayName = "Select.Item";
+
 export function Item({
   value,
   disabled = false,
@@ -17,12 +19,15 @@ export function Item({
   onPointerMove,
   ...props
 }: ItemProps) {
-  const { store, ids, config, selectAndClose } = useSelectContext();
+  const { store, ids, config, selectValue } = useSelectContext();
   const selectedValue = useSelectStore(store, (s) => s.value);
   const highlightedValue = useSelectStore(store, (s) => s.highlightedValue);
   const liRef = useRef<HTMLLIElement>(null);
 
-  const isSelected = selectedValue === value;
+  const isSelected = config.multiple
+    ? Array.isArray(selectedValue) &&
+      selectedValue.some((item) => config.isItemEqualToValue(item, value))
+    : typeof selectedValue === "string" && config.isItemEqualToValue(selectedValue, value);
   const isHighlighted = highlightedValue === value;
   const isDisabled = disabled || config.disabled || config.readOnly;
 
@@ -49,10 +54,10 @@ export function Item({
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLLIElement>) => {
       if (isDisabled) return;
-      selectAndClose(value);
+      selectValue(value);
       onClick?.(e);
     },
-    [isDisabled, selectAndClose, value, onClick],
+    [isDisabled, selectValue, value, onClick],
   );
 
   const handlePointerMove = useCallback(

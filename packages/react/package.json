@@ -1,6 +1,6 @@
 {
   "name": "@kenos-ui/react",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Kenos UI headless primitives for React — aggregator",
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kenos-ui/react-combobox": "workspace:*",
     "@kenos-ui/react-datepicker": "workspace:*",
     "@kenos-ui/react-select": "workspace:*"
   },

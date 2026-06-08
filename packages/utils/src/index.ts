@@ -1,3 +1,5 @@
+export { POPUP_POLICY_DEFAULTS, type PopupPolicyDefaults } from "./popup-policy";
+
 export {
   useFloating,
   type UseFloatingOptions,
@@ -26,3 +28,10 @@ export {
   type UseTypeaheadOptions,
   type TypeaheadItem,
 } from "./composite/use-typeahead";
+
+export {
+  useSelectCollection,
+  type UseSelectCollectionOptions,
+  type SelectCollectionItem,
+  type SelectCollectionFilterFn,
+} from "./composite/use-select-collection";

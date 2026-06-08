@@ -13,8 +13,12 @@ import {
   DatePicker,
   DateRangePicker,
   LiveDemo,
+  ComboboxDialogDemo,
+  ComboboxFilterDemo,
   SelectDialogDemo,
   SelectFormDemo,
+  SelectMultipleDemo,
+  SelectPortalDemo,
 } from "./demos";
 
 /* ---------------- shared typography ---------------- */
@@ -116,6 +120,77 @@ const SELECT_FORMS_SNIPPET = `import { Select } from "@kenos-ui/react-select";
   <button type="submit">Save</button>
 </form>`;
 
+const SELECT_MULTIPLE_SNIPPET = `import { Select } from "@kenos-ui/react-select";
+
+<Select.Root name="tags" multiple defaultValue={["react"]}>
+  <Select.Trigger>
+    <Select.Value placeholder="Choose frameworks…" />
+  </Select.Trigger>
+  <Select.Content>
+    <Select.List>
+      <Select.Item value="react">React</Select.Item>
+      <Select.Item value="vue">Vue</Select.Item>
+    </Select.List>
+  </Select.Content>
+  <Select.HiddenSelect />
+</Select.Root>`;
+
+const COMBOBOX_FILTER_SNIPPET = `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label>Language</Combobox.Label>
+  <Combobox.Input placeholder="Search languages…" />
+  <Combobox.Trigger>▼</Combobox.Trigger>
+  <Combobox.Content>
+    <Combobox.List>
+      <Combobox.Item value="ts">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+      <Combobox.Item value="js">
+        <Combobox.ItemText>JavaScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty>No languages found</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`;
+
+const COMBOBOX_DIALOG_SNIPPET = `import { Combobox } from "@kenos-ui/react-combobox";
+
+// Inside any Dialog.Content — Content stays inline (no portal)
+<Dialog.Content>
+  <Combobox.Root defaultValue="js">
+    <Combobox.Label>Language</Combobox.Label>
+    <Combobox.Input placeholder="Search…" />
+    <Combobox.Trigger>▼</Combobox.Trigger>
+    <Combobox.Content>
+      <Combobox.List>
+        <Combobox.Item value="ts">
+          <Combobox.ItemText>TypeScript</Combobox.ItemText>
+        </Combobox.Item>
+      </Combobox.List>
+      <Combobox.Empty>No matches</Combobox.Empty>
+    </Combobox.Content>
+  </Combobox.Root>
+</Dialog.Content>`;
+
+const SELECT_PORTAL_SNIPPET = `import { useRef } from "react";
+import { Select } from "@kenos-ui/react-select";
+
+const containerRef = useRef<HTMLDivElement>(null);
+
+<Dialog.Content ref={containerRef}>
+  <Select.Root name="country">
+    <Select.Trigger>
+      <Select.Value placeholder="Choose…" />
+    </Select.Trigger>
+    <Select.Content portal container={containerRef}>
+      <Select.List>
+        <Select.Item value="pt">Portugal</Select.Item>
+      </Select.List>
+    </Select.Content>
+  </Select.Root>
+</Dialog.Content>`;
+
 /* ================= COMPONENT PAGE ================= */
 export function ComponentPage({ slug }: { slug: string }) {
   const c = COMPONENTS[slug];
@@ -206,6 +281,39 @@ export function ComponentPage({ slug }: { slug: string }) {
         </>
       )}
 
+      {features.filter && slug === "combobox" && (
+        <>
+          <H3 id="filter">Type to filter</H3>
+          <P>
+            Typing in <InlineCode>Combobox.Input</InlineCode> filters options by{" "}
+            <InlineCode>textValue</InlineCode> (defaults to the item label). Pass a custom{" "}
+            <InlineCode>filter</InlineCode> on <InlineCode>Combobox.Root</InlineCode> to change the
+            matching logic. <InlineCode>Combobox.Empty</InlineCode> renders when nothing matches.
+          </P>
+          <Example code={COMBOBOX_FILTER_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <ComboboxFilterDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.dialogInterop && slug === "combobox" && (
+        <>
+          <H3 id="dialog-interop">Inside a Dialog</H3>
+          <P>
+            Combobox Content is inline by default with <InlineCode>modal=&#123;false&#125;</InlineCode>{" "}
+            so the listbox stays in the Dialog subtree. Escape closes the Combobox only (
+            <InlineCode>stopPropagation</InlineCode>) — the parent dialog stays open.
+          </P>
+          <Example code={COMBOBOX_DIALOG_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <ComboboxDialogDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
       {features.forms && slug === "select" && (
         <>
           <H3 id="forms">Forms</H3>
@@ -218,6 +326,39 @@ export function ComponentPage({ slug }: { slug: string }) {
           <Example code={SELECT_FORMS_SNIPPET} lang="tsx" previewTall>
             <DemoStage tall>
               <SelectFormDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.multiple && slug === "select" && (
+        <>
+          <H3 id="multiple">Multiple selection</H3>
+          <P>
+            Pass <InlineCode>multiple</InlineCode> on <InlineCode>Select.Root</InlineCode> to enable
+            multi-select. Items toggle on click and the listbox stays open. Value shape becomes{" "}
+            <InlineCode>string[]</InlineCode>.
+          </P>
+          <Example code={SELECT_MULTIPLE_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <SelectMultipleDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.portal && slug === "select" && (
+        <>
+          <H3 id="portal">Portal &amp; container</H3>
+          <P>
+            Use <InlineCode>portal=&#123;true&#125;</InlineCode> on{" "}
+            <InlineCode>Select.Content</InlineCode> when clipping is an issue. Inside a Dialog,
+            pass a <InlineCode>container</InlineCode> ref to keep the listbox in the Dialog subtree
+            while escaping <InlineCode>overflow: hidden</InlineCode>.
+          </P>
+          <Example code={SELECT_PORTAL_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <SelectPortalDemo />
             </DemoStage>
           </Example>
         </>

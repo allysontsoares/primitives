@@ -90,6 +90,7 @@ function Segments({
     }
     if (e.key === "Escape") {
       e.preventDefault();
+      e.stopPropagation();
       if (state.open) dispatch({ type: "CLOSE" });
     }
   }

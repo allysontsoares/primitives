@@ -1,9 +1,17 @@
 import { useSyncExternalStore, useCallback, useRef } from "react";
-import type { SelectStoreState, SelectItemRecord } from "./types";
+import type { SelectItemEqualFn, SelectStoreState, SelectItemRecord } from "./types";
 
 // ── SelectStore ────────────────────────────────────────────────────────────
 
 type Listener = () => void;
+
+function arraysEqual(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
 
 export class SelectStore {
   private state: SelectStoreState;
@@ -53,6 +61,54 @@ export class SelectStore {
     if (this.state.value === value) return;
     this.state = { ...this.state, value };
     this.notify();
+  }
+
+  setValues(values: string[]): void {
+    const current = this.state.value;
+    if (Array.isArray(current) && arraysEqual(current, values)) return;
+    this.state = { ...this.state, value: values };
+    this.notify();
+  }
+
+  toggleValue(value: string, comparator: SelectItemEqualFn): void {
+    const current = this.state.value;
+    const next = Array.isArray(current) ? [...current] : [];
+    const index = next.findIndex((item) => comparator(item, value));
+
+    if (index >= 0) {
+      next.splice(index, 1);
+    } else {
+      next.push(value);
+    }
+
+    if (Array.isArray(current) && arraysEqual(current, next)) return;
+
+    this.state = { ...this.state, value: next };
+    this.notify();
+  }
+
+  clearValue(multiple: boolean): void {
+    const next = multiple ? [] : null;
+    const current = this.state.value;
+
+    if (multiple) {
+      if (Array.isArray(current) && current.length === 0) return;
+    } else if (current === null) {
+      return;
+    }
+
+    this.state = { ...this.state, value: next };
+    this.notify();
+  }
+
+  isSelected(value: string, multiple: boolean, comparator: SelectItemEqualFn): boolean {
+    const current = this.state.value;
+
+    if (multiple) {
+      return Array.isArray(current) && current.some((item) => comparator(item, value));
+    }
+
+    return typeof current === "string" && comparator(current, value);
   }
 
   setHighlightedValue(value: string | null): void {

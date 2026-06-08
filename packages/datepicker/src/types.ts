@@ -86,4 +86,6 @@ export interface DatePickerConfig {
   disabled?: boolean | ((date: Date) => boolean);
   readOnly: boolean;
   closeOnSelect: boolean;
+  /** Opt-in focus trap + aria-modal. Default: false (popup-policy). */
+  modal: boolean;
 }

@@ -24,3 +24,15 @@ export {
   type SelectStoreState,
   type SelectContextValue,
 } from "@kenos-ui/react-select";
+
+export * as Combobox from "@kenos-ui/react-combobox";
+export {
+  useComboboxContext,
+  type ComboboxRootProps,
+  type ComboboxContentProps,
+  type ComboboxItemRecord,
+  type ComboboxStoreState,
+  type ComboboxContextValue,
+  ComboboxStore,
+  useComboboxStore,
+} from "@kenos-ui/react-combobox";

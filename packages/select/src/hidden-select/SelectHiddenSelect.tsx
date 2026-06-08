@@ -1,17 +1,72 @@
 import React from "react";
 import { useSelectContext } from "../context";
 import { useSelectStore } from "../store";
+import { mergeOptionValues, resolveItemLabel } from "../utils/labels";
 
 export function HiddenSelect() {
   const { store, config } = useSelectContext();
   const value = useSelectStore(store, (s) => s.value);
-  const items = useSelectStore(store, (s) => s.items);
+  const registry = useSelectStore(store, (s) => s.items);
 
   if (!config.name) return null;
 
-  const registered = Array.from(items.values());
+  const optionValues = mergeOptionValues(registry, config.items);
+  const selectedValues = config.multiple
+    ? Array.isArray(value)
+      ? value
+      : []
+    : typeof value === "string"
+      ? [value]
+      : [];
+
+  if (config.multiple) {
+    const allOptionValues = [
+      ...optionValues,
+      ...selectedValues.filter(
+        (selected) => !optionValues.some((v) => config.isItemEqualToValue(v, selected)),
+      ),
+    ];
+
+    return (
+      <select
+        aria-hidden="true"
+        tabIndex={-1}
+        name={config.name}
+        multiple
+        required={config.required}
+        disabled={config.disabled}
+        value={selectedValues}
+        onChange={() => undefined}
+        style={{
+          position: "absolute",
+          border: 0,
+          width: 1,
+          height: 1,
+          padding: 0,
+          margin: 0,
+          overflow: "hidden",
+          clip: "rect(0,0,0,0)",
+          whiteSpace: "nowrap",
+          pointerEvents: "none",
+          opacity: 0,
+        }}
+        data-part="hidden-select"
+      >
+        {allOptionValues.map((optionValue) => {
+          const record = registry.get(optionValue);
+          return (
+            <option key={optionValue} value={optionValue} disabled={record?.disabled}>
+              {resolveItemLabel(optionValue, registry, config.items)}
+            </option>
+          );
+        })}
+      </select>
+    );
+  }
+
+  const singleValue = typeof value === "string" ? value : "";
   const hasValueOption =
-    value != null && registered.some((item) => item.value === value);
+    singleValue !== "" && optionValues.some((v) => config.isItemEqualToValue(v, singleValue));
 
   return (
     <select
@@ -20,7 +75,7 @@ export function HiddenSelect() {
       name={config.name}
       required={config.required}
       disabled={config.disabled}
-      value={value ?? ""}
+      value={singleValue}
       onChange={() => undefined}
       style={{
         position: "absolute",
@@ -38,12 +93,15 @@ export function HiddenSelect() {
       data-part="hidden-select"
     >
       <option value="" disabled hidden />
-      {registered.map((item) => (
-        <option key={item.value} value={item.value} disabled={item.disabled}>
-          {item.label}
-        </option>
-      ))}
-      {value != null && !hasValueOption && <option value={value}>{value}</option>}
+      {optionValues.map((optionValue) => {
+        const record = registry.get(optionValue);
+        return (
+          <option key={optionValue} value={optionValue} disabled={record?.disabled}>
+            {resolveItemLabel(optionValue, registry, config.items)}
+          </option>
+        );
+      })}
+      {singleValue !== "" && !hasValueOption && <option value={singleValue}>{singleValue}</option>}
     </select>
   );
 }

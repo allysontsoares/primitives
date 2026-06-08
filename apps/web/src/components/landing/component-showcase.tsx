@@ -50,6 +50,56 @@ const COMPONENTS = [
   <DatePicker.Input />
 </DatePicker.Root>`,
   },
+  {
+    name: "Select",
+    slug: "select",
+    tag: "listbox",
+    description:
+      "Combobox + listbox with dialog-safe defaults, native form submission via HiddenSelect, and optional portal positioning.",
+    accent: "#e4e4e7",
+    art: "/streak-amber.png",
+    code: `import { Select } from "@kenos-ui/react-select";
+
+<Select.Root name="framework" defaultValue="react">
+  <Select.Label>Framework</Select.Label>
+  <Select.Trigger>
+    <Select.Value placeholder="Choose…" />
+    <Select.Icon />
+  </Select.Trigger>
+  <Select.Content sameWidth>
+    <Select.List>
+      <Select.Item value="react">
+        <Select.ItemText>React</Select.ItemText>
+      </Select.Item>
+    </Select.List>
+  </Select.Content>
+  <Select.HiddenSelect />
+</Select.Root>`,
+  },
+  {
+    name: "Combobox",
+    slug: "combobox",
+    tag: "filter",
+    description:
+      "Editable input with type-to-filter, Empty state, and aria-activedescendant list navigation — inline Content by default.",
+    accent: "#d4d4d8",
+    art: "/streak-green.png",
+    code: `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label>Language</Combobox.Label>
+  <Combobox.Input placeholder="Search…" />
+  <Combobox.Trigger>▼</Combobox.Trigger>
+  <Combobox.Content sameWidth>
+    <Combobox.List>
+      <Combobox.Item value="ts">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty>No matches</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+  },
 ];
 
 export function LandingComponentShowcase() {
@@ -59,11 +109,11 @@ export function LandingComponentShowcase() {
         <div className="border-b border-white/[0.07] px-6 py-12">
           <p className="kenos-landing-label mb-4">{"// 02 — primitives"}</p>
           <h2 className="max-w-2xl text-balance text-3xl font-bold leading-tight md:text-4xl">
-            Four primitives. One coherent system.
+            Six primitives. One coherent system.
           </h2>
           <p className="mt-4 max-w-xl text-pretty leading-relaxed text-zinc-500">
-            Calendar, Date Picker, Range Picker, and Date Field — each documented, typed, and ready
-            for your CSS.
+            Calendar, Date Picker, Range Picker, Date Field, Select, and Combobox — each documented,
+            typed, and ready for your CSS.
           </p>
         </div>
 

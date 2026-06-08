@@ -1,7 +1,11 @@
 import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
-  stories: ["../../../packages/datepicker/src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  stories: [
+    "../../../packages/datepicker/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../../../packages/select/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../../../packages/combobox/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+  ],
   addons: [
     "@storybook/addon-essentials",
     "@storybook/addon-interactions",

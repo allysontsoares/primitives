@@ -17,7 +17,10 @@ import {
 } from "@kenos-ui/utils";
 import { useSelectContext } from "../context";
 import { useSelectStore } from "../store";
+import { usePositionerContext } from "../positioner/PositionerContext";
+import { resolvePortalContainer, usePortalContext } from "../portal/SelectPortal";
 import type { SelectContentProps } from "../types";
+import { useAlignItemWithTrigger } from "../utils/use-align-item-with-trigger";
 
 export function Content({
   children,
@@ -29,31 +32,63 @@ export function Content({
   avoidCollisions = true,
   collisionPadding = 8,
   portal = false,
+  container = null,
   sameWidth = false,
+  alignItemWithTrigger = false,
+  lazyMount = true,
+  unmountOnExit = false,
+  onOpenChangeComplete: onOpenChangeCompleteProp,
   style,
   onKeyDown,
   ...props
 }: SelectContentProps & React.HTMLAttributes<HTMLDivElement>) {
-  const { store, ids, refs, config, close, selectAndClose } = useSelectContext();
+  const {
+    store,
+    ids,
+    refs,
+    config,
+    close,
+    selectValue,
+    onOpenChangeComplete: onOpenChangeCompleteRoot,
+  } = useSelectContext();
   const open = useSelectStore(store, (s) => s.open);
   const highlightedValue = useSelectStore(store, (s) => s.highlightedValue);
   const items = useSelectStore(store, (s) => s.items);
+  const positionerContext = usePositionerContext();
+  const isInsidePortal = usePortalContext();
 
-  const { setReference, setFloating, floatingStyles, isPositioned } = useFloating({
+  const onOpenChangeComplete = onOpenChangeCompleteProp ?? onOpenChangeCompleteRoot;
+
+  const ownAlign = useAlignItemWithTrigger({
+    alignItemWithTrigger: positionerContext ? false : alignItemWithTrigger,
+    side,
+    sideOffset,
     open,
+    refs,
+  });
+
+  const ownFloating = useFloating({
+    open: positionerContext ? false : open,
     side,
     align,
-    sideOffset,
+    sideOffset: ownAlign.effectiveSideOffset,
     alignOffset,
-    avoidCollisions,
+    avoidCollisions: ownAlign.avoidCollisionsOverride ?? avoidCollisions,
     collisionPadding,
     sameWidth,
   });
 
+  const { setReference } = ownFloating;
+  const setFloating = positionerContext?.setFloating ?? ownFloating.setFloating;
+  const floatingStyles = positionerContext?.floatingStyles ?? ownFloating.floatingStyles;
+  const isPositioned = positionerContext?.isPositioned ?? ownFloating.isPositioned;
+  const alignItemWithTriggerActive =
+    positionerContext?.alignItemWithTriggerActive ?? ownAlign.alignItemWithTriggerActive;
+
   useLayoutEffect(() => {
-    if (!open) return;
+    if (positionerContext || !open) return;
     setReference(refs.triggerRef.current);
-  }, [open, refs.triggerRef, setReference]);
+  }, [open, positionerContext, refs.triggerRef, setReference]);
 
   const mergedRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -63,7 +98,12 @@ export function Content({
     [refs.contentRef, setFloating],
   );
 
-  const { present } = usePresence({ open, lazyMount: true, unmountOnExit: false });
+  const { present } = usePresence({
+    open,
+    lazyMount,
+    unmountOnExit,
+    onOpenChangeComplete,
+  });
 
   useClickOutside([refs.contentRef, refs.triggerRef], close, open);
 
@@ -107,7 +147,7 @@ export function Content({
           e.preventDefault();
           const item = items.get(highlightedValue);
           if (item && !item.disabled) {
-            selectAndClose(highlightedValue);
+            selectValue(highlightedValue);
           }
         }
         return;
@@ -116,7 +156,7 @@ export function Content({
       onTypeaheadKeyDown(e);
       onKeyDown?.(e);
     },
-    [highlightedValue, items, selectAndClose, onNavKeyDown, onTypeaheadKeyDown, onKeyDown],
+    [highlightedValue, items, selectValue, onNavKeyDown, onTypeaheadKeyDown, onKeyDown],
   );
 
   const [transitionsReady, setTransitionsReady] = useState(false);
@@ -156,6 +196,7 @@ export function Content({
       id={ids.content}
       data-state={open ? "open" : "closed"}
       data-open={open ? "true" : undefined}
+      data-align-trigger={alignItemWithTriggerActive ? "true" : undefined}
       aria-modal={config.modal ? "true" : undefined}
       tabIndex={-1}
       style={{
@@ -172,5 +213,14 @@ export function Content({
     </div>
   );
 
-  return portal ? createPortal(content, document.body) : content;
+  if (isInsidePortal || !portal) {
+    return content;
+  }
+
+  const mountNode = resolvePortalContainer(container);
+  if (!mountNode) {
+    return content;
+  }
+
+  return createPortal(content, mountNode);
 }

@@ -2,14 +2,18 @@ import React from "react";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { MockDialog } from "./fixtures/mock-dialog";
+import {
+  MockDialog,
+  MockDialogBody,
+  MockDialogNextField,
+} from "../../utils/tests/fixtures/dialog-interop";
 import * as Select from "../src/index.parts";
 
 function SelectInDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
   return (
     <MockDialog label="Settings">
       <h2>Settings</h2>
-      <div data-testid="dialog-body">
+      <MockDialogBody>
         <Select.Root name="theme" defaultOpen={defaultOpen}>
           <Select.Label>Theme</Select.Label>
           <Select.Trigger data-testid="select-trigger">
@@ -27,15 +31,13 @@ function SelectInDialog({ defaultOpen = false }: { defaultOpen?: boolean }) {
           </Select.Content>
           <Select.HiddenSelect />
         </Select.Root>
-        <button type="button" data-testid="next-field">
-          Next field
-        </button>
-      </div>
+        <MockDialogNextField />
+      </MockDialogBody>
     </MockDialog>
   );
 }
 
-describe("Select dialog interop (popup-policy smoke)", () => {
+describe("Select dialog interop (popup-policy matrix)", () => {
   it("renders inline content inside the mock dialog container by default (portal=false)", async () => {
     const user = userEvent.setup();
     render(<SelectInDialog />);
@@ -47,16 +49,6 @@ describe("Select dialog interop (popup-policy smoke)", () => {
     expect(dialog.contains(selectContent)).toBe(true);
   });
 
-  it("keeps the parent dialog mounted when Select closes via Escape", async () => {
-    const user = userEvent.setup();
-    render(<SelectInDialog defaultOpen />);
-
-    await user.keyboard("{Escape}");
-
-    expect(screen.getByTestId("mock-dialog")).toBeInTheDocument();
-    expect(screen.getByTestId("select-trigger")).toHaveAttribute("aria-expanded", "false");
-  });
-
   it("Escape closes Select but NOT the parent dialog (stopPropagation)", async () => {
     const user = userEvent.setup();
     render(<SelectInDialog defaultOpen />);
@@ -64,9 +56,10 @@ describe("Select dialog interop (popup-policy smoke)", () => {
     expect(screen.getByRole("dialog", { name: /settings/i })).toBeInTheDocument();
     await user.keyboard("{Escape}");
     expect(screen.getByRole("dialog", { name: /settings/i })).toBeInTheDocument();
+    expect(screen.getByTestId("select-trigger")).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("content does not portal to document.body by default", async () => {
+  it("content does not portal outside the mock dialog by default", async () => {
     const user = userEvent.setup();
     render(<SelectInDialog />);
 
