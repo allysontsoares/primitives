@@ -76,6 +76,30 @@ const COMPONENTS = [
   <Select.HiddenSelect />
 </Select.Root>`,
   },
+  {
+    name: "Combobox",
+    slug: "combobox",
+    tag: "filter",
+    description:
+      "Editable input with type-to-filter, Empty state, and aria-activedescendant list navigation — inline Content by default.",
+    accent: "#d4d4d8",
+    art: "/streak-green.png",
+    code: `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label>Language</Combobox.Label>
+  <Combobox.Input placeholder="Search…" />
+  <Combobox.Trigger>▼</Combobox.Trigger>
+  <Combobox.Content sameWidth>
+    <Combobox.List>
+      <Combobox.Item value="ts">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty>No matches</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+  },
 ];
 
 export function LandingComponentShowcase() {
@@ -85,11 +109,11 @@ export function LandingComponentShowcase() {
         <div className="border-b border-white/[0.07] px-6 py-12">
           <p className="kenos-landing-label mb-4">{"// 02 — primitives"}</p>
           <h2 className="max-w-2xl text-balance text-3xl font-bold leading-tight md:text-4xl">
-            Five primitives. One coherent system.
+            Six primitives. One coherent system.
           </h2>
           <p className="mt-4 max-w-xl text-pretty leading-relaxed text-zinc-500">
-            Calendar, Date Picker, Range Picker, Date Field, and Select — each documented, typed, and
-            ready for your CSS.
+            Calendar, Date Picker, Range Picker, Date Field, Select, and Combobox — each documented,
+            typed, and ready for your CSS.
           </p>
         </div>
 

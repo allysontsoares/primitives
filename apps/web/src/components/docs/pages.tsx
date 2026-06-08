@@ -13,6 +13,8 @@ import {
   DatePicker,
   DateRangePicker,
   LiveDemo,
+  ComboboxDialogDemo,
+  ComboboxFilterDemo,
   SelectDialogDemo,
   SelectFormDemo,
   SelectMultipleDemo,
@@ -133,6 +135,44 @@ const SELECT_MULTIPLE_SNIPPET = `import { Select } from "@kenos-ui/react-select"
   <Select.HiddenSelect />
 </Select.Root>`;
 
+const COMBOBOX_FILTER_SNIPPET = `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label>Language</Combobox.Label>
+  <Combobox.Input placeholder="Search languages…" />
+  <Combobox.Trigger>▼</Combobox.Trigger>
+  <Combobox.Content>
+    <Combobox.List>
+      <Combobox.Item value="ts">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+      <Combobox.Item value="js">
+        <Combobox.ItemText>JavaScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty>No languages found</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`;
+
+const COMBOBOX_DIALOG_SNIPPET = `import { Combobox } from "@kenos-ui/react-combobox";
+
+// Inside any Dialog.Content — Content stays inline (no portal)
+<Dialog.Content>
+  <Combobox.Root defaultValue="js">
+    <Combobox.Label>Language</Combobox.Label>
+    <Combobox.Input placeholder="Search…" />
+    <Combobox.Trigger>▼</Combobox.Trigger>
+    <Combobox.Content>
+      <Combobox.List>
+        <Combobox.Item value="ts">
+          <Combobox.ItemText>TypeScript</Combobox.ItemText>
+        </Combobox.Item>
+      </Combobox.List>
+      <Combobox.Empty>No matches</Combobox.Empty>
+    </Combobox.Content>
+  </Combobox.Root>
+</Dialog.Content>`;
+
 const SELECT_PORTAL_SNIPPET = `import { useRef } from "react";
 import { Select } from "@kenos-ui/react-select";
 
@@ -236,6 +276,39 @@ export function ComponentPage({ slug }: { slug: string }) {
           <Example code={DIALOG_INTEROP_SNIPPET} lang="tsx" previewTall>
             <DemoStage tall>
               <SelectDialogDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.filter && slug === "combobox" && (
+        <>
+          <H3 id="filter">Type to filter</H3>
+          <P>
+            Typing in <InlineCode>Combobox.Input</InlineCode> filters options by{" "}
+            <InlineCode>textValue</InlineCode> (defaults to the item label). Pass a custom{" "}
+            <InlineCode>filter</InlineCode> on <InlineCode>Combobox.Root</InlineCode> to change the
+            matching logic. <InlineCode>Combobox.Empty</InlineCode> renders when nothing matches.
+          </P>
+          <Example code={COMBOBOX_FILTER_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <ComboboxFilterDemo />
+            </DemoStage>
+          </Example>
+        </>
+      )}
+
+      {features.dialogInterop && slug === "combobox" && (
+        <>
+          <H3 id="dialog-interop">Inside a Dialog</H3>
+          <P>
+            Combobox Content is inline by default with <InlineCode>modal=&#123;false&#125;</InlineCode>{" "}
+            so the listbox stays in the Dialog subtree. Escape closes the Combobox only (
+            <InlineCode>stopPropagation</InlineCode>) — the parent dialog stays open.
+          </P>
+          <Example code={COMBOBOX_DIALOG_SNIPPET} lang="tsx" previewTall>
+            <DemoStage tall>
+              <ComboboxDialogDemo />
             </DemoStage>
           </Example>
         </>

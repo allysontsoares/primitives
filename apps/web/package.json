@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kenos-ui/react-combobox": "workspace:*",
     "@kenos-ui/react-datepicker": "workspace:*",
     "@kenos-ui/react-select": "workspace:*",
     "@base-ui/react": "^1.5.0",

@@ -58,6 +58,11 @@ export function Installation() {
             code: "pnpm add @kenos-ui/react-select",
           },
           {
+            label: "Combobox",
+            lang: "bash",
+            code: "pnpm add @kenos-ui/react-combobox",
+          },
+          {
             label: "Aggregator",
             lang: "bash",
             code: "pnpm add @kenos-ui/react",
@@ -97,7 +102,7 @@ export function Installation() {
       <H2 id="import">Import primitives</H2>
       <CodeBlock
         lang="jsx"
-        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\nimport { Select } from "@kenos-ui/react-select";\n// or: import { DatePicker, Select } from "@kenos-ui/react";\n\n// <DatePicker.Root> ... <DatePicker.Calendar />\n// <Select.Root name="x"> ... <Select.HiddenSelect />`}
+        code={`import { DatePicker } from "@kenos-ui/react-datepicker";\nimport { Select } from "@kenos-ui/react-select";\nimport { Combobox } from "@kenos-ui/react-combobox";\n// or: import { DatePicker, Select, Combobox } from "@kenos-ui/react";\n\n// <DatePicker.Root> ... <DatePicker.Calendar />\n// <Select.Root name="x"> ... <Select.HiddenSelect />\n// <Combobox.Root> ... <Combobox.Input /> ... <Combobox.Empty />`}
       />
     </>
   );
