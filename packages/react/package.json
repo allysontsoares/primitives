@@ -1,6 +1,6 @@
 {
   "name": "@kenos-ui/react",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Kenos UI headless primitives for React — aggregator",
   "repository": {
     "type": "git",

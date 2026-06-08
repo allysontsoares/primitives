@@ -1,5 +1,12 @@
 # @kenos-ui/react-select
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [aaa8a57]
+  - @kenos-ui/utils@0.0.1
+
 ## 0.2.0
 
 ### Minor Changes
