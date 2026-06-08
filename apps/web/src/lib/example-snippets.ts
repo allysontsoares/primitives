@@ -819,4 +819,118 @@ const trigger = css({ display: "flex", w: "full", px: "3", py: "2", borderRadius
   </Select.Content>
 </Select.Root>`,
   },
+
+  combobox: {
+    unstyled: `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts" onValueChange={setValue}>
+  <Combobox.Label>Language</Combobox.Label>
+  <Combobox.Input placeholder="Search languages…" />
+  <Combobox.Trigger>▼</Combobox.Trigger>
+  <Combobox.Content>
+    <Combobox.List>
+      <Combobox.Item value="ts">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+      <Combobox.Item value="js">
+        <Combobox.ItemText>JavaScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty>No languages found</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+
+    css: `.combobox-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px 0 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #000;
+  color: #f4f3f1;
+}
+
+.combobox-trigger {
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  background: #000;
+  color: #f4f3f1;
+  cursor: pointer;
+}
+
+.combobox-content {
+  margin-top: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #111112;
+  padding: 4px;
+}
+
+.combobox-item[data-highlighted] {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.combobox-empty {
+  padding: 8px 12px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* index.tsx */
+import { Combobox } from "@kenos-ui/react-combobox";
+import "./combobox.css";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label className="label">Language</Combobox.Label>
+  <div className="row">
+    <Combobox.Input className="combobox-input" placeholder="Search…" />
+    <Combobox.Trigger className="combobox-trigger">▼</Combobox.Trigger>
+  </div>
+  <Combobox.Content className="combobox-content">
+    <Combobox.List>
+      <Combobox.Item value="ts" className="combobox-item">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty className="combobox-empty">No languages found</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+
+    tailwind: `import { Combobox } from "@kenos-ui/react-combobox";
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Label className="text-sm font-semibold">Language</Combobox.Label>
+  <div className="flex">
+    <Combobox.Input
+      className="flex-1 rounded-l-lg border px-3 py-2"
+      placeholder="Search languages…"
+    />
+    <Combobox.Trigger className="rounded-r-lg border border-l-0 px-2.5 py-2">▼</Combobox.Trigger>
+  </div>
+  <Combobox.Content className="mt-1 rounded-lg border bg-white p-1 shadow-lg" sameWidth>
+    <Combobox.List>
+      <Combobox.Item value="ts" className="rounded px-2 py-1.5 data-[highlighted]:bg-zinc-100">
+        <Combobox.ItemText>TypeScript</Combobox.ItemText>
+      </Combobox.Item>
+    </Combobox.List>
+    <Combobox.Empty className="px-2 py-1.5 text-sm text-zinc-500">No languages found</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+
+    panda: `import { Combobox } from "@kenos-ui/react-combobox";
+import { css } from "../styled-system/css";
+
+const input = css({ flex: "1", px: "3", py: "2", borderRadius: "md", borderWidth: "1px" });
+
+<Combobox.Root defaultValue="ts">
+  <Combobox.Input className={input} placeholder="Search…" />
+  <Combobox.Content>
+    <Combobox.Item value="ts">
+      <Combobox.ItemText>TypeScript</Combobox.ItemText>
+    </Combobox.Item>
+    <Combobox.Empty>No matches</Combobox.Empty>
+  </Combobox.Content>
+</Combobox.Root>`,
+  },
 };

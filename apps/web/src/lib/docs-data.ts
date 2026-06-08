@@ -36,6 +36,8 @@ export type ComponentDocFeatures = {
   multiple?: boolean;
   /** Portal + custom container example section. */
   portal?: boolean;
+  /** Type-to-filter example section (combobox). */
+  filter?: boolean;
 };
 
 export type ComponentMeta = {
@@ -51,7 +53,13 @@ export type ComponentMeta = {
   features?: ComponentDocFeatures;
 };
 
-export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field" | "select";
+export type DemoKind =
+  | "calendar"
+  | "date-picker"
+  | "date-range-picker"
+  | "date-field"
+  | "select"
+  | "combobox";
 
 export type NavItem = { label: string; route: string };
 export type NavGroup = { title: string; badge?: string; items: NavItem[] };
@@ -75,6 +83,7 @@ export const NAV: NavGroup[] = [
       { label: "Date Range Picker", route: "date-range-picker" },
       { label: "Date Field", route: "date-field" },
       { label: "Select", route: "select" },
+      { label: "Combobox", route: "combobox" },
     ],
   },
   {
@@ -231,6 +240,40 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             ],
           },
           { tag: "Select.HiddenSelect", note: "native <select> for forms" },
+        ],
+      },
+    ],
+  },
+  combobox: {
+    name: "Combobox",
+    eyebrow: "Primitive",
+    desc: "A headless combobox with type-to-filter, aria-activedescendant list navigation, and an Empty state when nothing matches. Interop-first defaults: modal={false}, inline Content anchored to the input.",
+    demo: "combobox",
+    npmPackage: "@kenos-ui/react-combobox",
+    importName: "Combobox",
+    features: { filter: true, dialogInterop: true },
+    parts: [
+      {
+        tag: "Combobox.Root",
+        children: [
+          { tag: "Combobox.Label", leaf: true },
+          {
+            tag: "Combobox.Input",
+            note: "combobox role — typing filters the list",
+          },
+          { tag: "Combobox.Trigger", note: "opens list without clearing filter text" },
+          {
+            tag: "Combobox.Content",
+            note: "floating listbox (inline, no portal)",
+            children: [
+              {
+                tag: "Combobox.List",
+                children: [{ tag: "Combobox.Item value=…", note: "registers in store" }],
+              },
+              { tag: "Combobox.Empty", note: "shown when filter matches nothing" },
+            ],
+          },
+          { tag: "Combobox.Clear", note: "clears value + input text" },
         ],
       },
     ],
@@ -439,6 +482,89 @@ export const API: Record<string, ApiGroup[]> = {
       ],
     },
   ],
+  combobox: [
+    {
+      ...rootGroup,
+      props: [
+        {
+          name: "value / defaultValue / onValueChange",
+          type: "string | null",
+          desc: "Controlled/uncontrolled selected value.",
+        },
+        {
+          name: "inputValue / defaultInputValue / onInputValueChange",
+          type: "string",
+          desc: "Controlled/uncontrolled filter text in the input.",
+        },
+        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
+        { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
+        { name: "modal", type: "boolean", def: "false", desc: "Opt-in focus trap + aria-modal on Content." },
+        {
+          name: "items",
+          type: "Record<string, string>",
+          desc: "Value → label map. Resolves input display when items are not mounted.",
+        },
+        {
+          name: "isItemEqualToValue",
+          type: "(item: string, value: string) => boolean",
+          desc: "Custom comparator for value matching.",
+        },
+        {
+          name: "filter",
+          type: "(item: { textValue: string }, query: string) => boolean",
+          desc: "Custom filter for type-to-filter. Default: case-insensitive substring on textValue.",
+        },
+      ],
+    },
+    {
+      group: "Content props",
+      props: [
+        { name: "side / align / sameWidth", desc: "Floating UI positioning via @kenos-ui/utils." },
+        { name: "lazyMount", type: "boolean", def: "true", desc: "Skip DOM until first open." },
+        {
+          name: "onOpenChangeComplete",
+          type: "(open: boolean) => void",
+          desc: "Fires when open transitions finish, including presence exit.",
+        },
+      ],
+    },
+    {
+      group: "Parts",
+      props: [
+        {
+          name: "Combobox.Empty",
+          type: "div",
+          desc: "Rendered when the filter matches no items. Place inside Content after List.",
+        },
+        {
+          name: "Combobox.Clear",
+          type: "span[role=button]",
+          desc: "Clears value and input text without opening the listbox.",
+        },
+      ],
+    },
+    {
+      group: "Data attributes",
+      attrs: true,
+      props: [
+        { name: "[data-open]", desc: "On input/trigger when listbox is open." },
+        { name: "[data-selected]", desc: "On selected option." },
+        { name: "[data-highlighted]", desc: "Keyboard/hover highlight." },
+        { name: "[data-disabled]", desc: "Disabled input, trigger, or option." },
+      ],
+    },
+    {
+      group: "Keyboard",
+      keys: true,
+      props: [
+        { name: "Type characters", desc: "Filter options by textValue (substring match)." },
+        { name: "Arrow ↑ / ↓", desc: "Move highlight via aria-activedescendant; skips disabled items." },
+        { name: "Home / End", desc: "First / last enabled option." },
+        { name: "Enter", desc: "Select highlighted option; closes listbox." },
+        { name: "Escape", desc: "Close listbox; stopPropagation for Dialog interop." },
+      ],
+    },
+  ],
   "date-field": [
     {
       ...rootGroup,
@@ -478,6 +604,7 @@ export const SEARCH: SearchEntry[] = [
   { title: "Date Range Picker", route: "date-range-picker", crumb: "Primitives", kind: "comp" },
   { title: "Date Field", route: "date-field", crumb: "Primitives", kind: "comp" },
   { title: "Select", route: "select", crumb: "Primitives", kind: "comp" },
+  { title: "Combobox", route: "combobox", crumb: "Primitives", kind: "comp" },
   { title: "Localization", route: "localization", crumb: "Guides", kind: "page" },
   { title: "Accessibility", route: "accessibility", crumb: "Guides", kind: "page" },
   { title: "Styling", route: "styling", crumb: "Guides", kind: "page" },

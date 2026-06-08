@@ -7,6 +7,7 @@ import {
   DatePicker,
   DateRangePicker,
   InlineCalendar,
+  ComboboxDemo,
   SelectDemo,
 } from "./demos";
 
@@ -74,6 +75,14 @@ function HighlightSelect() {
   );
 }
 
+function HighlightCombobox() {
+  return (
+    <HighlightDemoFrame>
+      <ComboboxDemo label="Language" />
+    </HighlightDemoFrame>
+  );
+}
+
 type Highlight = {
   slug: string;
   title: string;
@@ -111,6 +120,12 @@ const HIGHLIGHTS: Highlight[] = [
     title: "Select",
     desc: "Combobox + listbox with dialog-safe defaults — inline Content, Escape interop, HiddenSelect for forms.",
     demo: <HighlightSelect />,
+  },
+  {
+    slug: "combobox",
+    title: "Combobox",
+    desc: "Type-to-filter with aria-activedescendant navigation, Empty state, and inline floating Content.",
+    demo: <HighlightCombobox />,
   },
 ];
 

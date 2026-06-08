@@ -10,6 +10,7 @@ import {
   useDatePickerContext,
   type DateRange,
 } from "@kenos-ui/react-datepicker";
+import { Combobox as KenosCombobox } from "@kenos-ui/react-combobox";
 import { Select as KenosSelect } from "@kenos-ui/react-select";
 
 
@@ -22,7 +23,13 @@ import { Select as KenosSelect } from "@kenos-ui/react-select";
    the real library code (reducer, timescape, floating-ui, Intl, etc.).
    ============================================================ */
 
-export type DemoKind = "calendar" | "date-picker" | "date-range-picker" | "date-field" | "select";
+export type DemoKind =
+  | "calendar"
+  | "date-picker"
+  | "date-range-picker"
+  | "date-field"
+  | "select"
+  | "combobox";
 export type CalSize = "default" | "compact";
 
 /* ---------------- icons (ported from old fake for visual match) ---------------- */
@@ -857,6 +864,111 @@ export function SelectPortalDemo() {
   );
 }
 
+const comboboxInputCls = [
+  "min-w-0 flex-1 rounded-l-[10px] border border-r-0 border-zinc-200/90 bg-white px-3 py-2.5 text-sm text-zinc-900 shadow-sm",
+  "transition-[border-color,box-shadow] duration-150 placeholder:text-zinc-400",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40",
+  "dark:border-zinc-700/80 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500",
+].join(" ");
+
+const comboboxTriggerCls = [
+  "inline-flex shrink-0 items-center justify-center rounded-r-[10px] border border-zinc-200/90 bg-white px-2.5 py-2.5 text-zinc-500 shadow-sm",
+  "transition-[border-color,box-shadow] duration-150",
+  "hover:border-zinc-300 hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40",
+  "dark:border-zinc-700/80 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-200",
+].join(" ");
+
+const comboboxEmptyCls = "px-2.5 py-2 text-sm text-zinc-500 dark:text-zinc-400";
+
+const comboboxLanguageOptions = [
+  ["ts", "TypeScript"],
+  ["js", "JavaScript"],
+  ["py", "Python"],
+  ["rs", "Rust"],
+  ["go", "Go"],
+] as const;
+
+const comboboxFilterLanguageOptions = [
+  ["ts", "TypeScript"],
+  ["js", "JavaScript"],
+  ["py", "Python"],
+  ["rs", "Rust"],
+  ["go", "Go"],
+  ["java", "Java"],
+  ["kotlin", "Kotlin"],
+  ["swift", "Swift"],
+  ["csharp", "C#"],
+  ["cpp", "C++"],
+  ["ruby", "Ruby"],
+  ["php", "PHP"],
+  ["scala", "Scala"],
+  ["elixir", "Elixir"],
+  ["haskell", "Haskell"],
+  ["lua", "Lua"],
+  ["r", "R"],
+  ["dart", "Dart"],
+  ["zig", "Zig"],
+  ["ocaml", "OCaml"],
+] as const;
+
+const ChevronDownIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" strokeWidth={2} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);
+
+export function ComboboxDemo({
+  label = "Language",
+  defaultValue = "ts",
+  options = comboboxLanguageOptions,
+}: {
+  label?: string;
+  defaultValue?: string;
+  options?: ReadonlyArray<readonly [string, string]>;
+}) {
+  return (
+    <KenosCombobox.Root defaultValue={defaultValue}>
+      <KenosCombobox.Label className="mb-1.5 block text-sm font-semibold text-zinc-700 dark:text-zinc-200">
+        {label}
+      </KenosCombobox.Label>
+      <div className="flex min-w-[240px]">
+        <KenosCombobox.Input className={comboboxInputCls} placeholder="Search languages…" />
+        <KenosCombobox.Trigger className={comboboxTriggerCls} aria-label="Toggle list">
+          <ChevronDownIcon />
+        </KenosCombobox.Trigger>
+      </div>
+      <KenosCombobox.Content className={selectContentCls} sameWidth>
+        <KenosCombobox.List>
+          {options.map(([value, text]) => (
+            <KenosCombobox.Item key={value} value={value} className={selectItemCls}>
+              <KenosCombobox.ItemText>{text}</KenosCombobox.ItemText>
+            </KenosCombobox.Item>
+          ))}
+        </KenosCombobox.List>
+        <KenosCombobox.Empty className={comboboxEmptyCls}>No languages found</KenosCombobox.Empty>
+      </KenosCombobox.Content>
+    </KenosCombobox.Root>
+  );
+}
+
+export function ComboboxFilterDemo() {
+  return <ComboboxDemo label="Language" options={comboboxFilterLanguageOptions} />;
+}
+
+export function ComboboxDialogDemo() {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Settings"
+      className="w-full max-w-sm rounded-xl border border-zinc-200/90 bg-zinc-50 p-4 shadow-lg dark:border-zinc-700/80 dark:bg-zinc-900"
+    >
+      <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Settings</h3>
+      <ComboboxDemo label="Language" defaultValue="js" />
+    </div>
+  );
+}
+
 /* ---------------- LiveDemo dispatcher (used by component pages) ---------------- */
 export function LiveDemo({ kind, locale = "en-US" }: { kind: DemoKind; locale?: string }) {
   if (kind === "calendar") {
@@ -870,6 +982,9 @@ export function LiveDemo({ kind, locale = "en-US" }: { kind: DemoKind; locale?: 
   }
   if (kind === "select") {
     return <SelectDemo />;
+  }
+  if (kind === "combobox") {
+    return <ComboboxDemo />;
   }
   return <DateField locale={locale} label="Date of birth" />;
 }
