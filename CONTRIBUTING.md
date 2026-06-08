@@ -22,6 +22,59 @@
 - Layout target: `docs/package-structure.md`
 - Popup behavior: `docs/popup-policy.md`
 
+## State management convention
+
+Kenos primitives use one of two internal state patterns. Pick based on how state changes and who needs to subscribe — not on personal preference.
+
+| Primitive | Pattern | Why |
+|-----------|---------|-----|
+| **DatePicker** | **Reducer** (`datePickerReducer`) | Finite view machine: month/year/decade views, single/range selection modes, discrete transitions |
+| **Select** | **Store** (`SelectStore` + `useSyncExternalStore`) | Item registry from JSX children, `highlightedValue` updates every keypress — parts subscribe narrowly |
+| **Combobox** (Tier 3) | **Store** (extends Select shape) | Same registry + list navigation, plus `inputValue` and filter-driven collection updates |
+
+### DatePicker — reducer
+
+DatePicker models calendar navigation and selection as a **finite state machine**: actions like `NAVIGATE_MONTH`, `SELECT_DAY`, and `SET_VIEW` produce predictable next states. A reducer fits because:
+
+- The domain is **bounded** (known views, known selection modes).
+- Transitions are **event-driven** and easy to test in isolation.
+- Multiple parts read the same coherent snapshot without fine-grained subscriptions.
+
+See [docs/datepicker/plan.md](./docs/datepicker/plan.md) — *Principles → Reducer, not machine* and `packages/datepicker/src/date-picker/reducer.ts`.
+
+### Select — store
+
+Select uses a lightweight **store** with granular subscriptions (`useSyncExternalStore`). A store fits because:
+
+- Each `Select.Item` **registers/unregisters** on mount/unmount — high churn, map-shaped registry.
+- `highlightedValue` changes on every arrow key or typeahead character — only list/trigger parts should re-render.
+- `Select.Value` resolves labels from the registry without re-walking the React tree.
+
+See [docs/select/plan.md](./docs/select/plan.md) — *State: Store (decision)* and `packages/select/src/store.ts`.
+
+### Combobox — store + input/filter
+
+Combobox is a **separate package** (`@kenos-ui/react-combobox`) that reuses the Select store *pattern* (not a package dependency on `@kenos-ui/react-select`). It adds:
+
+- `inputValue` on the store
+- Filtered item collection (optional `useSelectCollection` hook — Combobox-only)
+- Creatable/async/limit behaviors
+
+Shared popup, dismiss, and composite utilities live in `packages/utils/` only.
+
+See [docs/select/plan.md](./docs/select/plan.md) — *Tier 3 — Combobox foundation*.
+
+### Choosing for new primitives
+
+| Choose **reducer** when… | Choose **store** when… |
+|--------------------------|------------------------|
+| State is a **finite machine** (views, steps, modes) | Children **register** dynamic data at runtime |
+| Updates are **coarse** action batches | One field updates **very frequently** (highlight, scroll, input) |
+| You want **pure transition tests** (`(state, action) → state`) | Parts need **narrow subscriptions** to avoid list re-renders |
+| Examples: DatePicker views, Wizard steps, Tabs panel index | Examples: Select, Combobox, Menu with roving index |
+
+**Do not** mix both in one primitive unless boundaries are clear (e.g. reducer for view mode, store for a child registry). **Do not** add cross-primitive package dependencies — share behavior through `packages/utils/` only.
+
 ## Release process
 
 Kenos UI publishes to npm under the **`@kenos-ui`** org. [Changesets](https://github.com/changesets/changesets) manages **independent** versioning — each `@kenos-ui/*` package has its own semver line (`fixed` / `linked` are empty; no release train). See [.changeset/README.md](./.changeset/README.md) for policy details.

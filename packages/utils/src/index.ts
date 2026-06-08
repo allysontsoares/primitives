@@ -28,3 +28,10 @@ export {
   type UseTypeaheadOptions,
   type TypeaheadItem,
 } from "./composite/use-typeahead";
+
+export {
+  useSelectCollection,
+  type UseSelectCollectionOptions,
+  type SelectCollectionItem,
+  type SelectCollectionFilterFn,
+} from "./composite/use-select-collection";

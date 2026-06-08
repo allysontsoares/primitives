@@ -4,6 +4,7 @@ const config: StorybookConfig = {
   stories: [
     "../../../packages/datepicker/src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../../../packages/select/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    "../../../packages/combobox/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
   addons: [
     "@storybook/addon-essentials",

@@ -5,15 +5,29 @@ import { useSelectStore } from "../store";
 export type TriggerProps = Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   "aria-haspopup" | "aria-expanded" | "aria-controls"
->;
+> & {
+  /**
+   * When true, focusing the trigger opens the listbox.
+   * Overrides `openOnFocus` on `<Select.Root>` when set.
+   */
+  openOnFocus?: boolean | undefined;
+};
 
-export function Trigger({ children, onClick, disabled, ...props }: TriggerProps) {
+export function Trigger({
+  children,
+  onClick,
+  onFocus,
+  disabled,
+  openOnFocus: openOnFocusProp,
+  ...props
+}: TriggerProps) {
   const { store, ids, refs, config } = useSelectContext();
   const open = useSelectStore(store, (s) => s.open);
   const highlightedValue = useSelectStore(store, (s) => s.highlightedValue);
 
   const isDisabled = disabled ?? config.disabled;
   const isReadOnly = config.readOnly;
+  const openOnFocus = openOnFocusProp ?? config.openOnFocus;
 
   const activeDescendantId =
     open && highlightedValue != null ? `${ids.content}-opt-${highlightedValue}` : undefined;
@@ -38,6 +52,12 @@ export function Trigger({ children, onClick, disabled, ...props }: TriggerProps)
         if (isDisabled || isReadOnly) return;
         store.setOpen(!open, "trigger");
         onClick?.(e);
+      }}
+      onFocus={(e) => {
+        if (openOnFocus && !isDisabled && !isReadOnly && !open) {
+          store.setOpen(true, "trigger");
+        }
+        onFocus?.(e);
       }}
       {...props}
     >

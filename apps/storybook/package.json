@@ -11,6 +11,7 @@
   "dependencies": {
     "@kenos-ui/react-datepicker": "workspace:*",
     "@kenos-ui/react-select": "workspace:*",
+    "@kenos-ui/react-combobox": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

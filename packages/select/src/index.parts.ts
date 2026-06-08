@@ -18,3 +18,5 @@ export { ItemIndicator } from "./item-indicator/SelectItemIndicator";
 export { Group } from "./group/SelectGroup";
 export { GroupLabel } from "./group-label/SelectGroupLabel";
 export { HiddenSelect } from "./hidden-select/SelectHiddenSelect";
+export { ScrollUpButton } from "./scroll-up-button/SelectScrollUpButton";
+export { ScrollDownButton } from "./scroll-down-button/SelectScrollDownButton";

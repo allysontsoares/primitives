@@ -20,6 +20,7 @@ import { useSelectStore } from "../store";
 import { usePositionerContext } from "../positioner/PositionerContext";
 import { resolvePortalContainer, usePortalContext } from "../portal/SelectPortal";
 import type { SelectContentProps } from "../types";
+import { useAlignItemWithTrigger } from "../utils/use-align-item-with-trigger";
 
 export function Content({
   children,
@@ -33,6 +34,7 @@ export function Content({
   portal = false,
   container = null,
   sameWidth = false,
+  alignItemWithTrigger = false,
   lazyMount = true,
   unmountOnExit = false,
   onOpenChangeComplete: onOpenChangeCompleteProp,
@@ -57,13 +59,21 @@ export function Content({
 
   const onOpenChangeComplete = onOpenChangeCompleteProp ?? onOpenChangeCompleteRoot;
 
+  const ownAlign = useAlignItemWithTrigger({
+    alignItemWithTrigger: positionerContext ? false : alignItemWithTrigger,
+    side,
+    sideOffset,
+    open,
+    refs,
+  });
+
   const ownFloating = useFloating({
     open: positionerContext ? false : open,
     side,
     align,
-    sideOffset,
+    sideOffset: ownAlign.effectiveSideOffset,
     alignOffset,
-    avoidCollisions,
+    avoidCollisions: ownAlign.avoidCollisionsOverride ?? avoidCollisions,
     collisionPadding,
     sameWidth,
   });
@@ -72,6 +82,8 @@ export function Content({
   const setFloating = positionerContext?.setFloating ?? ownFloating.setFloating;
   const floatingStyles = positionerContext?.floatingStyles ?? ownFloating.floatingStyles;
   const isPositioned = positionerContext?.isPositioned ?? ownFloating.isPositioned;
+  const alignItemWithTriggerActive =
+    positionerContext?.alignItemWithTriggerActive ?? ownAlign.alignItemWithTriggerActive;
 
   useLayoutEffect(() => {
     if (positionerContext || !open) return;
@@ -184,6 +196,7 @@ export function Content({
       id={ids.content}
       data-state={open ? "open" : "closed"}
       data-open={open ? "true" : undefined}
+      data-align-trigger={alignItemWithTriggerActive ? "true" : undefined}
       aria-modal={config.modal ? "true" : undefined}
       tabIndex={-1}
       style={{

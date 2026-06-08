@@ -202,17 +202,31 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             children: [
               { tag: "Select.Value", leaf: true },
               { tag: "Select.Icon", leaf: true },
-              { tag: "Select.ClearTrigger", note: "clears value (Tier 2)" },
+              { tag: "Select.ClearTrigger", note: "clears value without opening listbox" },
             ],
           },
           {
-            tag: "Select.Content",
-            note: "listbox container (inline default)",
+            tag: "Select.Portal",
+            note: "optional — portal to body or custom container",
             children: [
-              { tag: "Select.Backdrop", note: "only when modal={true}" },
               {
-                tag: "Select.List",
-                children: [{ tag: "Select.Item value=…", note: "registers in store" }],
+                tag: "Select.Positioner",
+                note: "floating-ui anchor (side, align, sameWidth)",
+                children: [
+                  {
+                    tag: "Select.Content",
+                    note: "listbox container (inline when Portal omitted)",
+                    children: [
+                      { tag: "Select.Backdrop", note: "only when modal={true}" },
+                      { tag: "Select.ScrollUpButton", note: "long lists" },
+                      {
+                        tag: "Select.List",
+                        children: [{ tag: "Select.Item value=…", note: "registers in store" }],
+                      },
+                      { tag: "Select.ScrollDownButton", note: "long lists" },
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -351,12 +365,24 @@ export const API: Record<string, ApiGroup[]> = {
           type: "(item: string, value: string) => boolean",
           desc: "Custom comparator for non-string or object-like values.",
         },
+        {
+          name: "openOnFocus",
+          type: "boolean",
+          def: "false",
+          desc: "Open the listbox when the trigger receives focus (keyboard users).",
+        },
       ],
     },
     {
       group: "Content props",
       props: [
         { name: "portal", type: "boolean", def: "false", desc: "Portal to document.body — avoid inside Dialogs." },
+        {
+          name: "alignItemWithTrigger",
+          type: "boolean",
+          def: "false",
+          desc: "Align popup edge with trigger (covers trigger on bottom side).",
+        },
         {
           name: "container",
           type: "HTMLElement | RefObject<HTMLElement>",
@@ -372,12 +398,22 @@ export const API: Record<string, ApiGroup[]> = {
       ],
     },
     {
-      group: "ClearTrigger props",
+      group: "Parts (Tier 2–4)",
       props: [
         {
           name: "Select.ClearTrigger",
-          type: "button",
+          type: "span[role=button]",
           desc: "Clears the current value without opening the listbox. Place inside Trigger.",
+        },
+        {
+          name: "Select.ScrollUpButton / ScrollDownButton",
+          type: "button",
+          desc: "Scroll the list when options overflow. Auto-hidden when not needed.",
+        },
+        {
+          name: "scrollToIndex(index)",
+          type: "context method",
+          desc: "Programmatically scroll the list to an item index.",
         },
       ],
     },

@@ -39,8 +39,8 @@ export function LandingHero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-zinc-500 md:text-lg">
-            Composable, accessible and unstyled React primitives for date UI. Start with structure.
-            Finish with style — Tailwind, Panda, or your own CSS.
+            Composable, accessible and unstyled React primitives for date and form UI. Start with
+            structure. Finish with style — Tailwind, Panda, or your own CSS.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
@@ -111,7 +111,7 @@ export function LandingHero() {
               {"// built for scheduling UI"}
             </div>
             <div className="flex flex-1 flex-wrap items-center justify-center gap-x-10 gap-y-3 px-6 py-5 opacity-50">
-              {["Calendar", "Date Picker", "Range Picker", "Date Field"].map((item) => (
+              {["Calendar", "Date Picker", "Range Picker", "Date Field", "Select"].map((item) => (
                 <span key={item} className="text-sm font-semibold text-zinc-100">
                   {item}
                 </span>

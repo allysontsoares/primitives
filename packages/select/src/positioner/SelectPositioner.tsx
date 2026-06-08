@@ -3,6 +3,7 @@ import { useFloating } from "@kenos-ui/utils";
 import { useSelectContext } from "../context";
 import { useSelectStore } from "../store";
 import type { SelectPositionerProps } from "../types";
+import { useAlignItemWithTrigger } from "../utils/use-align-item-with-trigger";
 import { PositionerContext } from "./PositionerContext";
 
 export function Positioner({
@@ -14,17 +15,27 @@ export function Positioner({
   avoidCollisions = true,
   collisionPadding = 8,
   sameWidth = false,
+  alignItemWithTrigger = false,
 }: SelectPositionerProps) {
   const { store, refs } = useSelectContext();
   const open = useSelectStore(store, (s) => s.open);
+
+  const { alignItemWithTriggerActive, effectiveSideOffset, avoidCollisionsOverride } =
+    useAlignItemWithTrigger({
+      alignItemWithTrigger,
+      side,
+      sideOffset,
+      open,
+      refs,
+    });
 
   const { setReference, setFloating, floatingStyles, isPositioned } = useFloating({
     open,
     side,
     align,
-    sideOffset,
+    sideOffset: effectiveSideOffset,
     alignOffset,
-    avoidCollisions,
+    avoidCollisions: avoidCollisionsOverride ?? avoidCollisions,
     collisionPadding,
     sameWidth,
   });
@@ -39,8 +50,9 @@ export function Positioner({
       floatingStyles,
       isPositioned,
       setFloating,
+      alignItemWithTriggerActive,
     }),
-    [floatingStyles, isPositioned, setFloating],
+    [floatingStyles, isPositioned, setFloating, alignItemWithTriggerActive],
   );
 
   return (

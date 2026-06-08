@@ -1,6 +1,6 @@
 import { createContext, useContext, type RefObject } from "react";
 import type { SelectStore } from "./store";
-import type { SelectItemEqualFn } from "./types";
+import type { SelectItemEqualFn, ScrollToIndexOptions } from "./types";
 
 export interface SelectRefs {
   triggerRef: RefObject<HTMLButtonElement | null>;
@@ -26,6 +26,7 @@ export interface SelectContextValue {
     multiple: boolean;
     items: Record<string, string>;
     isItemEqualToValue: SelectItemEqualFn;
+    openOnFocus: boolean;
   };
   isControlledOpen: boolean;
   isControlledValue: boolean;
@@ -38,6 +39,8 @@ export interface SelectContextValue {
   selectAndClose: (value: string) => void;
   /** Clear the current selection. */
   clearValue: () => void;
+  /** Scroll the list to the item at the given index. */
+  scrollToIndex: (index: number, options?: ScrollToIndexOptions) => void;
 }
 
 export const SelectContext = createContext<SelectContextValue | null>(null);

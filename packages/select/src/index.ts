@@ -4,6 +4,16 @@
 export * as Select from "./index.parts";
 
 // Named type exports for consumers that want to type individual parts.
-export type { SelectRootProps, SelectContentProps, SelectItemRecord, SelectStoreState } from "./types";
+export type {
+  SelectRootProps,
+  SelectContentProps,
+  SelectItemRecord,
+  SelectStoreState,
+  SelectScrollUpButtonProps,
+  SelectScrollDownButtonProps,
+  ScrollToIndexAlign,
+  ScrollToIndexOptions,
+} from "./types";
+export { scrollToIndexInState } from "./utils/scroll-to-index";
 export { useSelectContext } from "./context";
 export type { SelectContextValue } from "./context";

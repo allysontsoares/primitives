@@ -4,6 +4,8 @@ import { SelectStore } from "../store";
 import { SelectContext } from "../context";
 import type { SelectRootProps } from "../types";
 import { extractItemsFromChildren } from "../utils/extract-items";
+import { scrollToIndexInState } from "../utils/scroll-to-index";
+import type { ScrollToIndexOptions } from "../types";
 
 const defaultIsItemEqualToValue = (a: string, b: string) => a === b;
 
@@ -41,6 +43,7 @@ export function Root(props: SelectRootProps) {
     items = {},
     isItemEqualToValue = defaultIsItemEqualToValue,
     multiple = false,
+    openOnFocus = false,
   } = props;
 
   const uid = useId();
@@ -163,6 +166,13 @@ export function Root(props: SelectRootProps) {
     store.clearValue(multiple);
   }, [store, multiple]);
 
+  const scrollToIndex = useCallback(
+    (index: number, options?: ScrollToIndexOptions) => {
+      scrollToIndexInState(store.getState(), index, options);
+    },
+    [store],
+  );
+
   const discoveredItems = useMemo(() => extractItemsFromChildren(children), [children]);
   const mergedItems = useMemo(
     () => ({ ...discoveredItems, ...items }),
@@ -179,8 +189,9 @@ export function Root(props: SelectRootProps) {
       multiple,
       items: mergedItems,
       isItemEqualToValue,
+      openOnFocus,
     }),
-    [disabled, required, readOnly, modal, name, multiple, mergedItems, isItemEqualToValue],
+    [disabled, required, readOnly, modal, name, multiple, mergedItems, isItemEqualToValue, openOnFocus],
   );
 
   const ctx = useMemo(
@@ -196,6 +207,7 @@ export function Root(props: SelectRootProps) {
       selectValue,
       selectAndClose: selectValue,
       clearValue,
+      scrollToIndex,
     }),
     [
       store,
@@ -207,6 +219,7 @@ export function Root(props: SelectRootProps) {
       close,
       selectValue,
       clearValue,
+      scrollToIndex,
     ],
   );
 

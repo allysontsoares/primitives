@@ -4,6 +4,7 @@ export interface PositionerContextValue {
   floatingStyles: CSSProperties;
   isPositioned: boolean;
   setFloating: (node: HTMLElement | null) => void;
+  alignItemWithTriggerActive: boolean;
 }
 
 export const PositionerContext = createContext<PositionerContextValue | null>(null);

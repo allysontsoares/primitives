@@ -838,11 +838,13 @@ export function SelectPortalDemo() {
           sameWidth
         >
           <KenosSelect.List>
-            {[
-              ["pt", "Portugal"],
-              ["br", "Brazil"],
-              ["es", "Spain"],
-            ].map(([value, text]) => (
+            {(
+              [
+                ["pt", "Portugal"],
+                ["br", "Brazil"],
+                ["es", "Spain"],
+              ] as const
+            ).map(([value, text]) => (
               <KenosSelect.Item key={value} value={value} className={selectItemCls}>
                 <KenosSelect.ItemText>{text}</KenosSelect.ItemText>
               </KenosSelect.Item>

@@ -61,6 +61,11 @@ interface SelectRootPropsBase {
   items?: Record<string, string> | undefined;
   /** Custom equality for value matching. Default: strict `===`. */
   isItemEqualToValue?: SelectItemEqualFn | undefined;
+  /**
+   * When true, focusing the trigger opens the listbox.
+   * **Default: false**
+   */
+  openOnFocus?: boolean | undefined;
 }
 
 export interface SelectRootPropsSingle extends SelectRootPropsBase {
@@ -110,6 +115,12 @@ export interface SelectPositionerProps {
   collisionPadding?: number | undefined;
   /** Match the trigger's width. Default: false. */
   sameWidth?: boolean | undefined;
+  /**
+   * When true, positions content to cover the trigger.
+   * For `side="bottom"`, aligns the top of content with the top of the trigger.
+   * **Default: false**
+   */
+  alignItemWithTrigger?: boolean | undefined;
 }
 
 // ── Backdrop props ─────────────────────────────────────────────────────────
@@ -119,6 +130,28 @@ export interface SelectBackdropProps extends HTMLAttributes<HTMLDivElement> {}
 // ── ClearTrigger props ─────────────────────────────────────────────────────
 
 export interface SelectClearTriggerProps extends HTMLAttributes<HTMLSpanElement> {}
+
+// ── Scroll button props ──────────────────────────────────────────────────────
+
+export interface SelectScrollButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  direction: "up" | "down";
+  /**
+   * Keep the button in the DOM when the list is not scrollable in this direction.
+   * **Default: false**
+   */
+  keepMounted?: boolean | undefined;
+}
+
+export type SelectScrollUpButtonProps = Omit<SelectScrollButtonProps, "direction">;
+export type SelectScrollDownButtonProps = Omit<SelectScrollButtonProps, "direction">;
+
+// ── scrollToIndex ────────────────────────────────────────────────────────────
+
+export type ScrollToIndexAlign = "auto" | "start" | "end" | "center" | "nearest";
+
+export interface ScrollToIndexOptions {
+  align?: ScrollToIndexAlign | undefined;
+}
 
 // ── Content props ──────────────────────────────────────────────────────────
 
@@ -144,6 +177,12 @@ export interface SelectContentProps {
   container?: SelectPortalContainer | undefined;
   /** Match the trigger's width. Default: false. */
   sameWidth?: boolean | undefined;
+  /**
+   * When true, positions content to cover the trigger.
+   * For `side="bottom"`, aligns the top of content with the top of the trigger.
+   * **Default: false**
+   */
+  alignItemWithTrigger?: boolean | undefined;
   /** Skip DOM until first open. Default: true. */
   lazyMount?: boolean | undefined;
   /** Remove from DOM when closed. Default: false. */
