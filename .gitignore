@@ -43,3 +43,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Local blog/announcement content (not part of the library repo)
+/blog/
+
