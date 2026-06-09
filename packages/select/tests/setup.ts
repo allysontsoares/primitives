@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import "./vitest-axe-types";
 import * as matchers from "vitest-axe/dist/matchers";
 import { expect } from "vitest";
 
