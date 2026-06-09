@@ -1,5 +1,16 @@
 # @kenos-ui/react-datepicker
 
+## 0.4.0
+
+### Minor Changes
+
+- docs(readme): major update to README
+
+  - Document the unified `DatePicker.Root` + `mode` API correctly
+  - Highlight the segmented `<DatePicker.Input />` as the main feature
+  - Add clear examples for range (dual inputs + hover preview), multiple, and full composition
+  - Improve props, localization and advanced Content sections
+
 ## 0.3.3
 
 ### Patch Changes
