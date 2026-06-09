@@ -136,7 +136,7 @@ const QUALITIES = [
   },
   {
     title: "WAI-ARIA grid semantics",
-    desc: "Calendar cells use role=\"grid\" / gridcell, roving tabindex, and aria-selected — not a pile of unlabeled buttons.",
+    desc: 'Calendar cells use role="grid" / gridcell, roving tabindex, and aria-selected — not a pile of unlabeled buttons.',
   },
   {
     title: "Locale-aware by default",
@@ -200,7 +200,9 @@ export function HomeHighlights() {
                 <h3 className="mb-1 text-[17px] font-[650] tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
                   {h.title}
                 </h3>
-                <p className="mb-4 flex-1 text-[13.5px] leading-normal text-zinc-500 dark:text-zinc-400">{h.desc}</p>
+                <p className="mb-4 flex-1 text-[13.5px] leading-normal text-zinc-500 dark:text-zinc-400">
+                  {h.desc}
+                </p>
                 <Link
                   href={`/docs/${h.slug}`}
                   className="text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-500"
@@ -218,9 +220,14 @@ export function HomeHighlights() {
 
 export function HomeQualities() {
   return (
-    <section className="relative mt-20 overflow-hidden sm:mt-24" aria-labelledby="home-qualities-title">
+    <section
+      className="relative mt-20 overflow-hidden sm:mt-24"
+      aria-labelledby="home-qualities-title"
+    >
       <div className="relative z-[1]">
-        <p className="mb-1 text-[13px] font-semibold tracking-wide text-zinc-500">Accessible by default</p>
+        <p className="mb-1 text-[13px] font-semibold tracking-wide text-zinc-500">
+          Accessible by default
+        </p>
         <h2
           id="home-qualities-title"
           className="mb-3 max-w-[20ch] text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100 text-balance"
@@ -230,7 +237,10 @@ export function HomeQualities() {
         <p className="mb-10 max-w-[52ch] text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
           Date components are easy to get wrong. Kenos handles semantics, keyboard support, and
           locale rules so your team can focus on visual design.{" "}
-          <Link href="/docs/accessibility" className="font-semibold text-zinc-900 dark:text-zinc-100 underline-offset-2 hover:underline">
+          <Link
+            href="/docs/accessibility"
+            className="font-semibold text-zinc-900 dark:text-zinc-100 underline-offset-2 hover:underline"
+          >
             Accessibility guide →
           </Link>
         </p>
@@ -239,8 +249,12 @@ export function HomeQualities() {
             <li key={q.title} className="flex gap-3">
               <CheckIcon />
               <div className="min-w-0">
-                <h3 className="mb-1 text-[15px] font-[650] text-zinc-900 dark:text-zinc-100">{q.title}</h3>
-                <p className="text-[14px] leading-relaxed text-zinc-500 dark:text-zinc-400">{q.desc}</p>
+                <h3 className="mb-1 text-[15px] font-[650] text-zinc-900 dark:text-zinc-100">
+                  {q.title}
+                </h3>
+                <p className="text-[14px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+                  {q.desc}
+                </p>
               </div>
             </li>
           ))}
@@ -273,8 +287,12 @@ export function HomeWhySection() {
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
         {items.map((item) => (
           <div key={item.title}>
-            <h3 className="mb-2 text-[17px] font-[650] text-zinc-900 dark:text-zinc-100">{item.title}</h3>
-            <p className="text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">{item.body}</p>
+            <h3 className="mb-2 text-[17px] font-[650] text-zinc-900 dark:text-zinc-100">
+              {item.title}
+            </h3>
+            <p className="text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">
+              {item.body}
+            </p>
           </div>
         ))}
       </div>
@@ -288,7 +306,10 @@ export function HomeCtaBand() {
       className="mt-20 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-8 sm:mt-24 sm:p-10"
       aria-labelledby="home-cta-title"
     >
-      <h2 id="home-cta-title" className="mb-2 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100">
+      <h2
+        id="home-cta-title"
+        className="mb-2 text-[length:var(--text-section)] font-bold tracking-[-0.03em] text-zinc-900 dark:text-zinc-100"
+      >
         Ready to adopt?
       </h2>
       <p className="mb-6 max-w-[48ch] text-[15px] leading-relaxed text-zinc-500 dark:text-zinc-400">

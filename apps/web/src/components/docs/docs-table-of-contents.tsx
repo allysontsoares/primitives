@@ -54,7 +54,7 @@ export function DocsTableOfContents() {
   const refreshHeadings = useCallback(() => {
     const next = collectHeadings();
     setHeadings((prev) => (headingsEqual(prev, next) ? prev : next));
-    setActiveId((cur) => (cur && next.some((h) => h.id === cur) ? cur : next[0]?.id ?? ""));
+    setActiveId((cur) => (cur && next.some((h) => h.id === cur) ? cur : (next[0]?.id ?? "")));
   }, []);
 
   useEffect(() => {

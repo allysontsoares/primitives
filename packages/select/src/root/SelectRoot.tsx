@@ -174,10 +174,7 @@ export function Root(props: SelectRootProps) {
   );
 
   const discoveredItems = useMemo(() => extractItemsFromChildren(children), [children]);
-  const mergedItems = useMemo(
-    () => ({ ...discoveredItems, ...items }),
-    [discoveredItems, items],
-  );
+  const mergedItems = useMemo(() => ({ ...discoveredItems, ...items }), [discoveredItems, items]);
 
   const config = useMemo(
     () => ({
@@ -191,7 +188,17 @@ export function Root(props: SelectRootProps) {
       isItemEqualToValue,
       openOnFocus,
     }),
-    [disabled, required, readOnly, modal, name, multiple, mergedItems, isItemEqualToValue, openOnFocus],
+    [
+      disabled,
+      required,
+      readOnly,
+      modal,
+      name,
+      multiple,
+      mergedItems,
+      isItemEqualToValue,
+      openOnFocus,
+    ],
   );
 
   const ctx = useMemo(

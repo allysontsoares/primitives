@@ -132,8 +132,7 @@ export const OpenOnFocus: Story = {
     return (
       <div style={{ fontFamily: "sans-serif", minWidth: 280 }}>
         <p style={{ marginBottom: 8, fontSize: 14, color: "#666" }}>
-          Tab to the trigger — list opens on focus. Focused:{" "}
-          <code>{focused ? "yes" : "no"}</code>
+          Tab to the trigger — list opens on focus. Focused: <code>{focused ? "yes" : "no"}</code>
         </p>
         <Select.Root name="open-on-focus" openOnFocus>
           <Select.Label style={{ display: "block", marginBottom: 4, fontWeight: 600 }}>

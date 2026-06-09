@@ -30,9 +30,5 @@ export function Portal({ children, container = null }: SelectPortalProps) {
     return null;
   }
 
-  return (
-    <PortalContext.Provider value>
-      {createPortal(children, mountNode)}
-    </PortalContext.Provider>
-  );
+  return <PortalContext.Provider value>{createPortal(children, mountNode)}</PortalContext.Provider>;
 }

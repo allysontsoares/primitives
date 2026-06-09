@@ -7,10 +7,7 @@ export interface SelectCollectionItem {
   disabled: boolean;
 }
 
-export type SelectCollectionFilterFn = (
-  item: SelectCollectionItem,
-  inputValue: string,
-) => boolean;
+export type SelectCollectionFilterFn = (item: SelectCollectionItem, inputValue: string) => boolean;
 
 export interface UseSelectCollectionOptions {
   items: SelectCollectionItem[] | Map<string, SelectCollectionItem>;
@@ -21,10 +18,7 @@ export interface UseSelectCollectionOptions {
 function defaultFilter(item: SelectCollectionItem, inputValue: string): boolean {
   const query = inputValue.trim().toLowerCase();
   if (!query) return true;
-  return (
-    item.textValue.toLowerCase().includes(query) ||
-    item.label.toLowerCase().includes(query)
-  );
+  return item.textValue.toLowerCase().includes(query) || item.label.toLowerCase().includes(query);
 }
 
 function toItemArray(
@@ -47,10 +41,7 @@ export function useSelectCollection({
     return all.filter((item) => filter(item, inputValue));
   }, [items, inputValue, filter]);
 
-  const enabledItems = useMemo(
-    () => collection.filter((item) => !item.disabled),
-    [collection],
-  );
+  const enabledItems = useMemo(() => collection.filter((item) => !item.disabled), [collection]);
 
   return {
     items: collection,

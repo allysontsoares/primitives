@@ -140,7 +140,7 @@ describe("Content", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
-  it('omits aria-modal when modal=false (popup-policy default)', () => {
+  it("omits aria-modal when modal=false (popup-policy default)", () => {
     render(<BasicPicker defaultOpen />);
     expect(screen.getByRole("dialog")).not.toHaveAttribute("aria-modal", "true");
   });

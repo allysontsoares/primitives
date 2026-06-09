@@ -11,7 +11,7 @@ pnpm add @kenos-ui/react-select
 ## Usage
 
 ```tsx
-import { Select } from '@kenos-ui/react-select';
+import { Select } from "@kenos-ui/react-select";
 
 <Select.Root name="framework" onValueChange={setValue}>
   <Select.Label>Framework</Select.Label>
@@ -32,26 +32,26 @@ import { Select } from '@kenos-ui/react-select';
     </Select.List>
   </Select.Content>
   <Select.HiddenSelect />
-</Select.Root>
+</Select.Root>;
 ```
 
 ## API
 
-| Part | Description |
-|------|-------------|
-| `Root` | Context + state provider |
-| `Label` | Associated `<label>` |
-| `Trigger` | Button that opens the listbox |
-| `Value` | Displays the selected label or placeholder |
-| `Icon` | Chevron slot |
-| `Content` | Listbox container (floating, lazyMount) |
-| `List` | `role="listbox"` wrapper |
-| `Item` | `role="option"` — registers value/label |
-| `ItemText` | Option label slot |
-| `ItemIndicator` | Shown when the option is selected |
-| `Group` | Groups options (`role="group"`) |
-| `GroupLabel` | Label for a group |
-| `HiddenSelect` | Native `<select>` for form submission |
+| Part            | Description                                |
+| --------------- | ------------------------------------------ |
+| `Root`          | Context + state provider                   |
+| `Label`         | Associated `<label>`                       |
+| `Trigger`       | Button that opens the listbox              |
+| `Value`         | Displays the selected label or placeholder |
+| `Icon`          | Chevron slot                               |
+| `Content`       | Listbox container (floating, lazyMount)    |
+| `List`          | `role="listbox"` wrapper                   |
+| `Item`          | `role="option"` — registers value/label    |
+| `ItemText`      | Option label slot                          |
+| `ItemIndicator` | Shown when the option is selected          |
+| `Group`         | Groups options (`role="group"`)            |
+| `GroupLabel`    | Label for a group                          |
+| `HiddenSelect`  | Native `<select>` for form submission      |
 
 ## Popup defaults (interop-first)
 

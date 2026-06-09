@@ -1,10 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import type { FloatingSide } from "@kenos-ui/utils";
 import type { SelectRefs } from "../context";
-import {
-  getAlignItemWithTriggerOffset,
-  shouldDisableFlipForAlign,
-} from "./align-with-trigger";
+import { getAlignItemWithTriggerOffset, shouldDisableFlipForAlign } from "./align-with-trigger";
 
 export interface AlignItemWithTriggerOptions {
   alignItemWithTrigger: boolean;

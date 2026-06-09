@@ -65,9 +65,7 @@ describe("multiple mode", () => {
   it("selecting a second item appends to the value array", async () => {
     const onValueChange = vi.fn();
     const user = userEvent.setup();
-    render(
-      <MultipleSelect defaultOpen defaultValue={["react"]} onValueChange={onValueChange} />,
-    );
+    render(<MultipleSelect defaultOpen defaultValue={["react"]} onValueChange={onValueChange} />);
 
     await user.click(screen.getByRole("option", { name: /vue/i }));
     expect(onValueChange).toHaveBeenCalledWith(["react", "vue"]);
@@ -95,10 +93,7 @@ describe("multiple mode", () => {
   it("marks multiple options as aria-selected", () => {
     render(<MultipleSelect defaultOpen defaultValue={["react", "vue"]} />);
 
-    expect(screen.getByRole("option", { name: /react/i })).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    expect(screen.getByRole("option", { name: /react/i })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("option", { name: /vue/i })).toHaveAttribute("aria-selected", "true");
     expect(screen.getByRole("option", { name: /svelte/i })).toHaveAttribute(
       "aria-selected",

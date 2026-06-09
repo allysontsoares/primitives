@@ -64,9 +64,7 @@ describe("useEscapeKey", () => {
       if (e.key === "Escape") parentEscape();
     });
 
-    renderHook(() =>
-      useEscapeKey({ enabled: true, onEscape, stopPropagation: false }),
-    );
+    renderHook(() => useEscapeKey({ enabled: true, onEscape, stopPropagation: false }));
 
     const event = new KeyboardEvent("keydown", {
       key: "Escape",

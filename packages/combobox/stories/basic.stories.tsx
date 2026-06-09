@@ -61,7 +61,10 @@ export const Uncontrolled: Story = {
           Language
         </Combobox.Label>
         <div style={{ display: "flex" }}>
-          <Combobox.Input placeholder="Search languages…" style={{ ...inputStyle, borderRadius: "6px 0 0 6px" }} />
+          <Combobox.Input
+            placeholder="Search languages…"
+            style={{ ...inputStyle, borderRadius: "6px 0 0 6px" }}
+          />
           <Combobox.Trigger style={triggerStyle}>▼</Combobox.Trigger>
         </div>
         <Combobox.Content style={contentStyle}>
@@ -103,7 +106,10 @@ export const Controlled: Story = {
             Language (controlled)
           </Combobox.Label>
           <div style={{ display: "flex" }}>
-            <Combobox.Input placeholder="Search…" style={{ ...inputStyle, borderRadius: "6px 0 0 6px" }} />
+            <Combobox.Input
+              placeholder="Search…"
+              style={{ ...inputStyle, borderRadius: "6px 0 0 6px" }}
+            />
             <Combobox.Trigger style={triggerStyle}>▼</Combobox.Trigger>
             <Combobox.Clear
               style={{

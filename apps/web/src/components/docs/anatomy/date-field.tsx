@@ -25,32 +25,95 @@ export function DateFieldAnatomy() {
         </AnatomyLabel>
         <AnatomyLeader d="M248 64 L248 72" />
 
-        <rect x={148} y={96} width={240} height={32} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={2} rx={4} />
+        <rect
+          x={148}
+          y={96}
+          width={240}
+          height={32}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={2}
+          rx={4}
+        />
         <text x={158} y={116} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
           Label
         </text>
 
-        <rect x={148} y={144} width={600} height={72} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={2} rx={4} />
+        <rect
+          x={148}
+          y={144}
+          width={600}
+          height={72}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={2}
+          rx={4}
+        />
         <text x={158} y={164} fill="var(--anatomy-label)" fontSize={12} fontWeight={600}>
           DatePicker.Input
         </text>
-        <rect x={168} y={176} width={80} height={32} fill="var(--anatomy-surface-2)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={168}
+          y={176}
+          width={80}
+          height={32}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={176} y={196} fill="var(--anatomy-label)" fontSize={10}>
           Segment (month)
         </text>
-        <rect x={260} y={176} width={24} height={32} fill="var(--anatomy-inset)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={260}
+          y={176}
+          width={24}
+          height={32}
+          fill="var(--anatomy-inset)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={264} y={196} fill="var(--anatomy-label)" fontSize={10}>
           /
         </text>
-        <rect x={296} y={176} width={80} height={32} fill="var(--anatomy-surface-2)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={296}
+          y={176}
+          width={80}
+          height={32}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={304} y={196} fill="var(--anatomy-label)" fontSize={10}>
           Segment (day)
         </text>
-        <rect x={388} y={176} width={24} height={32} fill="var(--anatomy-inset)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={388}
+          y={176}
+          width={24}
+          height={32}
+          fill="var(--anatomy-inset)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={392} y={196} fill="var(--anatomy-label)" fontSize={10}>
           /
         </text>
-        <rect x={424} y={176} width={100} height={32} fill="var(--anatomy-surface-2)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={424}
+          y={176}
+          width={100}
+          height={32}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={432} y={196} fill="var(--anatomy-label)" fontSize={10}>
           Segment (year)
         </text>

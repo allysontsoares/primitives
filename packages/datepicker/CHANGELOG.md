@@ -5,7 +5,6 @@
 ### Minor Changes
 
 - docs(readme): major update to README
-
   - Document the unified `DatePicker.Root` + `mode` API correctly
   - Highlight the segmented `<DatePicker.Input />` as the main feature
   - Add clear examples for range (dual inputs + hover preview), multiple, and full composition
@@ -16,7 +15,6 @@
 ### Patch Changes
 
 - docs: major refresh of README.md and root documentation
-
   - Update package README to accurately reflect current API (unified `DatePicker.Root` with `mode`, first-class `<DatePicker.Input>`, full composition)
   - Add strong examples for segmented input, range with dual inputs + hover preview, multiple selection, and custom rendering
   - Align with brand voice and recent announcement content
@@ -40,7 +38,6 @@
 ### Minor Changes
 
 - Axis lift-and-shift: publish DatePicker under `@at5/axis-datepicker`.
-
   - Add `@at5/axis-datepicker` — same DatePicker API and behavior as `@at5/kairo` (migrated from `packages/kairo` to `packages/datepicker`)
   - Add `@at5/axis` — aggregator re-exporting `DatePicker`
   - `@at5/kairo` — deprecated; thin re-export of `@at5/axis-datepicker` for transition

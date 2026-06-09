@@ -177,7 +177,7 @@ export function Content({
       if (first) store.setHighlightedValue(first.value);
     }
     refs.contentRef.current.focus({ preventScroll: true });
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on open
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on open
   }, [open]);
 
   useEffect(() => {

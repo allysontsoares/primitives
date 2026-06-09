@@ -136,7 +136,9 @@ function ConnectorLabel({
   accent?: boolean;
 }) {
   return (
-    <div className={`flex items-center gap-2 ${side === "right" ? "flex-row" : "flex-row-reverse"}`}>
+    <div
+      className={`flex items-center gap-2 ${side === "right" ? "flex-row" : "flex-row-reverse"}`}
+    >
       <span
         className={`rounded border border-white/[0.07] bg-zinc-900 px-1.5 py-0.5 ${accent ? "text-zinc-100" : "text-zinc-400"}`}
       >

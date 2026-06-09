@@ -109,7 +109,6 @@ describe("portal", () => {
   });
 
   it("custom container takes precedence over document.body", async () => {
-    const user = userEvent.setup();
     render(<ContainerPortalSelect defaultOpen />);
 
     const content = screen.getByTestId("content");

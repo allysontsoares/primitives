@@ -7,16 +7,12 @@ export interface ComboboxCollectionContextValue {
   isEmpty: boolean;
 }
 
-export const ComboboxCollectionContext = createContext<ComboboxCollectionContextValue | null>(
-  null,
-);
+export const ComboboxCollectionContext = createContext<ComboboxCollectionContextValue | null>(null);
 
 export function useComboboxCollection(): ComboboxCollectionContextValue {
   const ctx = useContext(ComboboxCollectionContext);
   if (!ctx) {
-    throw new Error(
-      "Combobox collection context is missing. Render inside <Combobox.Content>.",
-    );
+    throw new Error("Combobox collection context is missing. Render inside <Combobox.Content>.");
   }
   return ctx;
 }

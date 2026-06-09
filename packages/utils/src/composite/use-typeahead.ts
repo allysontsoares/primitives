@@ -20,12 +20,7 @@ function isPrintableKey(event: KeyboardEvent): boolean {
   return /^[\p{L}\p{N}\s]$/u.test(event.key);
 }
 
-export function useTypeahead({
-  enabled,
-  items,
-  onMatch,
-  resetDelay = 500,
-}: UseTypeaheadOptions) {
+export function useTypeahead({ enabled, items, onMatch, resetDelay = 500 }: UseTypeaheadOptions) {
   const queryRef = useRef("");
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -51,8 +46,7 @@ export function useTypeahead({
       queryRef.current += event.key.toLowerCase();
 
       const match = items.find(
-        (item) =>
-          !item.disabled && item.textValue.toLowerCase().startsWith(queryRef.current),
+        (item) => !item.disabled && item.textValue.toLowerCase().startsWith(queryRef.current),
       );
 
       if (match) {

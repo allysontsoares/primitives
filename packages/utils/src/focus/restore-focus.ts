@@ -27,9 +27,7 @@ export function restoreFocus({
       target = input ?? null;
       break;
     case "unknown":
-      target = isFocusable(previousActiveElement)
-        ? previousActiveElement
-        : (trigger ?? null);
+      target = isFocusable(previousActiveElement) ? previousActiveElement : (trigger ?? null);
       break;
   }
 

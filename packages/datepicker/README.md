@@ -111,9 +111,7 @@ Or take full control:
               <DatePicker.Day key={j} date={d}>
                 {({ isSelected, isToday }) => (
                   // custom rendering
-                  <span className={isSelected ? "selected" : ""}>
-                    {d.getDate()}
-                  </span>
+                  <span className={isSelected ? "selected" : ""}>{d.getDate()}</span>
                 )}
               </DatePicker.Day>
             ))}
@@ -188,4 +186,4 @@ MIT
 
 ---
 
-*Kenos UI* — https://github.com/allysontsoares/kenos-ui/tree/main/packages/datepicker
+_Kenos UI_ — https://github.com/allysontsoares/kenos-ui/tree/main/packages/datepicker

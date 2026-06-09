@@ -7,9 +7,7 @@ export function ClearTrigger({ onClick, ...props }: SelectClearTriggerProps) {
   const { store, config, clearValue } = useSelectContext();
   const value = useSelectStore(store, (s) => s.value);
 
-  const hasValue = config.multiple
-    ? Array.isArray(value) && value.length > 0
-    : value != null;
+  const hasValue = config.multiple ? Array.isArray(value) && value.length > 0 : value != null;
 
   const handleActivate = useCallback(
     (e: React.SyntheticEvent) => {

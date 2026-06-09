@@ -35,7 +35,9 @@ export const PageIntro = ({ children }: { children: ReactNode }) => (
   </header>
 );
 export const Eyebrow = ({ children }: { children: ReactNode }) => (
-  <div className="mb-3.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-500 dark:text-zinc-400">{children}</div>
+  <div className="mb-3.5 text-[13px] font-semibold tracking-[0.01em] text-zinc-500 dark:text-zinc-400">
+    {children}
+  </div>
 );
 export const PageTitle = ({ children, action }: { children: ReactNode; action?: ReactNode }) => (
   <div className="flex items-start justify-between gap-4">
@@ -302,9 +304,10 @@ export function ComponentPage({ slug }: { slug: string }) {
         <>
           <H3 id="dialog-interop">Inside a Dialog</H3>
           <P>
-            Combobox Content is inline by default with <InlineCode>modal=&#123;false&#125;</InlineCode>{" "}
-            so the listbox stays in the Dialog subtree. Escape closes the Combobox only (
-            <InlineCode>stopPropagation</InlineCode>) — the parent dialog stays open.
+            Combobox Content is inline by default with{" "}
+            <InlineCode>modal=&#123;false&#125;</InlineCode> so the listbox stays in the Dialog
+            subtree. Escape closes the Combobox only (<InlineCode>stopPropagation</InlineCode>) —
+            the parent dialog stays open.
           </P>
           <Example code={COMBOBOX_DIALOG_SNIPPET} lang="tsx" previewTall>
             <DemoStage tall>
@@ -352,9 +355,9 @@ export function ComponentPage({ slug }: { slug: string }) {
           <H3 id="portal">Portal &amp; container</H3>
           <P>
             Use <InlineCode>portal=&#123;true&#125;</InlineCode> on{" "}
-            <InlineCode>Select.Content</InlineCode> when clipping is an issue. Inside a Dialog,
-            pass a <InlineCode>container</InlineCode> ref to keep the listbox in the Dialog subtree
-            while escaping <InlineCode>overflow: hidden</InlineCode>.
+            <InlineCode>Select.Content</InlineCode> when clipping is an issue. Inside a Dialog, pass
+            a <InlineCode>container</InlineCode> ref to keep the listbox in the Dialog subtree while
+            escaping <InlineCode>overflow: hidden</InlineCode>.
           </P>
           <Example code={SELECT_PORTAL_SNIPPET} lang="tsx" previewTall>
             <DemoStage tall>
@@ -368,7 +371,8 @@ export function ComponentPage({ slug }: { slug: string }) {
       <P>
         Props, data attributes, and keyboard interactions for <InlineCode>{c.name}</InlineCode>.
         Import from <InlineCode>{c.npmPackage}</InlineCode>; parts use{" "}
-        <InlineCode>data-part</InlineCode> and <InlineCode>data-*</InlineCode> attributes for styling.
+        <InlineCode>data-part</InlineCode> and <InlineCode>data-*</InlineCode> attributes for
+        styling.
       </P>
       <ApiReference groups={API[slug] || []} />
 

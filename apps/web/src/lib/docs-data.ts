@@ -119,7 +119,7 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             ],
           },
           {
-            tag: "DatePicker.View view=\"day\"",
+            tag: 'DatePicker.View view="day"',
             children: [
               {
                 tag: "DatePicker.Grid",
@@ -134,8 +134,8 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
               },
             ],
           },
-          { tag: "DatePicker.View view=\"month\"", note: "MonthGrid + MonthCell" },
-          { tag: "DatePicker.View view=\"year\"", note: "YearGrid + YearCell" },
+          { tag: 'DatePicker.View view="month"', note: "MonthGrid + MonthCell" },
+          { tag: 'DatePicker.View view="year"', note: "YearGrid + YearCell" },
         ],
       },
     ],
@@ -150,7 +150,7 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     features: { localeExamples: true, dialogInterop: true },
     parts: [
       {
-        tag: "DatePicker.Root (mode=\"single\")",
+        tag: 'DatePicker.Root (mode="single")',
         children: [
           { tag: "DatePicker.Label", leaf: true },
           { tag: "DatePicker.Input", note: "the segmented field (timescape)" },
@@ -159,7 +159,10 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             tag: "DatePicker.Content",
             note: "popover (floating + focus trap + portal)",
             children: [
-              { tag: "DatePicker.Calendar", note: "shorthand, or manual ViewControl + Grid + Day etc." },
+              {
+                tag: "DatePicker.Calendar",
+                note: "shorthand, or manual ViewControl + Grid + Day etc.",
+              },
             ],
           },
         ],
@@ -169,14 +172,14 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-range-picker": {
     name: "Date Range Picker",
     eyebrow: "Primitive",
-    desc: "Select a start and end date with live range preview and dual-segment input (mode=\"range\" on the same Root). Presets are custom UI you compose.",
+    desc: 'Select a start and end date with live range preview and dual-segment input (mode="range" on the same Root). Presets are custom UI you compose.',
     demo: "date-range-picker",
     npmPackage: "@kenos-ui/react-datepicker",
     importName: "DatePicker",
     features: { localeExamples: true },
     parts: [
       {
-        tag: "DatePicker.Root mode=\"range\"",
+        tag: 'DatePicker.Root mode="range"',
         children: [
           { tag: "DatePicker.Label", leaf: true },
           { tag: "DatePicker.Input index={0}", note: "start segment" },
@@ -291,7 +294,10 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
         tag: "DatePicker.Root",
         children: [
           { tag: "DatePicker.Label", leaf: true },
-          { tag: "DatePicker.Input", note: "segmented spinbuttons (data-segment, role=spinbutton)" },
+          {
+            tag: "DatePicker.Input",
+            note: "segmented spinbuttons (data-segment, role=spinbutton)",
+          },
         ],
       },
     ],
@@ -329,7 +335,12 @@ export const API: Record<string, ApiGroup[]> = {
           desc: "Disable specific dates or the whole picker.",
         },
         { name: "readOnly", type: "boolean", desc: "Prevent edits via segments or grid." },
-        { name: "mode", type: '"single" | "range" | "multiple"', def: '"single"', desc: "Selection mode (affects value shape and Input index usage)." },
+        {
+          name: "mode",
+          type: '"single" | "range" | "multiple"',
+          def: '"single"',
+          desc: "Selection mode (affects value shape and Input index usage).",
+        },
       ],
     },
     {
@@ -349,12 +360,34 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value / defaultValue / onValueChange", type: "Date | null (single) etc.", desc: "Controlled value. Shape depends on mode." },
-        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Popover control (also auto via trigger/input)." },
-        { name: "locale", type: "string", def: '"en-US"', desc: "Drives segments order, separators, labels, week start." },
-        { name: "closeOnSelect", type: "boolean", def: "true for single", desc: "Auto-close after pick (false for range)." },
+        {
+          name: "value / defaultValue / onValueChange",
+          type: "Date | null (single) etc.",
+          desc: "Controlled value. Shape depends on mode.",
+        },
+        {
+          name: "open / defaultOpen / onOpenChange",
+          type: "boolean",
+          desc: "Popover control (also auto via trigger/input).",
+        },
+        {
+          name: "locale",
+          type: "string",
+          def: '"en-US"',
+          desc: "Drives segments order, separators, labels, week start.",
+        },
+        {
+          name: "closeOnSelect",
+          type: "boolean",
+          def: "true for single",
+          desc: "Auto-close after pick (false for range).",
+        },
         { name: "minDate / maxDate / disabled / readOnly", desc: "Standard constraints." },
-        { name: "mode", type: '"single" | "range" | "multiple"', desc: "Affects Input (index) and behavior." },
+        {
+          name: "mode",
+          type: '"single" | "range" | "multiple"',
+          desc: "Affects Input (index) and behavior.",
+        },
       ],
     },
     {
@@ -373,9 +406,21 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value / defaultValue / onValueChange", type: "DateRange {start,end}", desc: "Controlled range (mode=\"range\" on Root)." },
-        { name: "locale / minDate / maxDate / disabled / readOnly", desc: "Same as single + range preview on hover." },
-        { name: "closeOnSelect", type: "boolean", def: "false for range", desc: "Keep open until both ends chosen." },
+        {
+          name: "value / defaultValue / onValueChange",
+          type: "DateRange {start,end}",
+          desc: 'Controlled range (mode="range" on Root).',
+        },
+        {
+          name: "locale / minDate / maxDate / disabled / readOnly",
+          desc: "Same as single + range preview on hover.",
+        },
+        {
+          name: "closeOnSelect",
+          type: "boolean",
+          def: "false for range",
+          desc: "Keep open until both ends chosen.",
+        },
       ],
     },
   ],
@@ -391,7 +436,12 @@ export const API: Record<string, ApiGroup[]> = {
         { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
         { name: "name", type: "string", desc: "Forwarded to Select.HiddenSelect for form submit." },
         { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
-        { name: "modal", type: "boolean", def: "false", desc: "Opt-in focus trap + aria-modal on Content. Renders Select.Backdrop." },
+        {
+          name: "modal",
+          type: "boolean",
+          def: "false",
+          desc: "Opt-in focus trap + aria-modal on Content. Renders Select.Backdrop.",
+        },
         {
           name: "multiple",
           type: "boolean",
@@ -419,7 +469,12 @@ export const API: Record<string, ApiGroup[]> = {
     {
       group: "Content props",
       props: [
-        { name: "portal", type: "boolean", def: "false", desc: "Portal to document.body — avoid inside Dialogs." },
+        {
+          name: "portal",
+          type: "boolean",
+          def: "false",
+          desc: "Portal to document.body — avoid inside Dialogs.",
+        },
         {
           name: "alignItemWithTrigger",
           type: "boolean",
@@ -498,7 +553,12 @@ export const API: Record<string, ApiGroup[]> = {
         },
         { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
         { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
-        { name: "modal", type: "boolean", def: "false", desc: "Opt-in focus trap + aria-modal on Content." },
+        {
+          name: "modal",
+          type: "boolean",
+          def: "false",
+          desc: "Opt-in focus trap + aria-modal on Content.",
+        },
         {
           name: "items",
           type: "Record<string, string>",
@@ -558,7 +618,10 @@ export const API: Record<string, ApiGroup[]> = {
       keys: true,
       props: [
         { name: "Type characters", desc: "Filter options by textValue (substring match)." },
-        { name: "Arrow ↑ / ↓", desc: "Move highlight via aria-activedescendant; skips disabled items." },
+        {
+          name: "Arrow ↑ / ↓",
+          desc: "Move highlight via aria-activedescendant; skips disabled items.",
+        },
         { name: "Home / End", desc: "First / last enabled option." },
         { name: "Enter", desc: "Select highlighted option; closes listbox." },
         { name: "Escape", desc: "Close listbox; stopPropagation for Dialog interop." },
@@ -569,9 +632,20 @@ export const API: Record<string, ApiGroup[]> = {
     {
       ...rootGroup,
       props: [
-        { name: "value / defaultValue / onValueChange", type: "Date | null", desc: "Use on Root; Input commits when segments are valid." },
-        { name: "locale", type: "string", desc: "Order + separator from Intl (e.g. en-GB = DD/MM/YYYY)." },
-        { name: "minDate / maxDate / disabled / readOnly", desc: "Constraints flow to the segments." },
+        {
+          name: "value / defaultValue / onValueChange",
+          type: "Date | null",
+          desc: "Use on Root; Input commits when segments are valid.",
+        },
+        {
+          name: "locale",
+          type: "string",
+          desc: "Order + separator from Intl (e.g. en-GB = DD/MM/YYYY).",
+        },
+        {
+          name: "minDate / maxDate / disabled / readOnly",
+          desc: "Constraints flow to the segments.",
+        },
       ],
     },
     {

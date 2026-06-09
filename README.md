@@ -107,22 +107,22 @@ Supports three modes via the `mode` prop:
 - `"range"` — `value?: { start: Date | null; end: Date | null }`
 - `"multiple"` — `value?: Date[]`
 
-| Prop            | Type                                   | Default              | Description                                      |
-| --------------- | -------------------------------------- | -------------------- | ------------------------------------------------ |
-| `mode`          | `"single" \| "range" \| "multiple"`    | `"single"`           | Selection mode                                   |
-| `value`         | (see modes above)                      | —                    | Controlled value                                 |
-| `defaultValue`  | (see modes above)                      | —                    | Uncontrolled initial value                       |
-| `onValueChange` | (mode-specific)                        | —                    | Called when selection changes                    |
-| `locale`        | `string`                               | `navigator.language` | BCP 47 locale tag (`'en-US'`, `'fr-FR'`, …)      |
-| `weekStartsOn`  | `0–6`                                  | locale default       | Override first day of week (0 = Sunday)          |
-| `minDate`       | `Date`                                 | —                    | Earliest selectable date                         |
-| `maxDate`       | `Date`                                 | —                    | Latest selectable date                           |
-| `disabled`      | `boolean \| ((date: Date) => boolean)` | —                    | Disable all or specific dates                    |
-| `readOnly`      | `boolean`                              | `false`              | Allow navigation but block selection             |
-| `open`          | `boolean`                              | —                    | Controlled open state of the popover             |
-| `defaultOpen`   | `boolean`                              | `false`              | Start with popover open                          |
-| `onOpenChange`  | `(open: boolean) => void`              | —                    | Called when popover opens/closes                 |
-| `modal`         | `boolean`                              | `false`              | Opt-in focus trap + `aria-modal` (popup policy)  |
+| Prop            | Type                                   | Default              | Description                                                           |
+| --------------- | -------------------------------------- | -------------------- | --------------------------------------------------------------------- |
+| `mode`          | `"single" \| "range" \| "multiple"`    | `"single"`           | Selection mode                                                        |
+| `value`         | (see modes above)                      | —                    | Controlled value                                                      |
+| `defaultValue`  | (see modes above)                      | —                    | Uncontrolled initial value                                            |
+| `onValueChange` | (mode-specific)                        | —                    | Called when selection changes                                         |
+| `locale`        | `string`                               | `navigator.language` | BCP 47 locale tag (`'en-US'`, `'fr-FR'`, …)                           |
+| `weekStartsOn`  | `0–6`                                  | locale default       | Override first day of week (0 = Sunday)                               |
+| `minDate`       | `Date`                                 | —                    | Earliest selectable date                                              |
+| `maxDate`       | `Date`                                 | —                    | Latest selectable date                                                |
+| `disabled`      | `boolean \| ((date: Date) => boolean)` | —                    | Disable all or specific dates                                         |
+| `readOnly`      | `boolean`                              | `false`              | Allow navigation but block selection                                  |
+| `open`          | `boolean`                              | —                    | Controlled open state of the popover                                  |
+| `defaultOpen`   | `boolean`                              | `false`              | Start with popover open                                               |
+| `onOpenChange`  | `(open: boolean) => void`              | —                    | Called when popover opens/closes                                      |
+| `modal`         | `boolean`                              | `false`              | Opt-in focus trap + `aria-modal` (popup policy)                       |
 | `closeOnSelect` | `boolean`                              | `true` (single)      | Close popover after a selection (false for range/multiple by default) |
 
 ---
@@ -156,14 +156,14 @@ Button that toggles the calendar popup. Automatically wires `aria-haspopup`, `ar
 
 The popover container (`role="dialog"`). Handles positioning (Floating UI), click-outside, Escape, and focus management.
 
-| Prop              | Type      | Description |
-|-------------------|-----------|-------------|
-| `forceMount`      | `boolean` | Keep the element in the DOM when closed (enables CSS exit animations via `[data-state]`) |
-| `portal`          | `boolean` | Render into `document.body` (useful for stacking contexts) |
-| `side` / `align`  | string    | Positioning relative to the anchor (`top`, `bottom`, `left`, `right` + `start`/`center`/`end`) |
-| `sideOffset` / `alignOffset` | number | Distance from the anchor |
-| `avoidCollisions` | `boolean` | Whether to flip when there is no space (default true) |
-| `collisionPadding`| number    | Padding from viewport edges when avoiding collisions |
+| Prop                         | Type      | Description                                                                                    |
+| ---------------------------- | --------- | ---------------------------------------------------------------------------------------------- |
+| `forceMount`                 | `boolean` | Keep the element in the DOM when closed (enables CSS exit animations via `[data-state]`)       |
+| `portal`                     | `boolean` | Render into `document.body` (useful for stacking contexts)                                     |
+| `side` / `align`             | string    | Positioning relative to the anchor (`top`, `bottom`, `left`, `right` + `start`/`center`/`end`) |
+| `sideOffset` / `alignOffset` | number    | Distance from the anchor                                                                       |
+| `avoidCollisions`            | `boolean` | Whether to flip when there is no space (default true)                                          |
+| `collisionPadding`           | number    | Padding from viewport edges when avoiding collisions                                           |
 
 **Animation hook:** use `[data-state="open"]` / `[data-state="closed"]` selectors with CSS transitions when using `forceMount`.
 

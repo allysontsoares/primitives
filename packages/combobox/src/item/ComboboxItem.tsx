@@ -35,7 +35,7 @@ export function Item({
 
   useLayoutEffect(() => {
     const el = liRef.current;
-    const label = textValue ?? (el?.textContent ?? value);
+    const label = textValue ?? el?.textContent ?? value;
 
     store.registerItem({
       value,

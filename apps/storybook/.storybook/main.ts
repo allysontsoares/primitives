@@ -6,11 +6,7 @@ const config: StorybookConfig = {
     "../../../packages/select/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     "../../../packages/combobox/stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
   ],
-  addons: [
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions",
-    "@storybook/addon-a11y",
-  ],
+  addons: ["@storybook/addon-essentials", "@storybook/addon-interactions", "@storybook/addon-a11y"],
   framework: {
     name: "@storybook/react-vite",
     options: {},

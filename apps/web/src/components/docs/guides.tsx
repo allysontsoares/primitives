@@ -36,8 +36,8 @@ export function Installation() {
         <Eyebrow>Get Started</Eyebrow>
         <PageTitle>Installation</PageTitle>
         <Lead>
-          Kenos UI ships headless primitives with no runtime dependencies. React 19 and React DOM 19 are
-          peer dependencies.
+          Kenos UI ships headless primitives with no runtime dependencies. React 19 and React DOM 19
+          are peer dependencies.
         </Lead>
       </PageIntro>
       <H2 id="install">Install a package</H2>
@@ -70,8 +70,9 @@ export function Installation() {
         ]}
       />
       <Callout icon={<InfoIcon />}>
-        Kenos has <strong className="font-semibold text-zinc-900 dark:text-zinc-100">zero CSS</strong>. Nothing renders
-        styled out of the box — you attach classes to each part. See the{" "}
+        Kenos has{" "}
+        <strong className="font-semibold text-zinc-900 dark:text-zinc-100">zero CSS</strong>.
+        Nothing renders styled out of the box — you attach classes to each part. See the{" "}
         <Link
           href="/docs/styling"
           className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
@@ -263,7 +264,10 @@ export function Accessibility() {
           </tr>
           <tr>
             <td>DatePicker.Input (segments inside)</td>
-            <td>role=spinbutton · aria-valuenow · aria-valuetext (data-segment, data-placeholder, data-separator on children)</td>
+            <td>
+              role=spinbutton · aria-valuenow · aria-valuetext (data-segment, data-placeholder,
+              data-separator on children)
+            </td>
           </tr>
         </tbody>
       </table>
@@ -343,7 +347,11 @@ export function Changelog() {
       v: "1.0.0",
       date: "May 2026",
       tag: "Stable",
-      items: ["First stable release.", "React 19 peer dependency.", "Range support via mode=\"range\" + presets in examples."],
+      items: [
+        "First stable release.",
+        "React 19 peer dependency.",
+        'Range support via mode="range" + presets in examples.',
+      ],
     },
     {
       v: "0.9.0",
@@ -370,7 +378,9 @@ export function Changelog() {
       {rel.map((r) => (
         <div key={r.v} className="border-t border-zinc-200 dark:border-zinc-800 py-[22px]">
           <div className="mb-2 flex items-center gap-3">
-            <span className="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">v{r.v}</span>
+            <span className="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              v{r.v}
+            </span>
             <Badge
               variant={r.tag === "Beta" ? "beta" : "secondary"}
               className="h-5 px-1.5 py-0 text-[10px]"

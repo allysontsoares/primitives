@@ -50,9 +50,7 @@ export function useListNavigation({
         case "ArrowDown": {
           event.preventDefault();
           const index =
-            currentIndex === -1
-              ? 0
-              : getNextIndex(currentIndex, 1, enabledItems.length, loop);
+            currentIndex === -1 ? 0 : getNextIndex(currentIndex, 1, enabledItems.length, loop);
           onHighlight(enabledItems[index]?.value ?? null);
           break;
         }

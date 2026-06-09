@@ -25,34 +25,98 @@ export function SelectAnatomy() {
         </AnatomyLabel>
         <AnatomyLeader d="M220 56 L220 64" />
 
-        <rect x={128} y={88} width={200} height={28} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={2} rx={4} />
+        <rect
+          x={128}
+          y={88}
+          width={200}
+          height={28}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={2}
+          rx={4}
+        />
         <text x={138} y={106} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
           Select.Label
         </text>
 
-        <rect x={128} y={128} width={640} height={44} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={2} rx={4} />
+        <rect
+          x={128}
+          y={128}
+          width={640}
+          height={44}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={2}
+          rx={4}
+        />
         <text x={138} y={148} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
           Select.Trigger (combobox)
         </text>
-        <rect x={148} y={152} width={400} height={24} fill="var(--anatomy-surface-2)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={148}
+          y={152}
+          width={400}
+          height={24}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={158} y={168} fill="var(--anatomy-label)" fontSize={10}>
           Select.Value + Select.Icon
         </text>
 
-        <rect x={128} y={188} width={640} height={160} fill="var(--anatomy-inset)" stroke="var(--anatomy-stroke)" strokeWidth={2} rx={4} />
+        <rect
+          x={128}
+          y={188}
+          width={640}
+          height={160}
+          fill="var(--anatomy-inset)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={2}
+          rx={4}
+        />
         <text x={138} y={208} fill="var(--anatomy-label)" fontSize={12} fontWeight={600}>
           Select.Content (inline default)
         </text>
-        <rect x={148} y={220} width={600} height={116} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={4} />
+        <rect
+          x={148}
+          y={220}
+          width={600}
+          height={116}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={4}
+        />
         <text x={158} y={240} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
           Select.List (listbox)
         </text>
-        <rect x={168} y={252} width={560} height={28} fill="var(--anatomy-surface-2)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} />
+        <rect
+          x={168}
+          y={252}
+          width={560}
+          height={28}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
         <text x={178} y={270} fill="var(--anatomy-label)" fontSize={10}>
           Select.Item (option)
         </text>
 
-        <rect x={128} y={360} width={280} height={24} fill="var(--anatomy-surface)" stroke="var(--anatomy-stroke)" strokeWidth={1.5} rx={3} strokeDasharray="4 4" />
+        <rect
+          x={128}
+          y={360}
+          width={280}
+          height={24}
+          fill="var(--anatomy-surface)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+          strokeDasharray="4 4"
+        />
         <text x={138} y={376} fill="var(--anatomy-label)" fontSize={10}>
           Select.HiddenSelect (forms)
         </text>

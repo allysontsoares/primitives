@@ -219,8 +219,12 @@ function SearchModal({ onClose }: { onClose: () => void }) {
                         {kindIco(r.kind)}
                       </span>
                       <span>
-                        <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">{r.title}</span>
-                        <span className="block text-xs text-zinc-500 dark:text-zinc-400">{r.crumb}</span>
+                        <span className="block text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                          {r.title}
+                        </span>
+                        <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+                          {r.crumb}
+                        </span>
                       </span>
                     </button>
                   );
@@ -300,7 +304,7 @@ function Topbar({
           aria-label="Toggle theme"
           suppressHydrationWarning
         >
-          {themeReady ? (theme === "dark" ? <Sun /> : <Moon />) : <Sun />}
+          {themeReady ? theme === "dark" ? <Sun /> : <Moon /> : <Sun />}
         </button>
         <a
           href="https://github.com/allysontsoares/kenos-ui"
@@ -345,7 +349,12 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
                   : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
               }`;
             return (
-              <Link key={item.route} href={routeToHref(item.route)} onClick={onClose} className={itemCls(active)}>
+              <Link
+                key={item.route}
+                href={routeToHref(item.route)}
+                onClick={onClose}
+                className={itemCls(active)}
+              >
                 {item.label}
               </Link>
             );
@@ -390,9 +399,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
       />
       <div className="grid items-start md:grid-cols-[var(--sidebar-w)_minmax(0,1fr)]">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main
-          className={`relative min-w-0 ${showTocRail ? "min-[1180px]:pr-[var(--toc-w)]" : ""}`}
-        >
+        <main className={`relative min-w-0 ${showTocRail ? "min-[1180px]:pr-[var(--toc-w)]" : ""}`}>
           <div
             id="docs-content"
             className="mx-auto max-w-[760px] px-5 pb-28 pt-10 sm:px-10 sm:pt-[46px]"

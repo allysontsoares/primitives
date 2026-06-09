@@ -8,14 +8,7 @@ export type InputProps = Omit<
   "role" | "aria-expanded" | "aria-controls" | "aria-autocomplete" | "value" | "defaultValue"
 >;
 
-export function Input({
-  onChange,
-  onFocus,
-  onKeyDown,
-  disabled,
-  readOnly,
-  ...props
-}: InputProps) {
+export function Input({ onChange, onFocus, onKeyDown, disabled, readOnly, ...props }: InputProps) {
   const { store, ids, refs, config, close, selectValue } = useComboboxContext();
   const open = useComboboxStore(store, (s) => s.open);
   const inputValue = useComboboxStore(store, (s) => s.inputValue);
@@ -74,16 +67,7 @@ export function Input({
 
       onKeyDown?.(e);
     },
-    [
-      open,
-      highlightedValue,
-      items,
-      store,
-      onNavKeyDown,
-      selectValue,
-      close,
-      onKeyDown,
-    ],
+    [open, highlightedValue, items, store, onNavKeyDown, selectValue, close, onKeyDown],
   );
 
   return (

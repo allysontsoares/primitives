@@ -80,7 +80,11 @@ export function Example({
     <div className="my-6">
       {(title || desc) && (
         <div className="mb-3">
-          {title && <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">{title}</div>}
+          {title && (
+            <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">
+              {title}
+            </div>
+          )}
           {desc && <div className="text-[13.5px] text-zinc-500 dark:text-zinc-400">{desc}</div>}
         </div>
       )}
@@ -262,7 +266,9 @@ function AnatomyFallback({ parts }: { parts: AnatomyNode[] }) {
   const render = (node: AnatomyNode, depth = 0) => (
     <div key={node.tag + depth} className={depth ? "ml-4 mt-2" : ""}>
       <code className="font-mono text-[12px] text-zinc-500">{node.tag}</code>
-      {node.note && <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">{node.note}</span>}
+      {node.note && (
+        <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">{node.note}</span>
+      )}
       {node.children?.map((c) => render(c, depth + 1))}
     </div>
   );
@@ -286,13 +292,16 @@ export function PageNav({ route }: { route: string }) {
   const prev = ORDER[idx - 1];
   const next = ORDER[idx + 1];
   const href = (r: string) => routeToHref(r);
-  const card = "rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700";
+  const card =
+    "rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700";
   return (
     <div className="mt-[72px] grid grid-cols-1 gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-7 sm:grid-cols-2">
       {prev != null ? (
         <Link href={href(prev)} className={card}>
           <div className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">← Previous</div>
-          <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">{titleForRoute(prev)}</div>
+          <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">
+            {titleForRoute(prev)}
+          </div>
         </Link>
       ) : (
         <div />
@@ -300,7 +309,9 @@ export function PageNav({ route }: { route: string }) {
       {next != null ? (
         <Link href={href(next)} className={`${card} text-right`}>
           <div className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">Next →</div>
-          <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">{titleForRoute(next)}</div>
+          <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">
+            {titleForRoute(next)}
+          </div>
         </Link>
       ) : (
         <div />
@@ -335,7 +346,9 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
                   {g.props.map((p, i) => (
                     <tr key={i}>
                       <td>
-                        <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">{p.name}</span>
+                        <span className="font-mono text-xs text-zinc-900 dark:text-zinc-100">
+                          {p.name}
+                        </span>
                       </td>
                       <td>{p.desc}</td>
                     </tr>
@@ -387,9 +400,14 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
             </h2>
             <div>
               {g.props.map((p, i) => (
-                <div key={i} className="border-t border-zinc-200 dark:border-zinc-800 py-5 first-of-type:border-zinc-200 dark:border-zinc-800">
+                <div
+                  key={i}
+                  className="border-t border-zinc-200 dark:border-zinc-800 py-5 first-of-type:border-zinc-200 dark:border-zinc-800"
+                >
                   <div className="mb-2 flex flex-wrap items-baseline gap-3">
-                    <span className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100">{p.name}</span>
+                    <span className="font-mono text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                      {p.name}
+                    </span>
                     {p.type && (
                       <span className="rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 px-1.5 py-px font-mono text-[12.5px] text-sky-400">
                         {p.type}
@@ -397,7 +415,8 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
                     )}
                     {p.def != null && (
                       <span className="text-[12.5px] text-zinc-500 dark:text-zinc-400">
-                        default: <code className="font-mono text-zinc-500 dark:text-zinc-400">{p.def}</code>
+                        default:{" "}
+                        <code className="font-mono text-zinc-500 dark:text-zinc-400">{p.def}</code>
                       </span>
                     )}
                     {p.required && (
@@ -406,7 +425,9 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
                       </span>
                     )}
                   </div>
-                  <p className="m-0 max-w-[64ch] text-[13.5px] text-zinc-500 dark:text-zinc-400">{p.desc}</p>
+                  <p className="m-0 max-w-[64ch] text-[13.5px] text-zinc-500 dark:text-zinc-400">
+                    {p.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -416,5 +437,3 @@ export function ApiReference({ groups }: { groups: ApiGroup[] }) {
     </>
   );
 }
-
-

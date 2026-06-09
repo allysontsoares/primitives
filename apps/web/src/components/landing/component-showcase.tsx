@@ -147,8 +147,18 @@ export function LandingComponentShowcase() {
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-100 transition-all hover:gap-2.5"
                   >
                     Explore {comp.name}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-3.5 w-3.5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="h-3.5 w-3.5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                      />
                     </svg>
                   </Link>
                 </div>
@@ -163,7 +173,9 @@ export function LandingComponentShowcase() {
                       <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                       <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                       <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                      <span className="ml-2 font-mono text-[11px] text-white/40">{comp.slug}.tsx</span>
+                      <span className="ml-2 font-mono text-[11px] text-white/40">
+                        {comp.slug}.tsx
+                      </span>
                     </div>
                     <pre className="overflow-x-auto p-4 font-mono text-xs leading-relaxed text-zinc-100/90">
                       {comp.code}
@@ -182,8 +194,18 @@ export function LandingComponentShowcase() {
             className="inline-flex items-center gap-2 rounded-md border border-white/[0.07] px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:border-zinc-100/30 hover:bg-zinc-900"
           >
             View all primitives
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="h-4 w-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+              />
             </svg>
           </Link>
         </div>

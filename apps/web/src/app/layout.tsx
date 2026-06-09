@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -26,8 +26,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "kenos — Unstyled React primitives",
-    description:
-      "The space before design. Composable, accessible and unstyled React primitives.",
+    description: "The space before design. Composable, accessible and unstyled React primitives.",
     type: "website",
     siteName: "kenos",
     locale: "en_US",
@@ -43,8 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "kenos — Unstyled React primitives",
-    description:
-      "The space before design. Composable, accessible and unstyled React primitives.",
+    description: "The space before design. Composable, accessible and unstyled React primitives.",
     images: ["/twitter-image"],
   },
   icons: {
@@ -65,7 +63,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="en"
       data-theme="dark"
       data-scroll-behavior="smooth"
-      className={cn(geistSans.variable, geistMono.variable, "dark font-sans", "font-sans", geist.variable)}
+      className={cn(
+        geistSans.variable,
+        geistMono.variable,
+        "dark font-sans",
+        "font-sans",
+        geist.variable,
+      )}
       suppressHydrationWarning
     >
       <head>

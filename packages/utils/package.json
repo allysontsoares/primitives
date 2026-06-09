@@ -1,8 +1,8 @@
 {
   "name": "@kenos-ui/utils",
   "version": "0.0.1",
-  "description": "Shared internals for Kenos UI primitives — floating, presence, dismiss, focus",
   "private": true,
+  "description": "Shared internals for Kenos UI primitives — floating, presence, dismiss, focus",
   "repository": {
     "type": "git",
     "url": "https://github.com/allysontsoares/kenos-ui",

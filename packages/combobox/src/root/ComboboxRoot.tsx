@@ -109,9 +109,7 @@ export function Root(props: ComboboxRootProps) {
       const state = store.getState();
       if (state.value !== prevStoreValue.current) {
         prevStoreValue.current = state.value;
-        onValueChangeRef.current?.(
-          typeof state.value === "string" ? state.value : null,
-        );
+        onValueChangeRef.current?.(typeof state.value === "string" ? state.value : null);
       }
     });
   }, [store]);
@@ -177,14 +175,16 @@ export function Root(props: ComboboxRootProps) {
       modal,
       items,
       isItemEqualToValue,
-      filter: filter ?? ((item, query) => {
-        const normalized = query.trim().toLowerCase();
-        if (!normalized) return true;
-        return (
-          item.textValue.toLowerCase().includes(normalized) ||
-          item.label.toLowerCase().includes(normalized)
-        );
-      }),
+      filter:
+        filter ??
+        ((item, query) => {
+          const normalized = query.trim().toLowerCase();
+          if (!normalized) return true;
+          return (
+            item.textValue.toLowerCase().includes(normalized) ||
+            item.label.toLowerCase().includes(normalized)
+          );
+        }),
     }),
     [disabled, required, readOnly, modal, items, isItemEqualToValue, filter],
   );

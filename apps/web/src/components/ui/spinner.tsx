@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import { SpinnerIcon } from "@phosphor-icons/react"
+import { cn } from "@/lib/utils";
+import { SpinnerIcon } from "@phosphor-icons/react";
 
 function Spinner({ className }: { className?: string }) {
   return (
@@ -8,7 +8,7 @@ function Spinner({ className }: { className?: string }) {
       aria-label="Loading"
       className={cn("size-4 animate-spin", className)}
     />
-  )
+  );
 }
 
-export { Spinner }
+export { Spinner };

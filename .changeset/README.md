@@ -4,11 +4,11 @@ Kenos UI uses [Changesets](https://github.com/changesets/changesets) for **indep
 
 ## Versioning policy
 
-| Package | Policy |
-|---------|--------|
-| `@kenos-ui/react-datepicker` | Independent — primitive releases on its own cadence |
-| `@kenos-ui/react` | Independent — aggregator bumps when you choose; workspace dep bumps trigger a patch via `updateInternalDependencies` |
-| Internal apps (`@kenos-ui/web`, `@kenos-ui/playground`, `@kenos-ui/storybook`) | Ignored — not published |
+| Package                                                                        | Policy                                                                                                               |
+| ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `@kenos-ui/react-datepicker`                                                   | Independent — primitive releases on its own cadence                                                                  |
+| `@kenos-ui/react`                                                              | Independent — aggregator bumps when you choose; workspace dep bumps trigger a patch via `updateInternalDependencies` |
+| Internal apps (`@kenos-ui/web`, `@kenos-ui/playground`, `@kenos-ui/storybook`) | Ignored — not published                                                                                              |
 
 **No fixed or linked groups.** `@kenos-ui/react` and `@kenos-ui/react-datepicker` are **not** locked to the same version; the aggregator may trail or lead the primitive depending on release timing.
 

@@ -18,8 +18,8 @@ export function LandingFeatures() {
             <CellLabel index="H-01" name="headless" />
             <h3 className="mb-2 mt-4 text-xl font-bold">Zero default styles</h3>
             <p className="mb-8 max-w-md text-sm leading-relaxed text-zinc-500">
-              Every part is unstyled. Wire Tailwind, Panda CSS, CSS modules, or inline styles —
-              the library never ships opinionated CSS you have to override.
+              Every part is unstyled. Wire Tailwind, Panda CSS, CSS modules, or inline styles — the
+              library never ships opinionated CSS you have to override.
             </p>
             <div className="space-y-3 font-mono text-xs">
               {[
@@ -95,7 +95,9 @@ export function LandingFeatures() {
                 <div>
                   <span className="landing-code-keyword">import</span> {"{ DatePicker }"}{" "}
                   <span className="landing-code-keyword">from</span>{" "}
-                  <span className="landing-code-string">&quot;@kenos-ui/react-datepicker&quot;</span>
+                  <span className="landing-code-string">
+                    &quot;@kenos-ui/react-datepicker&quot;
+                  </span>
                 </div>
                 <div className="mt-3">
                   <span className="landing-code-highlight">&lt;DatePicker.Root</span> mode=

@@ -2,12 +2,12 @@
 
 ## Package naming
 
-| Layer | Convention | Example |
-|-------|------------|---------|
-| Monorepo folder | short name, no framework prefix | `packages/datepicker/` |
-| npm package | `@kenos-ui/react-<primitive>` | `@kenos-ui/react-datepicker` |
-| Import namespace | PascalCase | `DatePicker`, `Select` |
-| Aggregator | `@kenos-ui/react` | `import { DatePicker } from '@kenos-ui/react'` |
+| Layer            | Convention                      | Example                                        |
+| ---------------- | ------------------------------- | ---------------------------------------------- |
+| Monorepo folder  | short name, no framework prefix | `packages/datepicker/`                         |
+| npm package      | `@kenos-ui/react-<primitive>`   | `@kenos-ui/react-datepicker`                   |
+| Import namespace | PascalCase                      | `DatePicker`, `Select`                         |
+| Aggregator       | `@kenos-ui/react`               | `import { DatePicker } from '@kenos-ui/react'` |
 
 ## Shared tooling
 
@@ -26,11 +26,11 @@
 
 Kenos primitives use one of two internal state patterns. Pick based on how state changes and who needs to subscribe — not on personal preference.
 
-| Primitive | Pattern | Why |
-|-----------|---------|-----|
-| **DatePicker** | **Reducer** (`datePickerReducer`) | Finite view machine: month/year/decade views, single/range selection modes, discrete transitions |
-| **Select** | **Store** (`SelectStore` + `useSyncExternalStore`) | Item registry from JSX children, `highlightedValue` updates every keypress — parts subscribe narrowly |
-| **Combobox** (Tier 3) | **Store** (extends Select shape) | Same registry + list navigation, plus `inputValue` and filter-driven collection updates |
+| Primitive             | Pattern                                            | Why                                                                                                   |
+| --------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **DatePicker**        | **Reducer** (`datePickerReducer`)                  | Finite view machine: month/year/decade views, single/range selection modes, discrete transitions      |
+| **Select**            | **Store** (`SelectStore` + `useSyncExternalStore`) | Item registry from JSX children, `highlightedValue` updates every keypress — parts subscribe narrowly |
+| **Combobox** (Tier 3) | **Store** (extends Select shape)                   | Same registry + list navigation, plus `inputValue` and filter-driven collection updates               |
 
 ### DatePicker — reducer
 
@@ -40,7 +40,7 @@ DatePicker models calendar navigation and selection as a **finite state machine*
 - Transitions are **event-driven** and easy to test in isolation.
 - Multiple parts read the same coherent snapshot without fine-grained subscriptions.
 
-See [docs/datepicker/plan.md](./docs/datepicker/plan.md) — *Principles → Reducer, not machine* and `packages/datepicker/src/date-picker/reducer.ts`.
+See [docs/datepicker/plan.md](./docs/datepicker/plan.md) — _Principles → Reducer, not machine_ and `packages/datepicker/src/date-picker/reducer.ts`.
 
 ### Select — store
 
@@ -50,11 +50,11 @@ Select uses a lightweight **store** with granular subscriptions (`useSyncExterna
 - `highlightedValue` changes on every arrow key or typeahead character — only list/trigger parts should re-render.
 - `Select.Value` resolves labels from the registry without re-walking the React tree.
 
-See [docs/select/plan.md](./docs/select/plan.md) — *State: Store (decision)* and `packages/select/src/store.ts`.
+See [docs/select/plan.md](./docs/select/plan.md) — _State: Store (decision)_ and `packages/select/src/store.ts`.
 
 ### Combobox — store + input/filter
 
-Combobox is a **separate package** (`@kenos-ui/react-combobox`) that reuses the Select store *pattern* (not a package dependency on `@kenos-ui/react-select`). It adds:
+Combobox is a **separate package** (`@kenos-ui/react-combobox`) that reuses the Select store _pattern_ (not a package dependency on `@kenos-ui/react-select`). It adds:
 
 - `inputValue` on the store
 - Filtered item collection (optional `useSelectCollection` hook — Combobox-only)
@@ -62,16 +62,16 @@ Combobox is a **separate package** (`@kenos-ui/react-combobox`) that reuses the 
 
 Shared popup, dismiss, and composite utilities live in `packages/utils/` only.
 
-See [docs/select/plan.md](./docs/select/plan.md) — *Tier 3 — Combobox foundation*.
+See [docs/select/plan.md](./docs/select/plan.md) — _Tier 3 — Combobox foundation_.
 
 ### Choosing for new primitives
 
-| Choose **reducer** when… | Choose **store** when… |
-|--------------------------|------------------------|
-| State is a **finite machine** (views, steps, modes) | Children **register** dynamic data at runtime |
-| Updates are **coarse** action batches | One field updates **very frequently** (highlight, scroll, input) |
-| You want **pure transition tests** (`(state, action) → state`) | Parts need **narrow subscriptions** to avoid list re-renders |
-| Examples: DatePicker views, Wizard steps, Tabs panel index | Examples: Select, Combobox, Menu with roving index |
+| Choose **reducer** when…                                       | Choose **store** when…                                           |
+| -------------------------------------------------------------- | ---------------------------------------------------------------- |
+| State is a **finite machine** (views, steps, modes)            | Children **register** dynamic data at runtime                    |
+| Updates are **coarse** action batches                          | One field updates **very frequently** (highlight, scroll, input) |
+| You want **pure transition tests** (`(state, action) → state`) | Parts need **narrow subscriptions** to avoid list re-renders     |
+| Examples: DatePicker views, Wizard steps, Tabs panel index     | Examples: Select, Combobox, Menu with roving index               |
 
 **Do not** mix both in one primitive unless boundaries are clear (e.g. reducer for view mode, store for a child registry). **Do not** add cross-primitive package dependencies — share behavior through `packages/utils/` only.
 
@@ -131,10 +131,10 @@ Ensure you are logged into npm with access to **`@kenos-ui`** (`npm whoami`, `np
 
 ### Quick reference
 
-| Step | Command |
-|------|---------|
-| Add changeset | `pnpm changeset` |
-| Apply versions | `pnpm changeset version` |
-| Build packages | `pnpm turbo build --filter=./packages/*` |
-| Publish | `pnpm changeset publish` |
-| Build + publish | `pnpm release` |
+| Step            | Command                                  |
+| --------------- | ---------------------------------------- |
+| Add changeset   | `pnpm changeset`                         |
+| Apply versions  | `pnpm changeset version`                 |
+| Build packages  | `pnpm turbo build --filter=./packages/*` |
+| Publish         | `pnpm changeset publish`                 |
+| Build + publish | `pnpm release`                           |

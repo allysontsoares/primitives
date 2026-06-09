@@ -150,14 +150,18 @@ export function LandingCtaFooter() {
                 key={section}
                 className={`border-b border-white/[0.07] p-8 md:border-b-0 ${i < 3 ? "border-r" : ""}`}
               >
-                <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-zinc-500">{section}</p>
+                <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-zinc-500">
+                  {section}
+                </p>
                 <ul className="space-y-2.5">
                   {links.map((link) => (
                     <li key={link.label}>
                       <Link
                         href={link.href}
                         className="text-sm text-zinc-400 transition-colors hover:text-zinc-100"
-                        {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        {...(link.href.startsWith("http")
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
                       >
                         {link.label}
                       </Link>
@@ -172,7 +176,10 @@ export function LandingCtaFooter() {
             <p className="font-mono text-xs text-zinc-500">
               &copy; {new Date().getFullYear()} Kenos UI — MIT licensed.
             </p>
-            <Link href="/docs" className="font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-100">
+            <Link
+              href="/docs"
+              className="font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-100"
+            >
               Documentation →
             </Link>
           </div>

@@ -157,7 +157,7 @@ export function Content({
       const first = navItems.find((i) => !i.disabled);
       if (first) store.setHighlightedValue(first.value);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on open/filter change
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on open/filter change
   }, [open, inputValue, navItems.length]);
 
   useEffect(() => {

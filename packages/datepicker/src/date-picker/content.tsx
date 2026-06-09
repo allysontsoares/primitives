@@ -1,11 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import {
-  useClickOutside,
-  useEscapeKey,
-  useFocusTrap,
-  restoreFocus,
-} from "@kenos-ui/utils";
+import { useClickOutside, useEscapeKey, useFocusTrap, restoreFocus } from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
 import { formatMonthYear, formatYear } from "../utils/locale";
 import { useDatePickerFloating } from "./use-floating";
@@ -75,8 +70,7 @@ export function Content({
     if (!isOpen) return;
 
     const resolveAnchor = (): HTMLElement | null => {
-      const input =
-        document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`);
+      const input = document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`);
       const trigger = document.getElementById(ids.trigger);
 
       // When input and trigger share a row wrapper, anchor to the full control
@@ -86,11 +80,7 @@ export function Content({
         if (row && row === trigger.parentElement) return row;
       }
 
-      return (
-        input ??
-        document.getElementById(`${ids.input}-1`) ??
-        trigger
-      );
+      return input ?? document.getElementById(`${ids.input}-1`) ?? trigger;
     };
 
     let current = resolveAnchor();
@@ -125,16 +115,11 @@ export function Content({
     restoreFocus({
       openSource: source === "input" ? "input" : source === "trigger" ? "trigger" : "unknown",
       trigger: document.getElementById(ids.trigger),
-      input:
-        document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`),
+      input: document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`),
     });
   }, [dispatch, ids.input, ids.trigger, state.openSource]);
 
-  useClickOutside(
-    [contentRef, triggerRef, inputRef, input0Ref, input1Ref],
-    close,
-    isOpen,
-  );
+  useClickOutside([contentRef, triggerRef, inputRef, input0Ref, input1Ref], close, isOpen);
 
   useEscapeKey({
     enabled: isOpen,

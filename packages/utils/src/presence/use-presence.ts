@@ -29,9 +29,7 @@ export function usePresence({
     }
   }, [open]);
 
-  const present = lazyMount
-    ? open || (hasBeenOpen && !unmountOnExit)
-    : open || !unmountOnExit;
+  const present = lazyMount ? open || (hasBeenOpen && !unmountOnExit) : open || !unmountOnExit;
 
   useEffect(() => {
     if (prevOpenRef.current === open) return;

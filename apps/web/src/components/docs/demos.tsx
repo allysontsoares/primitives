@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useRef, useState } from "react";
 import {
   DatePicker as KenosDatePicker,
   useDatePickerContext,
@@ -12,7 +8,6 @@ import {
 } from "@kenos-ui/react-datepicker";
 import { Combobox as KenosCombobox } from "@kenos-ui/react-combobox";
 import { Select as KenosSelect } from "@kenos-ui/react-select";
-
 
 /* ============================================================
    Real @kenos-ui/react-datepicker-powered demo components.
@@ -178,10 +173,7 @@ const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
 };
 
 const DEMO_YEAR_CELL: Record<CalSize, string> = {
-  default: [
-    DEMO_MONTH_YEAR_CELL.default,
-    "tabular-nums text-[14px] tracking-tight",
-  ].join(" "),
+  default: [DEMO_MONTH_YEAR_CELL.default, "tabular-nums text-[14px] tracking-tight"].join(" "),
   compact: [DEMO_MONTH_YEAR_CELL.compact, "tabular-nums text-[12px] tracking-tight"].join(" "),
 };
 
@@ -356,7 +348,9 @@ export function InlineCalendar({
       onValueChange={setValue}
     >
       <div className={shell} data-cal-size={size}>
-        <div className={`flex items-center justify-between ${size === "default" ? "mb-2.5" : "mb-2"}`}>
+        <div
+          className={`flex items-center justify-between ${size === "default" ? "mb-2.5" : "mb-2"}`}
+        >
           <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
             <LeftIcon />
           </KenosDatePicker.PrevTrigger>
@@ -369,19 +363,13 @@ export function InlineCalendar({
         <KenosDatePicker.View view="day">
           <KenosDatePicker.Grid
             className="w-full border-collapse table-fixed"
-            header={
-              <KenosDatePicker.WeekDays className={weekdayCls} />
-            }
+            header={<KenosDatePicker.WeekDays className={weekdayCls} />}
           >
             {({ weeks }) =>
               weeks.map((week, wi) => (
                 <tr key={wi}>
                   {week.map((date, di) => (
-                    <KenosDatePicker.Day
-                      key={di}
-                      date={date}
-                      className={demoDayCls(size)}
-                    />
+                    <KenosDatePicker.Day key={di} date={date} className={demoDayCls(size)} />
                   ))}
                 </tr>
               ))
@@ -496,11 +484,7 @@ export function DatePicker({
                 weeks.map((week, wi) => (
                   <tr key={wi}>
                     {week.map((date, di) => (
-                      <KenosDatePicker.Day
-                        key={di}
-                        date={date}
-                        className={demoDayCls(size)}
-                      />
+                      <KenosDatePicker.Day key={di} date={date} className={demoDayCls(size)} />
                     ))}
                   </tr>
                 ))
@@ -602,10 +586,7 @@ export function DateRangePicker({
           ) : (
             <>
               <KenosDatePicker.Input index={0} className={rangeInputCls} />
-              <span
-                className="shrink-0 font-medium text-zinc-500 dark:text-zinc-400"
-                aria-hidden
-              >
+              <span className="shrink-0 font-medium text-zinc-500 dark:text-zinc-400" aria-hidden>
                 →
               </span>
               <KenosDatePicker.Input index={1} className={rangeInputCls} />
@@ -643,11 +624,7 @@ export function DateRangePicker({
                 weeks.map((week, wi) => (
                   <tr key={wi}>
                     {week.map((date, di) => (
-                      <KenosDatePicker.Day
-                        key={di}
-                        date={date}
-                        className={demoRangeDayCls(size)}
-                      />
+                      <KenosDatePicker.Day key={di} date={date} className={demoRangeDayCls(size)} />
                     ))}
                   </tr>
                 ))
@@ -673,11 +650,7 @@ export function DateField({
   defaultValue?: Date | null;
 }) {
   return (
-    <KenosDatePicker.Root
-      mode="single"
-      locale={locale}
-      defaultValue={defaultValue}
-    >
+    <KenosDatePicker.Root mode="single" locale={locale} defaultValue={defaultValue}>
       <div className={`${dateFieldWrap} mx-auto`}>
         <label className={labelCls}>{label}</label>
         <KenosDatePicker.Input className={dateFieldInputCls} />
@@ -758,12 +731,7 @@ export function SelectDialogDemo() {
       className="w-full max-w-sm rounded-xl border border-zinc-200/90 bg-zinc-50 p-4 shadow-lg dark:border-zinc-700/80 dark:bg-zinc-900"
     >
       <h3 className="mb-3 text-sm font-semibold text-zinc-900 dark:text-zinc-100">Settings</h3>
-      <SelectDemo
-        label="Theme"
-        name="theme"
-        defaultValue="light"
-        options={selectThemeOptions}
-      />
+      <SelectDemo label="Theme" name="theme" defaultValue="light" options={selectThemeOptions} />
     </div>
   );
 }
@@ -838,12 +806,7 @@ export function SelectPortalDemo() {
           <KenosSelect.Value placeholder="Choose…" />
           <KenosSelect.Icon />
         </KenosSelect.Trigger>
-        <KenosSelect.Content
-          portal
-          container={containerRef}
-          className={selectContentCls}
-          sameWidth
-        >
+        <KenosSelect.Content portal container={containerRef} className={selectContentCls} sameWidth>
           <KenosSelect.List>
             {(
               [
@@ -912,7 +875,17 @@ const comboboxFilterLanguageOptions = [
 ] as const;
 
 const ChevronDownIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" strokeWidth={2} fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    strokeWidth={2}
+    fill="none"
+    stroke="currentColor"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
     <path d="M6 9l6 6 6-6" />
   </svg>
 );

@@ -126,9 +126,7 @@ export function useComboboxStore<T>(
  * Return a stable ref to the store's current state getter.
  * Useful for event handlers that need a snapshot without subscribing.
  */
-export function useComboboxStateRef(
-  store: ComboboxStore,
-): React.RefObject<ComboboxStoreState> {
+export function useComboboxStateRef(store: ComboboxStore): React.RefObject<ComboboxStoreState> {
   const ref = useRef(store.getState());
   ref.current = store.getState();
   return ref;

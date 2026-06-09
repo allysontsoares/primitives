@@ -1,9 +1,4 @@
-import type {
-  ReactNode,
-  RefObject,
-  HTMLAttributes,
-  ButtonHTMLAttributes,
-} from "react";
+import type { ReactNode, RefObject, HTMLAttributes, ButtonHTMLAttributes } from "react";
 
 // ── Item registry ──────────────────────────────────────────────────────────
 
@@ -90,10 +85,7 @@ export type SelectRootProps = SelectRootPropsSingle | SelectRootPropsMultiple;
 
 // ── Portal container ───────────────────────────────────────────────────────
 
-export type SelectPortalContainer =
-  | HTMLElement
-  | RefObject<HTMLElement | null>
-  | null;
+export type SelectPortalContainer = HTMLElement | RefObject<HTMLElement | null> | null;
 
 // ── Portal props ─────────────────────────────────────────────────────────────
 

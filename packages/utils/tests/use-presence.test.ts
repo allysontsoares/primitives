@@ -47,10 +47,9 @@ describe("usePresence", () => {
 
   it("calls onOpenChangeComplete when open changes", () => {
     const onOpenChangeComplete = vi.fn();
-    const { rerender } = renderHook(
-      ({ open }) => usePresence({ open, onOpenChangeComplete }),
-      { initialProps: { open: false } },
-    );
+    const { rerender } = renderHook(({ open }) => usePresence({ open, onOpenChangeComplete }), {
+      initialProps: { open: false },
+    });
 
     rerender({ open: true });
     expect(onOpenChangeComplete).toHaveBeenCalledWith(true);

@@ -196,7 +196,13 @@ export const WithGroups: Story = {
                 <Select.Item
                   key={val}
                   value={val}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", cursor: "pointer" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                  }}
                 >
                   <Select.ItemText>{val.charAt(0).toUpperCase() + val.slice(1)}</Select.ItemText>
                   <Select.ItemIndicator value={val}>✓</Select.ItemIndicator>
@@ -213,7 +219,13 @@ export const WithGroups: Story = {
                 <Select.Item
                   key={val}
                   value={val}
-                  style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", cursor: "pointer" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                  }}
                 >
                   <Select.ItemText>{val.charAt(0).toUpperCase() + val.slice(1)}</Select.ItemText>
                   <Select.ItemIndicator value={val}>✓</Select.ItemIndicator>

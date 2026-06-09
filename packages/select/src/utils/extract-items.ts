@@ -7,8 +7,7 @@ function extractItemTextLabel(children: ReactNode): string | null {
     if (label != null || !isValidElement(child)) return;
 
     const type = child.type as { displayName?: string; name?: string };
-    const isItemText =
-      type?.displayName === "Select.ItemText" || type?.name === "ItemText";
+    const isItemText = type?.displayName === "Select.ItemText" || type?.name === "ItemText";
 
     if (isItemText) {
       const content = child.props.children;

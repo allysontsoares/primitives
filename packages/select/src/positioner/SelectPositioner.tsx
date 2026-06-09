@@ -55,7 +55,5 @@ export function Positioner({
     [floatingStyles, isPositioned, setFloating, alignItemWithTriggerActive],
   );
 
-  return (
-    <PositionerContext.Provider value={contextValue}>{children}</PositionerContext.Provider>
-  );
+  return <PositionerContext.Provider value={contextValue}>{children}</PositionerContext.Provider>;
 }
