@@ -487,7 +487,7 @@ function DemoCalendarBody({ locale = "en-US", size = "default" as CalSize }) {
   );
 }
 
-function DemoRangeCalendarBody({ locale = "en-US", size = "default" as CalSize }) {
+function DemoRangeCalendarBody({ size = "default" as CalSize }) {
   const weekdayCls = DEMO_WEEKDAY[size];
   const headNav = DEMO_HEAD_NAV[size];
   const headTitle = DEMO_HEAD_TITLE[size];
@@ -680,7 +680,7 @@ export function DateRangePicker({
           aria-label={label}
           data-cal-size={size}
         >
-          <DemoRangeCalendarBody locale={locale} size={size} />
+          <DemoRangeCalendarBody size={size} />
           {presets && <RangePresets />}
         </KenosDatePicker.Content>
       </div>
@@ -1214,7 +1214,7 @@ function DateRangePickerFieldControlled({
           aria-label={label}
           data-cal-size="default"
         >
-          <DemoRangeCalendarBody locale={locale} size="default" />
+          <DemoRangeCalendarBody size="default" />
         </KenosDatePicker.Content>
       </div>
     </KenosDatePicker.Root>
