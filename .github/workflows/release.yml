@@ -21,6 +21,18 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
+      - name: Verify npm publish access
+        run: |
+          npm whoami
+          for pkg in utils react-datepicker react react-select react-combobox; do
+            if npm view "@kenos-ui/${pkg}" version >/dev/null 2>&1; then
+              echo "✓ @kenos-ui/${pkg} exists on npm"
+            else
+              echo "• @kenos-ui/${pkg} not yet on npm (first publish)"
+            fi
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - uses: changesets/action@v1
         with:
           publish: pnpm release
@@ -28,4 +40,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_PROVENANCE: "true"
+          NPM_CONFIG_ACCESS: public

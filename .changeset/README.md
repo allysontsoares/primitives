@@ -6,7 +6,9 @@ Kenos UI uses [Changesets](https://github.com/changesets/changesets) for **indep
 
 | Package                                                                        | Policy                                                                                                               |
 | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `@kenos-ui/utils`                                                              | Independent — bump only when shared internals change; skip on datepicker-only releases                               |
 | `@kenos-ui/react-datepicker`                                                   | Independent — primitive releases on its own cadence                                                                  |
+| `@kenos-ui/react-select` / `@kenos-ui/react-combobox`                          | Independent — primitives on their own cadence                                                                        |
 | `@kenos-ui/react`                                                              | Independent — aggregator bumps when you choose; workspace dep bumps trigger a patch via `updateInternalDependencies` |
 | Internal apps (`@kenos-ui/web`, `@kenos-ui/playground`, `@kenos-ui/storybook`) | Ignored — not published                                                                                              |
 

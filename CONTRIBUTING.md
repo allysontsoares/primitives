@@ -129,6 +129,22 @@ pnpm changeset publish
 
 Ensure you are logged into npm with access to **`@kenos-ui`** (`npm whoami`, `npm login`).
 
+### GitHub Actions (`NPM_TOKEN`)
+
+The Release workflow publishes with `secrets.NPM_TOKEN`. A **404 on publish** for packages that already exist on npm almost always means the token cannot write to that package.
+
+Create or update the token at [npmjs.com → Access Tokens](https://www.npmjs.com/settings/~tokens):
+
+1. Prefer a **Granular Access Token** with:
+   - Packages and scopes: **Read and write**
+   - Scope: **`@kenos-ui`** (all packages under the org), not only individual package names
+2. Or use a **Classic Automation** token with publish permission for your account.
+3. Add it as the `NPM_TOKEN` repository secret in GitHub.
+
+The token must be able to publish **every** public package: `@kenos-ui/utils`, `@kenos-ui/react-datepicker`, `@kenos-ui/react-select`, `@kenos-ui/react-combobox`, and `@kenos-ui/react`. If `react-select` / `react-combobox` publish from CI but `react` / `react-datepicker` fail with `E404`, the token is scoped too narrowly.
+
+For a **datepicker-only** release, add a changeset only for `@kenos-ui/react-datepicker`. Do not bump `@kenos-ui/react` or `@kenos-ui/utils` unless their APIs changed — `changeset publish` skips packages whose version already matches npm.
+
 ### Quick reference
 
 | Step            | Command                                  |
