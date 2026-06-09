@@ -15,21 +15,18 @@
   Headless date & scheduling primitives for React 19+, fully unstyled and composition-first.
 
   **Selection API**
-
   - Unified `DatePicker.Root` with `mode`: `"single"` | `"range"` | `"multiple"`
   - Controlled / uncontrolled `value`, `open`, and `onValueChange` / `onOpenChange`
   - Range mode with live hover preview between `rangeStart` and `rangeEnd`
   - `minDate`, `maxDate`, `disabled` (boolean or per-date function), `readOnly`, `closeOnSelect`
 
   **Segmented input (timescape)**
-
   - First-class `<DatePicker.Input />` — locale-aware month / day / year segments
   - Dual inputs for range (`index={0}` / `index={1}`)
   - Bidirectional sync: type in segments or pick from calendar
   - Custom `segmentLabels` for screen readers
 
   **Compound calendar parts**
-
   - `Label`, `Trigger`, `Content`, `Calendar` (shorthand composition)
   - `ViewControl`, `PrevTrigger`, `NextTrigger`, `ViewTrigger`
   - `View` with `day` / `month` / `year` drill-down
@@ -38,30 +35,25 @@
   - `useDatePickerContext()` for custom layouts
 
   **Positioning & popup policy**
-
   - Floating UI via `Content`: `side`, `align`, `sideOffset`, `avoidCollisions`, `portal`
   - `forceMount` for enter/exit animations (`data-state`)
   - `modal` prop (default `false`) — opt-in focus trap + `aria-modal`; popup-policy friendly
   - Focus restore to trigger / input on close; dialog-interop (`Escape` does not bubble)
 
   **State & i18n**
-
   - Reducer-driven state machine (`OPEN`, `SELECT_DATE`, `NAV_PREV`/`NAV_NEXT`, `SET_VIEW`, `COMMIT_INPUT`, …)
   - `Intl`-based locale: week start, month/year labels, segment order & separators
   - `weekStartsOn` override
 
   **Accessibility & quality**
-
   - WAI-ARIA: `role="dialog"`, `grid` / `gridcell`, labelled inputs, keyboard roving tabindex
   - Test suite: reducer, calendar grid, date utils, ARIA, keyboard nav, dialog interop, axe (vitest-axe)
   - Storybook: Single, Range, Multiple, Locales
 
   **Docs**
-
   - README with quick start, range / multiple examples, full composition, localization, and `Content` props
 
   **Packaging**
-
   - Add `license: MIT` to `package.json` (fixes npm registry showing "no license")
 
 ## 0.4.0
@@ -73,21 +65,18 @@
   Headless date & scheduling primitives for React 19+, fully unstyled and composition-first.
 
   **Selection API**
-
   - Unified `DatePicker.Root` with `mode`: `"single"` | `"range"` | `"multiple"`
   - Controlled / uncontrolled `value`, `open`, and `onValueChange` / `onOpenChange`
   - Range mode with live hover preview between `rangeStart` and `rangeEnd`
   - `minDate`, `maxDate`, `disabled` (boolean or per-date function), `readOnly`, `closeOnSelect`
 
   **Segmented input (timescape)**
-
   - First-class `<DatePicker.Input />` — locale-aware month / day / year segments
   - Dual inputs for range (`index={0}` / `index={1}`)
   - Bidirectional sync: type in segments or pick from calendar
   - Custom `segmentLabels` for screen readers
 
   **Compound calendar parts**
-
   - `Label`, `Trigger`, `Content`, `Calendar` (shorthand composition)
   - `ViewControl`, `PrevTrigger`, `NextTrigger`, `ViewTrigger`
   - `View` with `day` / `month` / `year` drill-down
@@ -96,26 +85,22 @@
   - `useDatePickerContext()` for custom layouts
 
   **Positioning & popup policy**
-
   - Floating UI via `Content`: `side`, `align`, `sideOffset`, `avoidCollisions`, `portal`
   - `forceMount` for enter/exit animations (`data-state`)
   - `modal` prop (default `false`) — opt-in focus trap + `aria-modal`; popup-policy friendly
   - Focus restore to trigger / input on close; dialog-interop (`Escape` does not bubble)
 
   **State & i18n**
-
   - Reducer-driven state machine (`OPEN`, `SELECT_DATE`, `NAV_PREV`/`NAV_NEXT`, `SET_VIEW`, `COMMIT_INPUT`, …)
   - `Intl`-based locale: week start, month/year labels, segment order & separators
   - `weekStartsOn` override
 
   **Accessibility & quality**
-
   - WAI-ARIA: `role="dialog"`, `grid` / `gridcell`, labelled inputs, keyboard roving tabindex
   - Test suite: reducer, calendar grid, date utils, ARIA, keyboard nav, dialog interop, axe (vitest-axe)
   - Storybook: Single, Range, Multiple, Locales
 
   **Docs**
-
   - README with quick start, range / multiple examples, full composition, localization, and `Content` props
 
 ## 0.3.3
@@ -146,7 +131,6 @@
 ### Minor Changes
 
 - Axis lift-and-shift: publish DatePicker under `@at5/axis-datepicker`.
-
   - Add `@at5/axis-datepicker` — same DatePicker API and behavior as `@at5/kairo` (migrated from `packages/kairo` to `packages/datepicker`)
   - Add `@at5/axis` — aggregator re-exporting `DatePicker`
   - `@at5/kairo` — deprecated; thin re-export of `@at5/axis-datepicker` for transition
