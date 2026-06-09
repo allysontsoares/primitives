@@ -53,16 +53,18 @@ export type ComponentMeta = {
   features?: ComponentDocFeatures;
 };
 
-export type DemoKind =
-  | "calendar"
-  | "date-picker"
-  | "date-range-picker"
-  | "date-field"
-  | "select"
-  | "combobox";
+export type DemoKind = "date-picker" | "select" | "combobox";
 
-export type NavItem = { label: string; route: string };
+export type NavItem = { label: string; route: string; soon?: boolean };
 export type NavGroup = { title: string; badge?: string; items: NavItem[] };
+
+/** Component doc routes that appear in nav but are not published yet. */
+export const SOON_ROUTES = ["select", "combobox"] as const;
+export type SoonRoute = (typeof SOON_ROUTES)[number];
+
+export function isSoonRoute(route: string): route is SoonRoute {
+  return (SOON_ROUTES as readonly string[]).includes(route);
+}
 
 export const NAV: NavGroup[] = [
   {
@@ -78,123 +80,22 @@ export const NAV: NavGroup[] = [
     title: "Primitives",
     badge: "New",
     items: [
-      { label: "Calendar", route: "calendar" },
       { label: "Date Picker", route: "date-picker" },
-      { label: "Date Range Picker", route: "date-range-picker" },
-      { label: "Date Field", route: "date-field" },
-      { label: "Select", route: "select" },
-      { label: "Combobox", route: "combobox" },
-    ],
-  },
-  {
-    title: "Guides",
-    items: [
-      { label: "Localization", route: "localization" },
-      { label: "Accessibility", route: "accessibility" },
-      { label: "Styling", route: "styling" },
+      { label: "Select", route: "select", soon: true },
+      { label: "Combobox", route: "combobox", soon: true },
     ],
   },
 ];
 
 export const COMPONENTS: Record<string, ComponentMeta> = {
-  calendar: {
-    name: "Calendar",
-    eyebrow: "Primitive",
-    desc: "A composable month grid built on the WAI-ARIA grid pattern (via DatePicker.Root + calendar parts), with full keyboard navigation and roving focus. Use inside DatePicker.Root (even for standalone use).",
-    demo: "calendar",
-    npmPackage: "@kenos-ui/react-datepicker",
-    importName: "DatePicker",
-    features: { localeExamples: true },
-    parts: [
-      {
-        tag: "DatePicker.Root",
-        note: "state owner (mode, locale, value etc.)",
-        children: [
-          {
-            tag: "DatePicker.ViewControl",
-            children: [
-              { tag: "DatePicker.PrevTrigger", leaf: true },
-              { tag: "DatePicker.ViewTrigger", leaf: true },
-              { tag: "DatePicker.NextTrigger", leaf: true },
-            ],
-          },
-          {
-            tag: 'DatePicker.View view="day"',
-            children: [
-              {
-                tag: "DatePicker.Grid",
-                note: "table[role=grid]",
-                children: [
-                  { tag: "DatePicker.WeekDays", leaf: true },
-                  {
-                    tag: "DatePicker.Day (render prop)",
-                    note: "the cell (td[role=gridcell] with data-*); use children for custom content",
-                  },
-                ],
-              },
-            ],
-          },
-          { tag: 'DatePicker.View view="month"', note: "MonthGrid + MonthCell" },
-          { tag: 'DatePicker.View view="year"', note: "YearGrid + YearCell" },
-        ],
-      },
-    ],
-  },
   "date-picker": {
     name: "Date Picker",
     eyebrow: "Primitive",
-    desc: "An input (segmented) paired with a popover calendar. Use DatePicker.Root + Input + Trigger + Content (positioning & state built-in). Zero CSS shipped.",
+    desc: "Headless date primitives — segmented input, popover calendar, range and multiple selection. Built on Intl, timescape, and Floating UI. Zero CSS shipped.",
     demo: "date-picker",
     npmPackage: "@kenos-ui/react-datepicker",
     importName: "DatePicker",
-    features: { localeExamples: true, dialogInterop: true },
-    parts: [
-      {
-        tag: 'DatePicker.Root (mode="single")',
-        children: [
-          { tag: "DatePicker.Label", leaf: true },
-          { tag: "DatePicker.Input", note: "the segmented field (timescape)" },
-          { tag: "DatePicker.Trigger", leaf: true },
-          {
-            tag: "DatePicker.Content",
-            note: "popover (floating + focus trap + portal)",
-            children: [
-              {
-                tag: "DatePicker.Calendar",
-                note: "shorthand, or manual ViewControl + Grid + Day etc.",
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  "date-range-picker": {
-    name: "Date Range Picker",
-    eyebrow: "Primitive",
-    desc: 'Select a start and end date with live range preview and dual-segment input (mode="range" on the same Root). Presets are custom UI you compose.',
-    demo: "date-range-picker",
-    npmPackage: "@kenos-ui/react-datepicker",
-    importName: "DatePicker",
-    features: { localeExamples: true },
-    parts: [
-      {
-        tag: 'DatePicker.Root mode="range"',
-        children: [
-          { tag: "DatePicker.Label", leaf: true },
-          { tag: "DatePicker.Input index={0}", note: "start segment" },
-          { tag: "DatePicker.Input index={1}", note: "end segment" },
-          { tag: "DatePicker.Trigger", leaf: true },
-          {
-            tag: "DatePicker.Content",
-            note: "popover",
-            children: [
-              { tag: "DatePicker.Calendar", note: "range preview via hover + data-in-range etc." },
-            ],
-          },
-        ],
-      },
-    ],
+    parts: [],
   },
   select: {
     name: "Select",
@@ -281,149 +182,11 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
       },
     ],
   },
-  "date-field": {
-    name: "Date Field",
-    eyebrow: "Primitive",
-    desc: "A segmented text input (powered by DatePicker.Input inside a minimal Root). Locale-aware order/separators via Intl. No calendar required — just omit Content/Trigger.",
-    demo: "date-field",
-    npmPackage: "@kenos-ui/react-datepicker",
-    importName: "DatePicker",
-    features: { localeExamples: true },
-    parts: [
-      {
-        tag: "DatePicker.Root",
-        children: [
-          { tag: "DatePicker.Label", leaf: true },
-          {
-            tag: "DatePicker.Input",
-            note: "segmented spinbuttons (data-segment, role=spinbutton)",
-          },
-        ],
-      },
-    ],
-  },
 };
 
 const rootGroup = { group: "Root props" };
 
 export const API: Record<string, ApiGroup[]> = {
-  calendar: [
-    {
-      ...rootGroup,
-      props: [
-        {
-          name: "value / defaultValue / onValueChange",
-          type: "Date | null (single) or DateRange / Date[] (range/multiple)",
-          desc: "Controlled/uncontrolled value. Use on the Root (mode controls shape).",
-        },
-        {
-          name: "locale",
-          type: "string",
-          def: '"en-US" or navigator.language',
-          desc: "BCP 47 tag. Drives segment order, separators, weekday/month names, and week start.",
-        },
-        {
-          name: "weekStartsOn",
-          type: "0 – 6",
-          def: "derived from locale via Intl",
-          desc: "Override first day of week.",
-        },
-        { name: "minDate / maxDate", type: "Date", desc: "Clamp the selectable range." },
-        {
-          name: "disabled",
-          type: "boolean | (date: Date) => boolean",
-          desc: "Disable specific dates or the whole picker.",
-        },
-        { name: "readOnly", type: "boolean", desc: "Prevent edits via segments or grid." },
-        {
-          name: "mode",
-          type: '"single" | "range" | "multiple"',
-          def: '"single"',
-          desc: "Selection mode (affects value shape and Input index usage).",
-        },
-      ],
-    },
-    {
-      group: "Data attributes (on Day / gridcell)",
-      attrs: true,
-      props: [
-        { name: "[data-selected]", desc: "Selected day(s)." },
-        { name: "[data-today]", desc: "Current date." },
-        { name: "[data-outside-month]", desc: "Day belongs to adjacent month." },
-        { name: "[data-disabled]", desc: "Unavailable (min/max or disabled fn)." },
-        { name: "[data-in-range]", desc: "Inside current range selection (range mode)." },
-        { name: "[data-range-start] / [data-range-end]", desc: "Endpoints of range." },
-      ],
-    },
-  ],
-  "date-picker": [
-    {
-      ...rootGroup,
-      props: [
-        {
-          name: "value / defaultValue / onValueChange",
-          type: "Date | null (single) etc.",
-          desc: "Controlled value. Shape depends on mode.",
-        },
-        {
-          name: "open / defaultOpen / onOpenChange",
-          type: "boolean",
-          desc: "Popover control (also auto via trigger/input).",
-        },
-        {
-          name: "locale",
-          type: "string",
-          def: '"en-US"',
-          desc: "Drives segments order, separators, labels, week start.",
-        },
-        {
-          name: "closeOnSelect",
-          type: "boolean",
-          def: "true for single",
-          desc: "Auto-close after pick (false for range).",
-        },
-        { name: "minDate / maxDate / disabled / readOnly", desc: "Standard constraints." },
-        {
-          name: "mode",
-          type: '"single" | "range" | "multiple"',
-          desc: "Affects Input (index) and behavior.",
-        },
-      ],
-    },
-    {
-      group: "Keyboard",
-      keys: true,
-      props: [
-        { name: "Digits in segments", desc: "Type; auto-advance when full." },
-        { name: "Arrow ↑/↓ in segment", desc: "Inc/dec focused segment." },
-        { name: "Arrows in grid", desc: "Move focus by day/week." },
-        { name: "PageUp/Down, Home/End", desc: "Month/year nav in grid." },
-        { name: "Escape", desc: "Close popover, return focus to trigger." },
-      ],
-    },
-  ],
-  "date-range-picker": [
-    {
-      ...rootGroup,
-      props: [
-        {
-          name: "value / defaultValue / onValueChange",
-          type: "DateRange {start,end}",
-          desc: 'Controlled range (mode="range" on Root).',
-        },
-        {
-          name: "locale / minDate / maxDate / disabled / readOnly",
-          desc: "Same as single + range preview on hover.",
-        },
-        {
-          name: "closeOnSelect",
-          type: "boolean",
-          def: "false for range",
-          desc: "Keep open until both ends chosen.",
-        },
-      ],
-    },
-  ],
   select: [
     {
       ...rootGroup,
@@ -628,38 +391,6 @@ export const API: Record<string, ApiGroup[]> = {
       ],
     },
   ],
-  "date-field": [
-    {
-      ...rootGroup,
-      props: [
-        {
-          name: "value / defaultValue / onValueChange",
-          type: "Date | null",
-          desc: "Use on Root; Input commits when segments are valid.",
-        },
-        {
-          name: "locale",
-          type: "string",
-          desc: "Order + separator from Intl (e.g. en-GB = DD/MM/YYYY).",
-        },
-        {
-          name: "minDate / maxDate / disabled / readOnly",
-          desc: "Constraints flow to the segments.",
-        },
-      ],
-    },
-    {
-      group: "Keyboard (on segments)",
-      keys: true,
-      props: [
-        { name: "0–9", desc: "Type; auto-advance on full segment." },
-        { name: "Arrow ↑ / ↓", desc: "Inc/dec the focused segment (wraps)." },
-        { name: "Arrow ← / → / Tab", desc: "Move between segments." },
-        { name: "Backspace", desc: "Clear focused segment." },
-        { name: "Escape", desc: "If popover open, closes it." },
-      ],
-    },
-  ],
 };
 
 export type SearchEntry = {
@@ -673,20 +404,15 @@ export const SEARCH: SearchEntry[] = [
   { title: "Overview", route: "", crumb: "Get Started", kind: "page" },
   { title: "Installation", route: "installation", crumb: "Get Started", kind: "page" },
   { title: "Quick Start", route: "quickstart", crumb: "Get Started", kind: "page" },
-  { title: "Calendar", route: "calendar", crumb: "Primitives", kind: "comp" },
   { title: "Date Picker", route: "date-picker", crumb: "Primitives", kind: "comp" },
-  { title: "Date Range Picker", route: "date-range-picker", crumb: "Primitives", kind: "comp" },
-  { title: "Date Field", route: "date-field", crumb: "Primitives", kind: "comp" },
-  { title: "Select", route: "select", crumb: "Primitives", kind: "comp" },
-  { title: "Combobox", route: "combobox", crumb: "Primitives", kind: "comp" },
-  { title: "Localization", route: "localization", crumb: "Guides", kind: "page" },
-  { title: "Accessibility", route: "accessibility", crumb: "Guides", kind: "page" },
-  { title: "Styling", route: "styling", crumb: "Guides", kind: "page" },
+  { title: "Form Integration", route: "date-picker", crumb: "Date Picker", kind: "comp" },
+  { title: "Accessibility", route: "date-picker", crumb: "Date Picker", kind: "comp" },
   { title: "Changelog", route: "changelog", crumb: "Get Started", kind: "page" },
 ];
 
 /* flat route order for prev/next navigation */
 export const ORDER: string[] = NAV.flatMap((g) => g.items.map((i) => i.route));
+export const PUBLISHED_ROUTES: string[] = ORDER.filter((r) => !isSoonRoute(r));
 
 export function titleForRoute(route: string): string {
   for (const g of NAV) for (const it of g.items) if (it.route === route) return it.label;
@@ -694,12 +420,5 @@ export function titleForRoute(route: string): string {
 }
 
 /* helper: routes that map to /[slug] dynamic pages (non-component guides) */
-export const GUIDE_ROUTES = [
-  "installation",
-  "quickstart",
-  "changelog",
-  "localization",
-  "accessibility",
-  "styling",
-];
-export const COMPONENT_ROUTES = Object.keys(COMPONENTS);
+export const GUIDE_ROUTES = ["installation", "quickstart", "changelog"];
+export const COMPONENT_ROUTES = Object.keys(COMPONENTS).filter((r) => !isSoonRoute(r));

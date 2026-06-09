@@ -2,14 +2,9 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import {
-  DateField,
-  DatePicker,
-  DateRangePicker,
-  InlineCalendar,
-  ComboboxDemo,
-  SelectDemo,
-} from "./demos";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { DatePickerComposed, ComboboxDemo, SelectDemo } from "./demos";
 
 const CheckIcon = () => (
   <span
@@ -35,34 +30,10 @@ function HighlightDemoFrame({ children }: { children: ReactNode }) {
   );
 }
 
-function HighlightCalendar() {
-  return (
-    <HighlightDemoFrame>
-      <InlineCalendar size="compact" defaultValue={new Date()} />
-    </HighlightDemoFrame>
-  );
-}
-
 function HighlightDatePicker() {
   return (
     <HighlightDemoFrame>
-      <DatePicker label="Pick a date" size="compact" />
-    </HighlightDemoFrame>
-  );
-}
-
-function HighlightRangePicker() {
-  return (
-    <HighlightDemoFrame>
-      <DateRangePicker label="Trip dates" presets={false} size="compact" />
-    </HighlightDemoFrame>
-  );
-}
-
-function HighlightDateField() {
-  return (
-    <HighlightDemoFrame>
-      <DateField label="Birth date" />
+      <DatePickerComposed label="Pick a date" size="compact" />
     </HighlightDemoFrame>
   );
 }
@@ -88,44 +59,29 @@ type Highlight = {
   title: string;
   desc: string;
   demo: ReactNode;
+  soon?: boolean;
 };
 
 const HIGHLIGHTS: Highlight[] = [
   {
-    slug: "calendar",
-    title: "Calendar",
-    desc: "Month grid on the WAI-ARIA pattern with roving focus, range preview, and keyboard navigation.",
-    demo: <HighlightCalendar />,
-  },
-  {
     slug: "date-picker",
     title: "Date Picker",
-    desc: "Composable input, trigger, and popover — you own every className on each part.",
+    desc: "Segmented input, popover calendar, range and multiple selection — one composable API.",
     demo: <HighlightDatePicker />,
-  },
-  {
-    slug: "date-range-picker",
-    title: "Date Range Picker",
-    desc: "Start and end selection with live in-range styling across the grid.",
-    demo: <HighlightRangePicker />,
-  },
-  {
-    slug: "date-field",
-    title: "Date Field",
-    desc: "Locale-aware segmented input with spinbutton semantics — no popover required.",
-    demo: <HighlightDateField />,
   },
   {
     slug: "select",
     title: "Select",
     desc: "Combobox + listbox with dialog-safe defaults — inline Content, Escape interop, HiddenSelect for forms.",
     demo: <HighlightSelect />,
+    soon: true,
   },
   {
     slug: "combobox",
     title: "Combobox",
     desc: "Type-to-filter with aria-activedescendant navigation, Empty state, and inline floating Content.",
     demo: <HighlightCombobox />,
+    soon: true,
   },
 ];
 
@@ -178,7 +134,7 @@ export function HomeHighlights() {
           </h2>
         </div>
         <Link
-          href="/docs/calendar"
+          href="/docs/date-picker"
           className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-500"
         >
           View all docs
@@ -191,24 +147,41 @@ export function HomeHighlights() {
           {HIGHLIGHTS.map((h) => (
             <article
               key={h.slug}
-              className="isolate flex w-[min(100%,320px)] shrink-0 snap-start flex-col transition-transform duration-200 ease-[var(--ease-smooth)] hover:-translate-y-0.5 motion-reduce:transition-none sm:w-[280px]"
+              aria-disabled={h.soon || undefined}
+              className={cn(
+                "isolate flex w-[min(100%,320px)] shrink-0 snap-start flex-col transition-transform duration-200 ease-[var(--ease-smooth)] motion-reduce:transition-none sm:w-[280px]",
+                h.soon ? "pointer-events-none opacity-50 saturate-50" : "hover:-translate-y-0.5",
+              )}
             >
               <div className="overflow-hidden rounded-t-xl border border-b-0 border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800">
                 {h.demo}
               </div>
               <div className="flex flex-1 flex-col rounded-b-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-5">
-                <h3 className="mb-1 text-[17px] font-[650] tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
-                  {h.title}
-                </h3>
+                <div className="mb-1 flex items-center gap-2">
+                  <h3 className="text-[17px] font-[650] tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">
+                    {h.title}
+                  </h3>
+                  {h.soon && (
+                    <Badge variant="secondary" className="h-5 px-2 text-[10px]">
+                      Soon
+                    </Badge>
+                  )}
+                </div>
                 <p className="mb-4 flex-1 text-[13.5px] leading-normal text-zinc-500 dark:text-zinc-400">
                   {h.desc}
                 </p>
-                <Link
-                  href={`/docs/${h.slug}`}
-                  className="text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-500"
-                >
-                  Documentation →
-                </Link>
+                {h.soon ? (
+                  <span className="text-[13px] font-semibold text-zinc-400 dark:text-zinc-500">
+                    Documentation coming soon
+                  </span>
+                ) : (
+                  <Link
+                    href={`/docs/${h.slug}`}
+                    className="text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-500"
+                  >
+                    Documentation →
+                  </Link>
+                )}
               </div>
             </article>
           ))}
@@ -238,7 +211,7 @@ export function HomeQualities() {
           Date components are easy to get wrong. Kenos handles semantics, keyboard support, and
           locale rules so your team can focus on visual design.{" "}
           <Link
-            href="/docs/accessibility"
+            href="/docs/date-picker#accessibility"
             className="font-semibold text-zinc-900 dark:text-zinc-100 underline-offset-2 hover:underline"
           >
             Accessibility guide →

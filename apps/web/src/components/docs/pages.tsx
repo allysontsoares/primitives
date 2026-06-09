@@ -1,25 +1,25 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { COMPONENTS, API, type DemoKind } from "../../lib/docs-data";
+import { type ReactNode, useState } from "react";
+import { API, COMPONENTS, type DemoKind } from "../../lib/docs-data";
 import { EXAMPLE_SNIPPETS } from "../../lib/example-snippets";
-import { CodeBlock } from "./code-block";
-import { DocsHeroCard } from "./hero-card";
-import { HomeCtaBand, HomeHighlights, HomeQualities, HomeWhySection } from "./home-highlights";
 import { ActionRow, Anatomy, ApiReference, CopyPage, DemoStage, Example, PageNav } from "./blocks";
+import { CodeBlock } from "./code-block";
 import {
-  DateField,
-  InlineCalendar,
-  DatePicker,
-  DateRangePicker,
-  LiveDemo,
   ComboboxDialogDemo,
   ComboboxFilterDemo,
+  DateField,
+  DatePicker,
+  DateRangePicker,
+  InlineCalendar,
+  LiveDemo,
   SelectDialogDemo,
   SelectFormDemo,
   SelectMultipleDemo,
   SelectPortalDemo,
 } from "./demos";
+import { DocsHeroCard } from "./hero-card";
+import { HomeCtaBand, HomeHighlights, HomeQualities, HomeWhySection } from "./home-highlights";
 
 /* ---------------- shared typography ---------------- */
 export const PageIntro = ({ children }: { children: ReactNode }) => (
@@ -79,7 +79,7 @@ const P = ({ children }: { children: ReactNode }) => (
 
 const localeOpts: [string, string][] = [
   ["en-US", "English (US)"],
-  ["en-GB", "English (UK)"],
+  // ["en-GB", "English (UK)"],
   ["fr-FR", "Français"],
   ["ja-JP", "日本語"],
   ["de-DE", "Deutsch"],
@@ -397,12 +397,12 @@ export function Overview() {
 
 /* re-exports for guide pages */
 export {
-  InlineCode,
-  P,
-  DemoStage,
   CodeBlock,
   DateField,
-  InlineCalendar,
   DatePicker,
   DateRangePicker,
+  DemoStage,
+  InlineCalendar,
+  InlineCode,
+  P,
 };

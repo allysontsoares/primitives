@@ -1,3 +1,5 @@
+import { KENOS_MARK_PATHS } from "@/lib/kenos-mark-paths";
+
 type KenosMarkProps = {
   className?: string;
   size?: number;
@@ -15,20 +17,15 @@ export function KenosMark({ className, size = 24, strokeWidth = 2.5 }: KenosMark
       className={className}
       aria-hidden
     >
-      <path d="M4 10V4h6" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="square" />
-      <path d="M14 4h6v6" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="square" />
-      <path
-        d="M20 14v6h-6"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinecap="square"
-      />
-      <path
-        d="M10 20H4v-6"
-        stroke="currentColor"
-        strokeWidth={strokeWidth}
-        strokeLinecap="square"
-      />
+      {KENOS_MARK_PATHS.map((d) => (
+        <path
+          key={d}
+          d={d}
+          stroke="currentColor"
+          strokeWidth={strokeWidth}
+          strokeLinecap="square"
+        />
+      ))}
     </svg>
   );
 }

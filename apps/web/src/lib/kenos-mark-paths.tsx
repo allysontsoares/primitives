@@ -6,7 +6,8 @@ export const KENOS_MUTED = "#a1a1aa";
 export const KENOS_BORDER = "rgba(255, 255, 255, 0.08)";
 export const KENOS_GRID = "rgba(255, 255, 255, 0.06)";
 
-export const KENOS_MARK_PATHS = ["M4 10V4h6", "M14 4h6v6", "M20 14v6h-6", "M10 20H4v-6"] as const;
+/** Four open corners — generous center gap (cross negative space) */
+export const KENOS_MARK_PATHS = ["M3 9V3h5", "M16 3h5v5", "M21 16v5h-5", "M8 21H3v-5"] as const;
 
 type KenosMarkSvgProps = {
   size: number;

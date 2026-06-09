@@ -13,15 +13,9 @@ const FOOTER_LINKS = {
     { label: "Changelog", href: "/docs/changelog" },
   ],
   Primitives: [
-    { label: "Calendar", href: "/docs/calendar" },
     { label: "Date Picker", href: "/docs/date-picker" },
-    { label: "Range Picker", href: "/docs/date-range-picker" },
-    { label: "Date Field", href: "/docs/date-field" },
-  ],
-  Guides: [
-    { label: "Localization", href: "/docs/localization" },
-    { label: "Accessibility", href: "/docs/accessibility" },
-    { label: "Styling", href: "/docs/styling" },
+    { label: "Select", href: "/docs/select" },
+    { label: "Combobox", href: "/docs/combobox" },
   ],
   Links: [
     { label: "GitHub", href: "https://github.com/allysontsoares/kenos-ui" },

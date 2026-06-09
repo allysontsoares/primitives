@@ -22,35 +22,6 @@ const COMPONENTS = [
 </DatePicker.Root>`,
   },
   {
-    name: "Date Range",
-    slug: "date-range-picker",
-    tag: "range",
-    description:
-      "Dual-endpoint selection with live hover preview, optional presets, and in-range styling hooks for your design system.",
-    accent: "#a1a1aa",
-    art: "/streak-purple.png",
-    code: `<DatePicker.Root mode="range" onValueChange={setRange}>
-  <DatePicker.Input index={0} />
-  <DatePicker.Input index={1} />
-  <DatePicker.Content>
-    <DatePicker.Calendar />
-  </DatePicker.Content>
-</DatePicker.Root>`,
-  },
-  {
-    name: "Date Field",
-    slug: "date-field",
-    tag: "segmented",
-    description:
-      "Spinbutton segments for day, month, and year — no calendar required. Ideal for birth dates and compact forms.",
-    accent: "#d4d4d8",
-    art: "/streak-green.png",
-    code: `<DatePicker.Root>
-  <DatePicker.Label>Date of birth</DatePicker.Label>
-  <DatePicker.Input />
-</DatePicker.Root>`,
-  },
-  {
     name: "Select",
     slug: "select",
     tag: "listbox",
@@ -109,11 +80,10 @@ export function LandingComponentShowcase() {
         <div className="border-b border-white/[0.07] px-6 py-12">
           <p className="kenos-landing-label mb-4">{"// 02 — primitives"}</p>
           <h2 className="max-w-2xl text-balance text-3xl font-bold leading-tight md:text-4xl">
-            Six primitives. One coherent system.
+            Three primitives. One coherent system.
           </h2>
           <p className="mt-4 max-w-xl text-pretty leading-relaxed text-zinc-500">
-            Calendar, Date Picker, Range Picker, Date Field, Select, and Combobox — each documented,
-            typed, and ready for your CSS.
+            Date Picker, Select, and Combobox — each documented, typed, and ready for your CSS.
           </p>
         </div>
 
@@ -188,9 +158,9 @@ export function LandingComponentShowcase() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.07] px-6 py-8">
-          <p className="font-mono text-xs text-zinc-500">{"// calendar + guides in docs"}</p>
+          <p className="font-mono text-xs text-zinc-500">{"// full docs"}</p>
           <Link
-            href="/docs/calendar"
+            href="/docs/date-picker"
             className="inline-flex items-center gap-2 rounded-md border border-white/[0.07] px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:border-zinc-100/30 hover:bg-zinc-900"
           >
             View all primitives

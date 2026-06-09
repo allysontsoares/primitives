@@ -1,5 +1,26 @@
 /** JSX + styling snippets shown alongside live demos (Radix-style approach tabs). */
 
+import {
+  DP_CAL_SHORTHAND_CSS,
+  DP_CAL_SHORTHAND_POPOVER_CLS,
+  DP_CONTROL_ROW_CLS,
+  DP_DATE_FIELD_INPUT_CLS,
+  DP_DATE_FIELD_WRAP_CLS,
+  DP_DAY_CLS,
+  DP_DAY_CSS,
+  DP_FIELD_CSS,
+  DP_HEAD_NAV_CLS,
+  DP_HEAD_TITLE_CLS,
+  DP_LABEL_CLS,
+  DP_PANDA_DATE_FIELD_INPUT,
+  DP_PANDA_FIELD_BLOCK,
+  DP_PICKER_INPUT_CLS,
+  DP_POPOVER_SHELL_CLS,
+  DP_POPOVER_SHELL_CSS,
+  DP_TRIGGER_CLS,
+  DP_WEEKDAY_CLS,
+} from "@/components/ui/date-picker.variants";
+
 export type ExampleSnippets = {
   unstyled: string;
   css: string;
@@ -205,7 +226,7 @@ import "./styles.css";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-zinc-100 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
+                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 aria-selected:bg-zinc-800 aria-selected:text-white aria-selected:font-semibold data-[today]:font-bold data-[outside-month]:text-zinc-500"
                 />
               ))}
             </tr>
@@ -284,6 +305,130 @@ const day = css({
   },
 
   "date-picker": {
+    unstyled: `import { useState } from "react";
+import { DatePicker } from "@kenos-ui/react-datepicker";
+
+function App() {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker.Root value={date} onValueChange={setDate}>
+      <DatePicker.Label>Pick a date</DatePicker.Label>
+      <div>
+        <DatePicker.Input />
+        <DatePicker.Trigger>📅</DatePicker.Trigger>
+      </div>
+      <DatePicker.Content>
+        <DatePicker.Calendar />
+      </DatePicker.Content>
+    </DatePicker.Root>
+  );
+}`,
+
+    css: `/* styles.css */
+${DP_FIELD_CSS}
+
+${DP_CAL_SHORTHAND_CSS}
+
+/* App.tsx */
+import { useState } from "react";
+import { DatePicker } from "@kenos-ui/react-datepicker";
+import "./styles.css";
+
+function App() {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker.Root value={date} onValueChange={setDate}>
+      <div className="dp-field">
+        <DatePicker.Label className="dp-label">Pick a date</DatePicker.Label>
+        <div className="dp-control">
+          <DatePicker.Input className="dp-input" />
+          <DatePicker.Trigger className="dp-trigger">📅</DatePicker.Trigger>
+        </div>
+        <DatePicker.Content className="dp-popover">
+          <DatePicker.Calendar />
+        </DatePicker.Content>
+      </div>
+    </DatePicker.Root>
+  );
+}`,
+
+    tailwind: `import { useState } from "react";
+import { DatePicker } from "@kenos-ui/react-datepicker";
+
+function App() {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker.Root value={date} onValueChange={setDate}>
+      <div className="flex flex-col gap-2 w-[260px]">
+        <DatePicker.Label className="${DP_LABEL_CLS}">Pick a date</DatePicker.Label>
+        <div className="${DP_CONTROL_ROW_CLS}">
+          <DatePicker.Input className="${DP_PICKER_INPUT_CLS}" />
+          <DatePicker.Trigger className="${DP_TRIGGER_CLS}">📅</DatePicker.Trigger>
+        </div>
+        <DatePicker.Content className="${DP_CAL_SHORTHAND_POPOVER_CLS}">
+          <DatePicker.Calendar />
+        </DatePicker.Content>
+      </div>
+    </DatePicker.Root>
+  );
+}`,
+
+    panda: `import { useState } from "react";
+import { DatePicker } from "@kenos-ui/react-datepicker";
+import { css } from "styled-system/css";
+
+${DP_PANDA_FIELD_BLOCK}
+
+const popover = css({
+  width: "280px",
+  minWidth: "280px",
+  borderRadius: "14px",
+  borderWidth: "1px",
+  borderColor: { base: "rgba(228, 228, 231, 0.9)", _dark: "zinc.700" },
+  backgroundColor: { base: "zinc.50", _dark: "zinc.900" },
+  padding: "14px",
+  "& [role=group]": { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" },
+  "& table": { width: "100%", tableLayout: "fixed", borderCollapse: "collapse" },
+  "& td, & th": { padding: 0, textAlign: "center", verticalAlign: "middle" },
+  "& [role=gridcell]": {
+    width: "36px",
+    height: "36px",
+    lineHeight: "36px",
+    borderRadius: "8px",
+    fontSize: "14px",
+    color: { base: "zinc.800", _dark: "zinc.100" },
+    "&[data-selected]": {
+      backgroundColor: { base: "zinc.800", _dark: "zinc.200" },
+      color: { base: "white", _dark: "zinc.900" },
+      fontWeight: "semibold",
+    },
+  },
+});
+
+function App() {
+  const [date, setDate] = useState<Date | null>(null);
+
+  return (
+    <DatePicker.Root value={date} onValueChange={setDate}>
+      <div className={css({ display: "flex", flexDirection: "column", gap: "8px", width: "260px" })}>
+        <DatePicker.Label className={label}>Pick a date</DatePicker.Label>
+        <div className={css({ display: "flex", alignItems: "center", gap: "8px" })}>
+          <DatePicker.Input className={input} />
+          <DatePicker.Trigger className={trigger}>📅</DatePicker.Trigger>
+        </div>
+        <DatePicker.Content className={popover}>
+          <DatePicker.Calendar />
+        </DatePicker.Content>
+      </div>
+    </DatePicker.Root>
+  );
+}`,
+  },
+
+  "date-picker-composition": {
     unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
@@ -293,191 +438,167 @@ const day = css({
     <DatePicker.Trigger>📅</DatePicker.Trigger>
   </div>
   <DatePicker.Content>
-    <DatePicker.Calendar />
+    <DatePicker.ViewControl>
+      <DatePicker.PrevTrigger>‹</DatePicker.PrevTrigger>
+      <DatePicker.ViewTrigger />
+      <DatePicker.NextTrigger>›</DatePicker.NextTrigger>
+    </DatePicker.ViewControl>
+    <DatePicker.View view="day">
+      <DatePicker.Grid header={<DatePicker.WeekDays />}>
+        {({ weeks }) =>
+          weeks.map((week, wi) => (
+            <tr key={wi}>
+              {week.map((day, di) => (
+                <DatePicker.Day key={di} date={day} />
+              ))}
+            </tr>
+          ))
+        }
+      </DatePicker.Grid>
+    </DatePicker.View>
   </DatePicker.Content>
 </DatePicker.Root>`,
 
     css: `/* styles.css */
-${fieldCss}
+${DP_FIELD_CSS}
 
-${pickerExtraCss}
+${DP_POPOVER_SHELL_CSS}
 
-${calDayCss}
+${DP_DAY_CSS}
 
 /* index.tsx */
 import { DatePicker } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
-  <DatePicker.Label className="field-label">Pick a date</DatePicker.Label>
-  <div style={{ display: "flex", gap: 8 }}>
-    <DatePicker.Input className="field-input" />
-    <DatePicker.Trigger className="picker-trigger">📅</DatePicker.Trigger>
+  <div className="dp-field">
+    <DatePicker.Label className="dp-label">Pick a date</DatePicker.Label>
+    <div className="dp-control">
+      <DatePicker.Input className="dp-input" />
+      <DatePicker.Trigger className="dp-trigger">📅</DatePicker.Trigger>
+    </div>
+    <DatePicker.Content className="dp-popover">
+      <DatePicker.ViewControl>
+        <DatePicker.PrevTrigger>‹</DatePicker.PrevTrigger>
+        <DatePicker.ViewTrigger />
+        <DatePicker.NextTrigger>›</DatePicker.NextTrigger>
+      </DatePicker.ViewControl>
+      <DatePicker.View view="day">
+        <DatePicker.Grid header={<DatePicker.WeekDays />}>
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((day, di) => (
+                  <DatePicker.Day key={di} date={day} className="dp-day" />
+                ))}
+              </tr>
+            ))
+          }
+        </DatePicker.Grid>
+      </DatePicker.View>
+    </DatePicker.Content>
   </div>
-  <DatePicker.Content className="popover">
-    <DatePicker.ViewControl className="flex items-center justify-between mb-2.5">
-      <DatePicker.PrevTrigger className="grid place-items-center w-8 h-8 rounded-lg text-zinc-400 hover:bg-white/5">‹</DatePicker.PrevTrigger>
-      <DatePicker.ViewTrigger className="text-sm font-semibold px-2.5 py-1 rounded-lg text-zinc-100 hover:bg-white/5" />
-      <DatePicker.NextTrigger className="grid place-items-center w-8 h-8 rounded-lg text-zinc-400 hover:bg-white/5">›</DatePicker.NextTrigger>
-    </DatePicker.ViewControl>
-
-    <DatePicker.View view="day">
-      <DatePicker.Grid className="w-full" header={<DatePicker.WeekDays className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wide" />}>
-        {({ weeks }) =>
-          weeks.map((week, wi) => (
-            <tr key={wi}>
-              {week.map((day, di) => (
-                <DatePicker.Day key={di} date={day} className="cal-day" />
-              ))}
-            </tr>
-          ))
-        }
-      </DatePicker.Grid>
-    </DatePicker.View>
-  </DatePicker.Content>
 </DatePicker.Root>`,
 
     tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
-  <DatePicker.Label className="text-[13px] font-semibold text-zinc-100">Pick a date</DatePicker.Label>
-  <div className="mt-1.5 flex gap-2">
-    <DatePicker.Input className="h-[42px] flex-1 rounded-[10px] border border-white/15 bg-black px-3 font-mono text-sm text-zinc-100 outline-none focus:border-zinc-100 focus:ring-[3px] focus:ring-zinc-100/20" />
-    <DatePicker.Trigger className="grid size-[42px] shrink-0 place-items-center rounded-[10px] border border-white/15 bg-black text-zinc-400 transition-colors hover:border-zinc-100 hover:bg-zinc-100/10 hover:text-zinc-100 aria-expanded:border-zinc-100 aria-expanded:bg-zinc-100/10 aria-expanded:text-zinc-100">
-      📅
-    </DatePicker.Trigger>
+  <div className="flex flex-col gap-2 w-[260px]">
+    <DatePicker.Label className="${DP_LABEL_CLS}">Pick a date</DatePicker.Label>
+    <div className="${DP_CONTROL_ROW_CLS}">
+      <DatePicker.Input className="${DP_PICKER_INPUT_CLS}" />
+      <DatePicker.Trigger className="${DP_TRIGGER_CLS}">📅</DatePicker.Trigger>
+    </div>
+    <DatePicker.Content className="${DP_POPOVER_SHELL_CLS}">
+      <div className="flex items-center justify-between mb-2.5">
+        <DatePicker.PrevTrigger className="${DP_HEAD_NAV_CLS}">‹</DatePicker.PrevTrigger>
+        <DatePicker.ViewTrigger className="${DP_HEAD_TITLE_CLS}" />
+        <DatePicker.NextTrigger className="${DP_HEAD_NAV_CLS}">›</DatePicker.NextTrigger>
+      </div>
+      <DatePicker.View view="day">
+        <DatePicker.Grid
+          className="w-full border-collapse table-fixed"
+          header={<DatePicker.WeekDays className="${DP_WEEKDAY_CLS}" />}
+        >
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((day, di) => (
+                  <DatePicker.Day key={di} date={day} className="${DP_DAY_CLS}" />
+                ))}
+              </tr>
+            ))
+          }
+        </DatePicker.Grid>
+      </DatePicker.View>
+    </DatePicker.Content>
   </div>
-  <DatePicker.Content className="rounded-[14px] border border-white/15 bg-zinc-900 p-3.5 shadow-[0_18px_48px_rgba(0,0,0,0.7)]">
-    <DatePicker.ViewControl className="flex items-center justify-between mb-2.5">
-      <DatePicker.PrevTrigger className="grid place-items-center w-[30px] h-[30px] rounded-lg text-zinc-400 hover:bg-white/5">‹</DatePicker.PrevTrigger>
-      <DatePicker.ViewTrigger className="text-sm font-semibold px-2.5 py-1 rounded-lg text-zinc-100 hover:bg-white/5" />
-      <DatePicker.NextTrigger className="grid place-items-center w-[30px] h-[30px] rounded-lg text-zinc-400 hover:bg-white/5">›</DatePicker.NextTrigger>
-    </DatePicker.ViewControl>
-
-    <DatePicker.View view="day">
-      <DatePicker.Grid
-        className="w-full border-collapse"
-        header={<DatePicker.WeekDays className="text-[11px] font-semibold text-zinc-400 py-1.5 text-center uppercase tracking-wide" />}
-      >
-        {({ weeks }) =>
-          weeks.map((week, wi) => (
-            <tr key={wi}>
-              {week.map((day, di) => (
-                <DatePicker.Day
-                  key={di}
-                  date={day}
-                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[selected]:bg-zinc-100 data-[selected]:text-white data-[today]:font-bold data-[outside-month]:text-zinc-500"
-                />
-              ))}
-            </tr>
-          ))
-        }
-      </DatePicker.Grid>
-    </DatePicker.View>
-  </DatePicker.Content>
 </DatePicker.Root>`,
 
     panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
-const label = css({ fontSize: "13px", fontWeight: "semibold", color: "orange.500" });
-const input = css({
-  flex: 1,
-  height: "42px",
-  paddingX: "12px",
-  borderRadius: "10px",
-  borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.15)",
-  backgroundColor: "black",
-  color: "gray.100",
-  fontFamily: "mono",
-  fontSize: "14px",
-  _focus: {
-    borderColor: "orange.500",
-    boxShadow: "0 0 0 3px rgba(255, 91, 41, 0.2)",
-    outline: "none",
-  },
-});
-const trigger = css({
-  display: "grid",
-  placeItems: "center",
-  width: "42px",
-  height: "42px",
-  flexShrink: 0,
-  borderRadius: "10px",
-  borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.15)",
-  backgroundColor: "black",
-  color: "gray.400",
-  _hover: { borderColor: "orange.500", backgroundColor: "rgba(255, 91, 41, 0.1)", color: "orange.500" },
-});
+${DP_PANDA_FIELD_BLOCK}
+
 const popover = css({
+  width: "280px",
+  minWidth: "280px",
   borderRadius: "14px",
   borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.15)",
-  backgroundColor: "gray.900",
+  borderColor: { base: "rgba(228, 228, 231, 0.9)", _dark: "zinc.700" },
+  backgroundColor: { base: "zinc.50", _dark: "zinc.900" },
   padding: "14px",
-  boxShadow: "0 18px 48px rgba(0, 0, 0, 0.7)",
-});
-
-const navBtn = css({
-  display: "grid",
-  placeItems: "center",
-  width: "32px",
-  height: "32px",
-  borderRadius: "8px",
-  color: "gray.400",
-  _hover: { backgroundColor: "rgba(255, 255, 255, 0.05)", color: "gray.100" },
+  boxShadow: "0 10px 24px rgba(24, 24, 27, 0.08)",
 });
 
 const day = css({
   position: "relative",
   display: "grid",
   placeItems: "center",
-  width: "34px",
-  height: "34px",
+  width: "36px",
+  height: "36px",
+  margin: "0 auto",
   borderRadius: "8px",
-  fontSize: "13.5px",
-  color: "gray.100",
+  fontSize: "14px",
+  fontWeight: "medium",
+  color: { base: "zinc.800", _dark: "zinc.100" },
   fontVariantNumeric: "tabular-nums",
-  _hover: { backgroundColor: "rgba(255, 255, 255, 0.05)" },
-  "&[data-selected]": {
-    backgroundColor: "orange.500",
-    color: "white",
+  _hover: { backgroundColor: { base: "zinc.200", _dark: "zinc.700" } },
+  "&[aria-selected=true], &[data-selected]": {
+    backgroundColor: { base: "zinc.800", _dark: "zinc.200" },
+    color: { base: "white", _dark: "zinc.900" },
     fontWeight: "semibold",
   },
-  "&[data-outside-month]": { color: "gray.600" },
-  "&[data-disabled]": { opacity: 0.4, pointerEvents: "none" },
 });
 
 <DatePicker.Root locale="en-US" onValueChange={setValue}>
-  <DatePicker.Label className={label}>Pick a date</DatePicker.Label>
-  <div className={css({ display: "flex", gap: "8px", marginTop: "6px" })}>
-    <DatePicker.Input className={input} />
-    <DatePicker.Trigger className={trigger}>📅</DatePicker.Trigger>
+  <div className={css({ display: "flex", flexDirection: "column", gap: "8px", width: "260px" })}>
+    <DatePicker.Label className={label}>Pick a date</DatePicker.Label>
+    <div className={css({ display: "flex", alignItems: "center", gap: "8px" })}>
+      <DatePicker.Input className={input} />
+      <DatePicker.Trigger className={trigger}>📅</DatePicker.Trigger>
+    </div>
+    <DatePicker.Content className={popover}>
+      <DatePicker.ViewControl className={css({ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" })}>
+        <DatePicker.PrevTrigger>‹</DatePicker.PrevTrigger>
+        <DatePicker.ViewTrigger />
+        <DatePicker.NextTrigger>›</DatePicker.NextTrigger>
+      </DatePicker.ViewControl>
+      <DatePicker.View view="day">
+        <DatePicker.Grid header={<DatePicker.WeekDays />}>
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((dayDate, di) => (
+                  <DatePicker.Day key={di} date={dayDate} className={day} />
+                ))}
+              </tr>
+            ))
+          }
+        </DatePicker.Grid>
+      </DatePicker.View>
+    </DatePicker.Content>
   </div>
-  <DatePicker.Content className={popover}>
-    <DatePicker.ViewControl
-      className={css({ marginBottom: "12px", display: "flex", alignItems: "center", justifyContent: "space-between" })}
-    >
-      <DatePicker.PrevTrigger className={navBtn}>‹</DatePicker.PrevTrigger>
-      <DatePicker.ViewTrigger className={css({ fontSize: "14px", fontWeight: "semibold", color: "gray.100" })} />
-      <DatePicker.NextTrigger className={navBtn}>›</DatePicker.NextTrigger>
-    </DatePicker.ViewControl>
-    <DatePicker.View view="day">
-      <DatePicker.Grid className={css({ width: "100%", borderCollapse: "collapse" })} header={<DatePicker.WeekDays className={css({ fontSize: "11px", fontWeight: "semibold", color: "gray.400" })} />}>
-        {({ weeks }) =>
-          weeks.map((week, wi) => (
-            <tr key={wi}>
-              {week.map((dayDate, di) => (
-                <DatePicker.Day key={di} date={dayDate} className={day} />
-              ))}
-            </tr>
-          ))
-        }
-      </DatePicker.Grid>
-    </DatePicker.View>
-  </DatePicker.Content>
 </DatePicker.Root>`,
   },
 
@@ -576,7 +697,7 @@ import type { DateRange } from "@kenos-ui/react-datepicker";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-zinc-100/10 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[selected]:bg-zinc-100 data-[selected]:text-white"
+                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-zinc-100/10 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:bg-zinc-800 data-[range-end]:bg-zinc-800 data-[range-start]:text-white data-[range-end]:text-white"
                 />
               ))}
             </tr>
@@ -672,54 +793,202 @@ const day = css({
 </DatePicker.Root>`,
 
     css: `/* styles.css */
-${fieldCss}
+${DP_FIELD_CSS}
 
 /* index.tsx */
 import { DatePicker } from "@kenos-ui/react-datepicker";
 import "./styles.css";
 
 <DatePicker.Root locale="en-GB">
-  <DatePicker.Label className="field-label">Date of birth</DatePicker.Label>
-  <DatePicker.Input className="dp-input" />
+  <div className="dp-date-field-wrap">
+    <DatePicker.Label className="dp-label">Date of birth</DatePicker.Label>
+    <DatePicker.Input className="dp-date-field" />
+  </div>
 </DatePicker.Root>`,
 
     tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
 <DatePicker.Root locale="en-GB">
-  <DatePicker.Label className="text-[13px] font-semibold text-zinc-100">Date of birth</DatePicker.Label>
-  <DatePicker.Input
-    className="inline-flex items-center gap-0.5 rounded border border-white/15 bg-black px-3 py-2 font-mono text-sm text-zinc-100 focus-within:border-zinc-100 focus-within:ring-[3px] focus-within:ring-zinc-100/20 [&_[role=spinbutton]]:rounded [&_[role=spinbutton]]:px-0.5 [&_[role=spinbutton]]:outline-none [&_[role=spinbutton]:focus]:bg-zinc-800/60 [&_[role=spinbutton]:focus]:text-zinc-200 [&_[data-placeholder]]:text-zinc-500 [&_[data-separator]]:text-zinc-500"
-  />
+  <div className="${DP_DATE_FIELD_WRAP_CLS}">
+    <DatePicker.Label className="${DP_LABEL_CLS}">Date of birth</DatePicker.Label>
+    <DatePicker.Input className="${DP_DATE_FIELD_INPUT_CLS}" />
+  </div>
 </DatePicker.Root>`,
 
     panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
 import { css } from "styled-system/css";
 
-const label = css({ fontSize: "13px", fontWeight: "semibold", color: "orange.500" });
-const input = css({
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "2px",
-  borderRadius: "6px",
-  borderWidth: "1px",
-  borderColor: "rgba(255, 255, 255, 0.15)",
-  backgroundColor: "black",
-  paddingX: "12px",
-  paddingY: "8px",
-  fontFamily: "mono",
-  fontSize: "14px",
-  color: "gray.100",
-  _focusWithin: {
-    borderColor: "orange.500",
-    boxShadow: "0 0 0 3px rgba(255, 91, 41, 0.2)",
-  },
-  "& [data-placeholder]": { color: "gray.500" },
-  "& [data-separator]": { color: "gray.500" },
-});
+const label = css({ fontSize: "13px", fontWeight: "semibold", color: { base: "zinc.200", _dark: "zinc.300" } });
+${DP_PANDA_DATE_FIELD_INPUT}
 
 <DatePicker.Root locale="en-GB">
-  <DatePicker.Label className={label}>Date of birth</DatePicker.Label>
-  <DatePicker.Input className={input} />
+  <div className={css({ display: "flex", flexDirection: "column", gap: "8px", width: "fit-content" })}>
+    <DatePicker.Label className={label}>Date of birth</DatePicker.Label>
+    <DatePicker.Input className={dateField} />
+  </div>
+</DatePicker.Root>`,
+  },
+
+  "date-picker-field": {
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
+
+<DatePicker.Root locale="en-GB">
+  <DatePicker.Label>Date of birth</DatePicker.Label>
+  <DatePicker.Input />
+</DatePicker.Root>`,
+
+    css: `/* styles.css */
+${DP_FIELD_CSS}
+
+/* index.tsx */
+import { DatePicker } from "@kenos-ui/react-datepicker";
+import "./styles.css";
+
+<DatePicker.Root locale="en-GB">
+  <div className="dp-date-field-wrap">
+    <DatePicker.Label className="dp-label">Date of birth</DatePicker.Label>
+    <DatePicker.Input className="dp-date-field" />
+  </div>
+</DatePicker.Root>`,
+
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
+
+<DatePicker.Root locale="en-GB">
+  <div className="${DP_DATE_FIELD_WRAP_CLS}">
+    <DatePicker.Label className="${DP_LABEL_CLS}">Date of birth</DatePicker.Label>
+    <DatePicker.Input className="${DP_DATE_FIELD_INPUT_CLS}" />
+  </div>
+</DatePicker.Root>`,
+
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
+import { css } from "styled-system/css";
+
+const label = css({ fontSize: "13px", fontWeight: "semibold", color: { base: "zinc.200", _dark: "zinc.300" } });
+${DP_PANDA_DATE_FIELD_INPUT}
+
+<DatePicker.Root locale="en-GB">
+  <div className={css({ display: "flex", flexDirection: "column", gap: "8px", width: "fit-content" })}>
+    <DatePicker.Label className={label}>Date of birth</DatePicker.Label>
+    <DatePicker.Input className={dateField} />
+  </div>
+</DatePicker.Root>`,
+  },
+
+  "date-picker-inline": {
+    unstyled: `import { DatePicker } from "@kenos-ui/react-datepicker";
+
+<DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
+  <DatePicker.Calendar />
+</DatePicker.Root>`,
+
+    tailwind: `import { DatePicker } from "@kenos-ui/react-datepicker";
+
+<DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
+  <div className="${DP_POPOVER_SHELL_CLS}">
+    <div className="flex items-center justify-between mb-2.5">
+      <DatePicker.PrevTrigger className="${DP_HEAD_NAV_CLS}">‹</DatePicker.PrevTrigger>
+      <DatePicker.ViewTrigger className="${DP_HEAD_TITLE_CLS}" />
+      <DatePicker.NextTrigger className="${DP_HEAD_NAV_CLS}">›</DatePicker.NextTrigger>
+    </div>
+    <DatePicker.View view="day">
+      <DatePicker.Grid
+        className="w-full border-collapse table-fixed"
+        header={<DatePicker.WeekDays className="${DP_WEEKDAY_CLS}" />}
+      >
+        {({ weeks }) =>
+          weeks.map((week, wi) => (
+            <tr key={wi}>
+              {week.map((day, di) => (
+                <DatePicker.Day key={di} date={day} className="${DP_DAY_CLS}" />
+              ))}
+            </tr>
+          ))
+        }
+      </DatePicker.Grid>
+    </DatePicker.View>
+  </div>
+</DatePicker.Root>`,
+
+    css: `/* styles.css */
+${DP_POPOVER_SHELL_CSS}
+${DP_DAY_CSS}
+
+/* index.tsx */
+import { DatePicker } from "@kenos-ui/react-datepicker";
+import "./styles.css";
+
+<DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
+  <div className="dp-popover">
+    <DatePicker.ViewControl>
+      <DatePicker.PrevTrigger>‹</DatePicker.PrevTrigger>
+      <DatePicker.ViewTrigger />
+      <DatePicker.NextTrigger>›</DatePicker.NextTrigger>
+    </DatePicker.ViewControl>
+    <DatePicker.View view="day">
+      <DatePicker.Grid header={<DatePicker.WeekDays />}>
+        {({ weeks }) =>
+          weeks.map((week, wi) => (
+            <tr key={wi}>
+              {week.map((day, di) => (
+                <DatePicker.Day key={di} date={day} className="dp-day" />
+              ))}
+            </tr>
+          ))
+        }
+      </DatePicker.Grid>
+    </DatePicker.View>
+  </div>
+</DatePicker.Root>`,
+
+    panda: `import { DatePicker } from "@kenos-ui/react-datepicker";
+import { css } from "styled-system/css";
+
+const shell = css({
+  width: "280px",
+  borderRadius: "14px",
+  borderWidth: "1px",
+  borderColor: { base: "rgba(228, 228, 231, 0.9)", _dark: "zinc.700" },
+  backgroundColor: { base: "zinc.50", _dark: "zinc.900" },
+  padding: "14px",
+});
+
+const day = css({
+  display: "grid",
+  placeItems: "center",
+  width: "36px",
+  height: "36px",
+  margin: "0 auto",
+  borderRadius: "8px",
+  fontSize: "14px",
+  color: { base: "zinc.800", _dark: "zinc.100" },
+  "&[aria-selected=true], &[data-selected]": {
+    backgroundColor: { base: "zinc.800", _dark: "zinc.200" },
+    color: { base: "white", _dark: "zinc.900" },
+    fontWeight: "semibold",
+  },
+});
+
+<DatePicker.Root locale="en-US" value={value} onValueChange={setValue}>
+  <div className={shell}>
+    <DatePicker.ViewControl className={css({ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" })}>
+      <DatePicker.PrevTrigger>‹</DatePicker.PrevTrigger>
+      <DatePicker.ViewTrigger />
+      <DatePicker.NextTrigger>›</DatePicker.NextTrigger>
+    </DatePicker.ViewControl>
+    <DatePicker.View view="day">
+      <DatePicker.Grid header={<DatePicker.WeekDays />}>
+        {({ weeks }) =>
+          weeks.map((week, wi) => (
+            <tr key={wi}>
+              {week.map((dayDate, di) => (
+                <DatePicker.Day key={di} date={dayDate} className={day} />
+              ))}
+            </tr>
+          ))
+        }
+      </DatePicker.Grid>
+    </DatePicker.View>
+  </div>
 </DatePicker.Root>`,
   },
 

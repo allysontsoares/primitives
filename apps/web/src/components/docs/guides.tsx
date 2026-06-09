@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { CodeBlock } from "./code-block";
 import { DocsProse, docsTableClass } from "./docs-prose";
 import { Eyebrow, PageIntro, PageTitle, Lead, H2, InlineCode, P } from "./pages";
 import { DemoStage } from "./blocks";
-import { DateField, InlineCalendar, DatePicker } from "./demos";
+import { DatePicker } from "./demos";
 
 const Callout = ({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) => (
   <div className="my-5 flex gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 px-[18px] py-4 text-sm text-zinc-500 dark:text-zinc-400">
@@ -74,10 +73,10 @@ export function Installation() {
         <strong className="font-semibold text-zinc-900 dark:text-zinc-100">zero CSS</strong>.
         Nothing renders styled out of the box — you attach classes to each part. See the{" "}
         <Link
-          href="/docs/styling"
+          href="/docs/date-picker#default"
           className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
         >
-          Styling guide
+          Date Picker examples
         </Link>
         .
       </Callout>
@@ -150,193 +149,13 @@ export function QuickStart() {
         </Link>{" "}
         or read the{" "}
         <Link
-          href="/docs/accessibility"
+          href="/docs/date-picker#accessibility"
           className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
         >
-          accessibility guide
+          accessibility section
         </Link>
         .
       </Callout>
-    </>
-  );
-}
-
-export function Localization() {
-  const [locale, setLocale] = useState("ja-JP");
-  const opts = ["en-US", "en-GB", "fr-FR", "de-DE", "ja-JP", "ar-EG", "pt-BR"];
-  return (
-    <>
-      <PageIntro>
-        <Eyebrow>Guides</Eyebrow>
-        <PageTitle>Localization</PageTitle>
-        <Lead>
-          Pass any BCP 47 locale tag and Kenos derives everything from the platform{" "}
-          <InlineCode>Intl</InlineCode> APIs — no locale data to bundle.
-        </Lead>
-      </PageIntro>
-      <H2 id="what">What adapts</H2>
-      <DocsProse>
-        <ul>
-          <li>
-            <strong>Segment order</strong> —{" "}
-            <span className="inline-flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
-              <InlineCode>mm/dd/yyyy</InlineCode>
-              <span className="text-zinc-500 dark:text-zinc-400">vs</span>
-              <InlineCode>dd.mm.yyyy</InlineCode>
-              <span className="text-zinc-500 dark:text-zinc-400">vs</span>
-              <InlineCode>yyyy/mm/dd</InlineCode>
-            </span>
-            .
-          </li>
-          <li>
-            <strong>Separators</strong> — slashes, dots, hyphens, or locale-specific literals.
-          </li>
-          <li>
-            <strong>Weekday &amp; month names</strong> — short and long forms.
-          </li>
-          <li>
-            <strong>First day of week</strong> — Sunday, Monday or Saturday by region.
-          </li>
-        </ul>
-      </DocsProse>
-      <H2 id="try">Try a locale</H2>
-      <div className="mb-3.5 flex flex-wrap gap-2">
-        {opts.map((v) => (
-          <button
-            key={v}
-            onClick={() => setLocale(v)}
-            className={`min-h-9 rounded-lg border px-3 font-mono text-[12.5px] transition-colors ${
-              v === locale
-                ? "border-zinc-400 text-zinc-500"
-                : "border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 hover:border-zinc-300 dark:hover:border-zinc-700"
-            }`}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
-      <DemoStage tall key={locale}>
-        <div className="flex flex-wrap items-start justify-center gap-6">
-          <DateField locale={locale} label="Date field" />
-          <InlineCalendar locale={locale} defaultValue={new Date()} />
-        </div>
-      </DemoStage>
-      <H2 id="api">Usage</H2>
-      <CodeBlock
-        lang="jsx"
-        code={`<DatePicker.Root locale="ja-JP"><DatePicker.Input />  {/* → yyyy年mm月dd日 */}\n<DatePicker.Root locale="en-GB"><DatePicker.Input />  {/* → dd/mm/yyyy   */}\n<DatePicker.Root locale="de-DE"><DatePicker.Input />  {/* → dd.mm.yyyy   */}`}
-      />
-    </>
-  );
-}
-
-export function Accessibility() {
-  return (
-    <>
-      <PageIntro>
-        <Eyebrow>Guides</Eyebrow>
-        <PageTitle>Accessibility</PageTitle>
-        <Lead>
-          Kenos implements the WAI-ARIA grid pattern. Roles, labels, selection state and focus
-          management are handled for you.
-        </Lead>
-      </PageIntro>
-      <H2 id="roles">Roles &amp; state</H2>
-      <table className={docsTableClass}>
-        <thead>
-          <tr>
-            <th>Part</th>
-            <th>Role / Attr</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>DatePicker.Grid + Day</td>
-            <td>role=grid</td>
-          </tr>
-          <tr>
-            <td>DatePicker.Day (gridcell)</td>
-            <td>role=gridcell</td>
-          </tr>
-          <tr>
-            <td>DatePicker.Day (the gridcell)</td>
-            <td>aria-selected · aria-current=date · aria-label</td>
-          </tr>
-          <tr>
-            <td>DatePicker.Input (segments inside)</td>
-            <td>
-              role=spinbutton · aria-valuenow · aria-valuetext (data-segment, data-placeholder,
-              data-separator on children)
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <H2 id="keyboard">Keyboard navigation</H2>
-      <table className={docsTableClass}>
-        <thead>
-          <tr>
-            <th>Key</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {[
-            ["← → ↑ ↓", "Move focus by day or week (roving tabindex)."],
-            ["PageUp / PageDown", "Previous / next month. Shift for a year."],
-            ["Home / End", "Start / end of the focused week."],
-            ["Enter / Space", "Select the focused date."],
-            ["Esc", "Close the popover, restore focus to the trigger."],
-          ].map(([k, v]) => (
-            <tr key={k}>
-              <td>
-                <span className="font-mono text-xs">{k}</span>
-              </td>
-              <td>{v}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Callout icon="✓">Try it: focus the calendar below and navigate with the arrow keys.</Callout>
-      <DemoStage tall>
-        <InlineCalendar defaultValue={new Date()} />
-      </DemoStage>
-    </>
-  );
-}
-
-export function Styling() {
-  return (
-    <>
-      <PageIntro>
-        <Eyebrow>Guides</Eyebrow>
-        <PageTitle>Styling</PageTitle>
-        <Lead>
-          Kenos ships no CSS. Style parts however you like — plain CSS, CSS Modules, Tailwind, or
-          styled-components.
-        </Lead>
-      </PageIntro>
-      <H2 id="classname">className &amp; style</H2>
-      <P>
-        Every part forwards <InlineCode>className</InlineCode>, <InlineCode>style</InlineCode> and
-        the rest of its DOM props.
-      </P>
-      <CodeBlock
-        lang="jsx"
-        code={`<DatePicker.Day\n  date={day}\n  className="day"\n  style={{ borderRadius: 8 }}\n/>`}
-      />
-      <H2 id="data-attrs">Styling by state</H2>
-      <P>
-        Each part exposes its state as data attributes so you can style without wiring up props.
-      </P>
-      <CodeBlock
-        lang="css"
-        code={`.day { width: 36px; height: 36px; border-radius: 8px; }\n.day[data-today]         { font-weight: 700; }\n.day[data-selected]      { background: #ff5b29; color: #fff; }\n.day[data-in-range]      { background: #ff5b2922; }\n.day[data-outside-month] { color: #888; }\n.day[data-disabled]      { opacity: .4; pointer-events: none; }`}
-      />
-      <H2 id="tailwind">Tailwind</H2>
-      <CodeBlock
-        lang="jsx"
-        code={`<DatePicker.Day\n  date={day}\n  className="size-9 rounded-lg hover:bg-zinc-800\n             data-[selected]:bg-zinc-100\n             data-[today]:font-bold" />`}
-      />
     </>
   );
 }

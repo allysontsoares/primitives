@@ -129,7 +129,7 @@ export function LandingStats() {
             </span>
           </p>
           <Link
-            href="/docs/accessibility"
+            href="/docs/date-picker#accessibility"
             className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-100 transition-all hover:gap-3"
           >
             Read the accessibility guide

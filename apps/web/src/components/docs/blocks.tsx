@@ -4,7 +4,12 @@ import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { CodeBlock, type CodeTab } from "./code-block";
 import { type ExampleSnippets } from "../../lib/example-snippets";
-import { type AnatomyNode, type ApiGroup, ORDER, titleForRoute } from "../../lib/docs-data";
+import {
+  type AnatomyNode,
+  type ApiGroup,
+  PUBLISHED_ROUTES,
+  titleForRoute,
+} from "../../lib/docs-data";
 import { routeToHref } from "../../lib/docs-routes";
 import { ANATOMY_DIAGRAMS } from "./anatomy";
 import { docsTableClass } from "./docs-prose";
@@ -287,10 +292,10 @@ export function Anatomy({ slug, parts }: { slug: string; parts: AnatomyNode[] })
 
 /* ---------------- prev / next footer ---------------- */
 export function PageNav({ route }: { route: string }) {
-  const idx = ORDER.indexOf(route);
+  const idx = PUBLISHED_ROUTES.indexOf(route);
   if (idx === -1) return null;
-  const prev = ORDER[idx - 1];
-  const next = ORDER[idx + 1];
+  const prev = PUBLISHED_ROUTES[idx - 1];
+  const next = PUBLISHED_ROUTES[idx + 1];
   const href = (r: string) => routeToHref(r);
   const card =
     "rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700";

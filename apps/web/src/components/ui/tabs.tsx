@@ -10,19 +10,19 @@ function Tabs({ className, orientation = "horizontal", ...props }: TabsPrimitive
     <TabsPrimitive.Root
       data-slot="tabs"
       data-orientation={orientation}
-      className={cn("group/tabs flex gap-2 data-horizontal:flex-col", className)}
+      className={cn("group/tabs flex flex-col gap-3", className)}
       {...props}
     />
   );
 }
 
 const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-2xl p-[3px] text-oklch(0.556 0 0) group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit group-data-vertical/tabs:flex-col group-data-vertical/tabs:p-1 data-[variant=line]:rounded-none dark:text-oklch(0.708 0 0)",
+  "group/tabs-list inline-flex w-fit items-center gap-1 rounded-lg p-1 text-zinc-500 dark:text-zinc-400",
   {
     variants: {
       variant: {
-        default: "bg-oklch(0.97 0 0) dark:bg-oklch(0.269 0 0)",
-        line: "gap-1 bg-transparent",
+        default: "bg-zinc-100 dark:bg-zinc-800/80",
+        line: "gap-2 rounded-none bg-transparent p-0",
       },
     },
     defaultVariants: {
@@ -51,10 +51,16 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-2xl border border-oklch(0.922 0 0) border-transparent! px-1.5 py-0.5 text-sm font-medium whitespace-nowrap text-oklch(0.145 0 0)/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start group-data-vertical/tabs:px-3 group-data-vertical/tabs:py-0.5 hover:text-oklch(0.145 0 0) focus-visible:border-oklch(0.708 0 0) focus-visible:ring-[3px] focus-visible:ring-oklch(0.708 0 0)/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 dark:text-oklch(0.556 0 0) dark:hover:text-oklch(0.145 0 0) [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 dark:border-oklch(1 0 0 / 10%) dark:text-oklch(0.985 0 0)/60 dark:hover:text-oklch(0.985 0 0) dark:focus-visible:border-oklch(0.556 0 0) dark:focus-visible:ring-oklch(0.556 0 0)/50 dark:dark:text-oklch(0.708 0 0) dark:dark:hover:text-oklch(0.985 0 0)",
-        "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-        "data-active:bg-oklch(1 0 0) data-active:text-oklch(0.145 0 0) dark:data-active:border-oklch(0.922 0 0) dark:data-active:bg-oklch(0.922 0 0)/30 dark:data-active:text-oklch(0.145 0 0) dark:data-active:bg-oklch(0.145 0 0) dark:data-active:text-oklch(0.985 0 0) dark:dark:data-active:border-oklch(1 0 0 / 15%) dark:dark:data-active:bg-oklch(1 0 0 / 15%)/30 dark:dark:data-active:text-oklch(0.985 0 0)",
-        "after:absolute after:bg-oklch(0.145 0 0) after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 dark:after:bg-oklch(0.985 0 0)",
+        "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors outline-none",
+        "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
+        "focus-visible:ring-2 focus-visible:ring-zinc-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-950",
+        "disabled:pointer-events-none disabled:opacity-50",
+        "group-data-[variant=default]/tabs-list:data-active:bg-white group-data-[variant=default]/tabs-list:data-active:text-zinc-900 group-data-[variant=default]/tabs-list:data-active:shadow-sm",
+        "dark:group-data-[variant=default]/tabs-list:data-active:bg-zinc-900 dark:group-data-[variant=default]/tabs-list:data-active:text-zinc-50",
+        "group-data-[variant=line]/tabs-list:relative group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:px-2 group-data-[variant=line]/tabs-list:py-1 group-data-[variant=line]/tabs-list:shadow-none",
+        "group-data-[variant=line]/tabs-list:data-active:bg-transparent group-data-[variant=line]/tabs-list:data-active:text-zinc-900 dark:group-data-[variant=line]/tabs-list:data-active:text-zinc-50",
+        "group-data-[variant=line]/tabs-list:after:absolute group-data-[variant=line]/tabs-list:after:inset-x-0 group-data-[variant=line]/tabs-list:after:bottom-0 group-data-[variant=line]/tabs-list:after:h-0.5 group-data-[variant=line]/tabs-list:after:rounded-full group-data-[variant=line]/tabs-list:after:bg-zinc-900 group-data-[variant=line]/tabs-list:after:opacity-0 group-data-[variant=line]/tabs-list:after:transition-opacity group-data-[variant=line]/tabs-list:data-active:after:opacity-100 dark:group-data-[variant=line]/tabs-list:after:bg-zinc-100",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}
@@ -66,10 +72,10 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
-      className={cn("flex-1 text-sm outline-none", className)}
+      className={cn("outline-none", className)}
       {...props}
     />
   );
 }
 
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants };
+export { Tabs, TabsContent, TabsList, tabsListVariants, TabsTrigger };

@@ -342,12 +342,24 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           </div>
           {group.items.map((item) => {
             const active = route === item.route;
-            const itemCls = (on: boolean) =>
+            const itemCls = (on: boolean, disabled?: boolean) =>
               `flex min-h-9 items-center gap-2 rounded-lg px-2.5 text-[13.5px] transition-colors ${
-                on
-                  ? "bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-900 dark:text-zinc-100"
-                  : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+                disabled
+                  ? "cursor-not-allowed text-zinc-400 opacity-60 dark:text-zinc-500"
+                  : on
+                    ? "bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-900 dark:text-zinc-100"
+                    : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
               }`;
+            if (item.soon) {
+              return (
+                <span key={item.route} aria-disabled="true" className={itemCls(false, true)}>
+                  <span className="flex-1">{item.label}</span>
+                  <Badge variant="secondary" className="h-5 shrink-0 px-2 text-[10px]">
+                    Soon
+                  </Badge>
+                </span>
+              );
+            }
             return (
               <Link
                 key={item.route}

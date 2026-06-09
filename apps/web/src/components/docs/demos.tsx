@@ -1,11 +1,25 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm as useTanStackForm } from "@tanstack/react-form";
+import { z } from "zod";
 import {
   DatePicker as KenosDatePicker,
   useDatePickerContext,
   type DateRange,
 } from "@kenos-ui/react-datepicker";
+import {
+  DP_CAL_SHORTHAND_POPOVER_CLS,
+  DP_CONTROL_ROW_CLS,
+  DP_DATE_FIELD_INPUT_CLS,
+  DP_DATE_FIELD_WRAP_CLS,
+  DP_FIELD_WRAP_CLS,
+  DP_LABEL_CLS,
+  DP_PICKER_INPUT_CLS,
+  DP_TRIGGER_CLS,
+} from "@/components/ui/date-picker.variants";
 import { Combobox as KenosCombobox } from "@kenos-ui/react-combobox";
 import { Select as KenosSelect } from "@kenos-ui/react-select";
 
@@ -18,13 +32,7 @@ import { Select as KenosSelect } from "@kenos-ui/react-select";
    the real library code (reducer, timescape, floating-ui, Intl, etc.).
    ============================================================ */
 
-export type DemoKind =
-  | "calendar"
-  | "date-picker"
-  | "date-range-picker"
-  | "date-field"
-  | "select"
-  | "combobox";
+export type DemoKind = "date-picker" | "select" | "combobox";
 export type CalSize = "default" | "compact";
 
 /* ---------------- icons (ported from old fake for visual match) ---------------- */
@@ -149,6 +157,39 @@ const DEMO_MONTH_YEAR_GRID: Record<CalSize, string> = {
   compact: "grid w-full grid-cols-3 gap-1.5 py-1",
 };
 
+/** Today accent only when the cell is not selected — avoids clashing with the selected state. */
+const demoSelectedCls =
+  "aria-selected:bg-zinc-800 aria-selected:text-white aria-selected:font-semibold dark:aria-selected:bg-zinc-200 dark:aria-selected:text-zinc-900 aria-selected:hover:bg-zinc-700 dark:aria-selected:hover:bg-zinc-300";
+
+const demoTodayUnselected =
+  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-zinc-700 dark:data-[today]:[&:not([aria-selected=true])]:text-zinc-200 data-[today]:[&:not([aria-selected=true])]:ring-1 data-[today]:[&:not([aria-selected=true])]:ring-zinc-400/60 dark:data-[today]:[&:not([aria-selected=true])]:ring-zinc-500/50 data-[today]:[&:not([aria-selected=true])]:ring-inset";
+
+const demoDayStates = [
+  "text-zinc-800 dark:text-zinc-100",
+  "data-disabled:cursor-not-allowed data-disabled:opacity-30 data-disabled:hover:bg-transparent",
+  demoSelectedCls,
+  "aria-selected:focus-visible:ring-offset-zinc-200 dark:aria-selected:focus-visible:ring-offset-zinc-800",
+  demoTodayUnselected,
+  "aria-selected:data-[today]:ring-2 aria-selected:data-[today]:ring-zinc-400/80 dark:aria-selected:data-[today]:ring-zinc-600 aria-selected:data-[today]:ring-inset",
+  "data-[outside-month]:text-zinc-400 dark:data-[outside-month]:text-zinc-500",
+].join(" ");
+
+const demoDayCls = (size: CalSize) => `${DEMO_DAY_BASE[size]} ${demoDayStates}`;
+
+const demoRangeDayCls = (size: CalSize) =>
+  [
+    demoDayCls(size),
+    "data-[in-range]:bg-zinc-100/28 data-[in-range]:text-zinc-900 dark:data-[in-range]:bg-zinc-100/22 dark:data-[in-range]:text-zinc-100",
+    "data-[in-range]:hover:bg-zinc-100/36 dark:data-[in-range]:hover:bg-zinc-100/30",
+    "data-[in-range]:rounded-none",
+    "data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:data-[range-end]:rounded-lg",
+    "data-[range-start]:z-[1] data-[range-end]:z-[1]",
+    "data-[range-start]:bg-zinc-800 data-[range-end]:bg-zinc-800 data-[range-start]:text-white data-[range-end]:text-white",
+    "dark:data-[range-start]:bg-zinc-200 dark:data-[range-end]:bg-zinc-200 dark:data-[range-start]:text-zinc-900 dark:data-[range-end]:text-zinc-900",
+    "data-[range-start]:font-semibold data-[range-end]:font-semibold",
+    "data-[range-start]:hover:bg-zinc-700 data-[range-end]:hover:bg-zinc-700 dark:data-[range-start]:hover:bg-zinc-300 dark:data-[range-end]:hover:bg-zinc-300",
+  ].join(" ");
+
 const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
   default: [
     "flex min-h-[44px] w-full min-w-0 items-center justify-center rounded-lg px-1.5 py-2",
@@ -157,7 +198,7 @@ const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
     "hover:bg-zinc-200/90 dark:hover:bg-zinc-700/90",
     "active:scale-[0.98] aria-selected:active:scale-100",
     focusRing,
-    "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
+    demoSelectedCls,
     "disabled:pointer-events-none disabled:opacity-35",
   ].join(" "),
   compact: [
@@ -167,7 +208,7 @@ const DEMO_MONTH_YEAR_CELL: Record<CalSize, string> = {
     "hover:bg-zinc-200/90 dark:hover:bg-zinc-700/90",
     "active:scale-[0.98] aria-selected:active:scale-100",
     focusRing,
-    "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
+    demoSelectedCls,
     "disabled:pointer-events-none disabled:opacity-35",
   ].join(" "),
 };
@@ -182,9 +223,9 @@ function demoMonthLabel(locale: string, monthIndex: number) {
   return new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2024, monthIndex, 1));
 }
 
-const labelCls = "text-[13px] font-semibold text-zinc-200 dark:text-zinc-300";
+const labelCls = DP_LABEL_CLS;
 const fieldWrap = (compact?: boolean) =>
-  compact ? "flex flex-col gap-2 w-[228px] max-w-full" : "flex flex-col gap-2 w-[260px]";
+  compact ? "flex flex-col gap-2 w-[228px] max-w-full" : DP_FIELD_WRAP_CLS;
 
 const rangeFieldWrap = "flex w-fit max-w-full flex-col items-start gap-2";
 
@@ -197,36 +238,13 @@ const rangeInputCls = [
   "[&_input]:px-0.5 [&_input]:py-0.5",
 ].join(" ");
 
-const inputCls = [
-  "inline-flex h-[42px] min-w-0 flex-1 items-center rounded-[10px]",
-  "border border-zinc-300/90 bg-white px-[13px] font-mono text-sm tabular-nums text-zinc-900",
-  "dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100",
-  inputFocusWithin,
-  segmentFocus,
-  "[&_input]:px-1 [&_input]:py-0.5",
-].join(" ");
+const inputCls = DP_PICKER_INPUT_CLS;
 
-const dateFieldWrap = "flex w-fit max-w-full flex-col items-start gap-2";
+const dateFieldWrap = DP_DATE_FIELD_WRAP_CLS;
 
-const dateFieldInputCls = [
-  "inline-flex h-[42px] w-fit cursor-text items-center justify-start gap-0.5 rounded-[10px]",
-  "border border-zinc-300/90 bg-white px-2.5 font-mono text-sm tabular-nums text-zinc-900",
-  "dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100",
-  inputFocusWithin,
-  segmentFocus,
-  "[&_input]:px-1 [&_input]:py-0.5 [&_[data-separator]]:select-none [&_[data-separator]]:px-0.5",
-].join(" ");
+const dateFieldInputCls = DP_DATE_FIELD_INPUT_CLS;
 
-const triggerCls = [
-  "grid h-[42px] w-[42px] shrink-0 cursor-pointer place-items-center rounded-[10px]",
-  "border border-zinc-300/90 bg-white text-zinc-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300",
-  "transition-[border-color,background-color,color,transform,box-shadow] duration-150",
-  "hover:border-zinc-100 hover:bg-zinc-100/5 hover:text-zinc-200 dark:hover:text-zinc-300",
-  "active:scale-[0.97]",
-  "aria-expanded:border-zinc-100 aria-expanded:bg-zinc-100/12 aria-expanded:text-zinc-200 dark:aria-expanded:text-zinc-300",
-  focusRing,
-  "disabled:pointer-events-none disabled:opacity-40",
-].join(" ");
+const triggerCls = DP_TRIGGER_CLS;
 
 const presetBtn = [
   "min-h-[34px] flex-1 cursor-pointer rounded-lg border py-1.5 text-[12.5px] font-medium",
@@ -242,37 +260,6 @@ const popoverAlign = {
   align: "center" as const,
   sideOffset: 8,
 };
-
-/** Today accent only when the cell is not selected — avoids clashing with the selected state. */
-const demoTodayUnselected =
-  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-zinc-200 dark:data-[today]:[&:not([aria-selected=true])]:text-zinc-300 data-[today]:[&:not([aria-selected=true])]:ring-1 data-[today]:[&:not([aria-selected=true])]:ring-zinc-100/50 data-[today]:[&:not([aria-selected=true])]:ring-inset";
-
-const demoDayStates = [
-  "text-zinc-800 dark:text-zinc-100",
-  "data-disabled:cursor-not-allowed data-disabled:opacity-30 data-disabled:hover:bg-transparent",
-  "aria-selected:bg-zinc-100 aria-selected:!text-white aria-selected:font-semibold",
-  "aria-selected:hover:bg-zinc-200 dark:aria-selected:hover:bg-zinc-100",
-  "aria-selected:focus-visible:ring-offset-zinc-100",
-  demoTodayUnselected,
-  "aria-selected:data-[today]:!text-white aria-selected:data-[today]:ring-2 aria-selected:data-[today]:ring-white/70 aria-selected:data-[today]:ring-inset",
-  "data-[outside-month]:text-zinc-400 dark:data-[outside-month]:text-zinc-500",
-].join(" ");
-
-const demoDayCls = (size: CalSize) => `${DEMO_DAY_BASE[size]} ${demoDayStates}`;
-
-const demoRangeDayCls = (size: CalSize) =>
-  [
-    demoDayCls(size),
-    "data-[in-range]:bg-zinc-100/28 data-[in-range]:text-zinc-900 dark:data-[in-range]:bg-zinc-100/22 dark:data-[in-range]:text-zinc-100",
-    "data-[in-range]:hover:bg-zinc-100/36 dark:data-[in-range]:hover:bg-zinc-100/30",
-    "data-[in-range]:rounded-none",
-    "data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:data-[range-end]:rounded-lg",
-    "data-[range-start]:z-[1] data-[range-end]:z-[1]",
-    "data-[range-start]:bg-zinc-100 data-[range-end]:bg-zinc-100",
-    "data-[range-start]:!text-white data-[range-end]:!text-white data-[range-start]:font-semibold data-[range-end]:font-semibold",
-    "data-[range-start]:data-[today]:!text-white data-[range-end]:data-[today]:!text-white",
-    "data-[range-start]:hover:bg-zinc-200 data-[range-end]:hover:bg-zinc-200",
-  ].join(" ");
 
 /* ---------------- helpers ---------------- */
 function today() {
@@ -421,10 +408,170 @@ export function InlineCalendar({
   );
 }
 
-/* ---------------- DatePicker (simple prop API for quick renders + pages) ---------------- */
+/* ---------------- Shared styled calendar body (popover + inline) ---------------- */
+function DemoCalendarBody({ locale = "en-US", size = "default" as CalSize }) {
+  const weekdayCls = DEMO_WEEKDAY[size];
+  const headNav = DEMO_HEAD_NAV[size];
+  const headTitle = DEMO_HEAD_TITLE[size];
+
+  return (
+    <>
+      <div
+        className={`flex items-center justify-between ${size === "compact" ? "mb-2" : "mb-2.5"}`}
+      >
+        <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
+          <LeftIcon />
+        </KenosDatePicker.PrevTrigger>
+        <KenosDatePicker.ViewTrigger className={headTitle} />
+        <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
+          <RightIcon />
+        </KenosDatePicker.NextTrigger>
+      </div>
+
+      <KenosDatePicker.View view="day">
+        <KenosDatePicker.Grid
+          className="w-full border-collapse table-fixed"
+          header={<KenosDatePicker.WeekDays className={weekdayCls} />}
+        >
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((date, di) => (
+                  <KenosDatePicker.Day key={di} date={date} className={demoDayCls(size)} />
+                ))}
+              </tr>
+            ))
+          }
+        </KenosDatePicker.Grid>
+      </KenosDatePicker.View>
+
+      <KenosDatePicker.View view="month">
+        <KenosDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+          {({ months }) => (
+            <>
+              {months.map((m) => (
+                <KenosDatePicker.MonthCell
+                  key={m.value}
+                  value={m.value}
+                  disabled={m.isDisabled}
+                  title={m.label}
+                  className={DEMO_MONTH_YEAR_CELL[size]}
+                >
+                  {demoMonthLabel(locale, m.value)}
+                </KenosDatePicker.MonthCell>
+              ))}
+            </>
+          )}
+        </KenosDatePicker.MonthGrid>
+      </KenosDatePicker.View>
+
+      <KenosDatePicker.View view="year">
+        <KenosDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
+          {({ years }) => (
+            <>
+              {years.map((y) => (
+                <KenosDatePicker.YearCell
+                  key={y.value}
+                  value={y.value}
+                  disabled={y.isDisabled}
+                  className={DEMO_YEAR_CELL[size]}
+                >
+                  {y.value}
+                </KenosDatePicker.YearCell>
+              ))}
+            </>
+          )}
+        </KenosDatePicker.YearGrid>
+      </KenosDatePicker.View>
+    </>
+  );
+}
+
+function DemoRangeCalendarBody({ locale = "en-US", size = "default" as CalSize }) {
+  const weekdayCls = DEMO_WEEKDAY[size];
+  const headNav = DEMO_HEAD_NAV[size];
+  const headTitle = DEMO_HEAD_TITLE[size];
+
+  return (
+    <>
+      <div
+        className={`flex items-center justify-between ${size === "compact" ? "mb-2" : "mb-2.5"}`}
+      >
+        <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
+          <LeftIcon />
+        </KenosDatePicker.PrevTrigger>
+        <KenosDatePicker.ViewTrigger className={headTitle} />
+        <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
+          <RightIcon />
+        </KenosDatePicker.NextTrigger>
+      </div>
+
+      <KenosDatePicker.View view="day">
+        <KenosDatePicker.Grid
+          className="w-full border-collapse table-fixed"
+          header={<KenosDatePicker.WeekDays className={weekdayCls} />}
+        >
+          {({ weeks }) =>
+            weeks.map((week, wi) => (
+              <tr key={wi}>
+                {week.map((date, di) => (
+                  <KenosDatePicker.Day key={di} date={date} className={demoRangeDayCls(size)} />
+                ))}
+              </tr>
+            ))
+          }
+        </KenosDatePicker.Grid>
+      </KenosDatePicker.View>
+    </>
+  );
+}
+
+/* ---------------- DatePicker (README — Calendar shorthand) ---------------- */
 export function DatePicker({
   locale = "en-US",
   label = "Date",
+  defaultValue = null,
+  defaultOpen = false,
+}: {
+  locale?: string;
+  label?: string;
+  defaultValue?: Date | null;
+  defaultOpen?: boolean;
+}) {
+  return (
+    <KenosDatePicker.Root
+      mode="single"
+      locale={locale}
+      defaultValue={defaultValue}
+      defaultOpen={defaultOpen}
+    >
+      <div className={fieldWrap()}>
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
+        <div className={DP_CONTROL_ROW_CLS}>
+          <KenosDatePicker.Input className={inputCls} />
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+            <CalIcon />
+          </KenosDatePicker.Trigger>
+        </div>
+        <KenosDatePicker.Content
+          portal
+          {...popoverAlign}
+          className={DP_CAL_SHORTHAND_POPOVER_CLS}
+          role="dialog"
+          aria-label={label}
+          data-cal-size="default"
+        >
+          <KenosDatePicker.Calendar />
+        </KenosDatePicker.Content>
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+/** Full composition — ViewControl + Grid + Day (popover path). */
+export function DatePickerComposed({
+  locale = "en-US",
+  label = "Pick a date",
   defaultValue = null,
   size = "default" as CalSize,
   defaultOpen = false,
@@ -437,9 +584,6 @@ export function DatePicker({
 }) {
   const compact = size === "compact";
   const shell = demoShell(size);
-  const weekdayCls = DEMO_WEEKDAY[size];
-  const headNav = DEMO_HEAD_NAV[size];
-  const headTitle = DEMO_HEAD_TITLE[size];
 
   return (
     <KenosDatePicker.Root
@@ -449,14 +593,13 @@ export function DatePicker({
       defaultOpen={defaultOpen}
     >
       <div className={fieldWrap(compact)}>
-        <label className={labelCls}>{label}</label>
-        <div className="flex items-center gap-2">
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
+        <div className={DP_CONTROL_ROW_CLS}>
           <KenosDatePicker.Input className={inputCls} />
           <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
             <CalIcon />
           </KenosDatePicker.Trigger>
         </div>
-
         <KenosDatePicker.Content
           portal
           {...popoverAlign}
@@ -465,72 +608,7 @@ export function DatePicker({
           aria-label={label}
           data-cal-size={size}
         >
-          <div className={`flex items-center justify-between ${compact ? "mb-2" : "mb-2.5"}`}>
-            <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
-              <LeftIcon />
-            </KenosDatePicker.PrevTrigger>
-            <KenosDatePicker.ViewTrigger className={headTitle} />
-            <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
-              <RightIcon />
-            </KenosDatePicker.NextTrigger>
-          </div>
-
-          <KenosDatePicker.View view="day">
-            <KenosDatePicker.Grid
-              className="w-full border-collapse table-fixed"
-              header={<KenosDatePicker.WeekDays className={weekdayCls} />}
-            >
-              {({ weeks }) =>
-                weeks.map((week, wi) => (
-                  <tr key={wi}>
-                    {week.map((date, di) => (
-                      <KenosDatePicker.Day key={di} date={date} className={demoDayCls(size)} />
-                    ))}
-                  </tr>
-                ))
-              }
-            </KenosDatePicker.Grid>
-          </KenosDatePicker.View>
-
-          {/* Support month/year panes like the old demo */}
-          <KenosDatePicker.View view="month">
-            <KenosDatePicker.MonthGrid className={DEMO_MONTH_YEAR_GRID[size]}>
-              {({ months }) => (
-                <>
-                  {months.map((m) => (
-                    <KenosDatePicker.MonthCell
-                      key={m.value}
-                      value={m.value}
-                      disabled={m.isDisabled}
-                      title={m.label}
-                      className={DEMO_MONTH_YEAR_CELL[size]}
-                    >
-                      {demoMonthLabel(locale, m.value)}
-                    </KenosDatePicker.MonthCell>
-                  ))}
-                </>
-              )}
-            </KenosDatePicker.MonthGrid>
-          </KenosDatePicker.View>
-
-          <KenosDatePicker.View view="year">
-            <KenosDatePicker.YearGrid className={DEMO_MONTH_YEAR_GRID[size]}>
-              {({ years }) => (
-                <>
-                  {years.map((y) => (
-                    <KenosDatePicker.YearCell
-                      key={y.value}
-                      value={y.value}
-                      disabled={y.isDisabled}
-                      className={DEMO_YEAR_CELL[size]}
-                    >
-                      {y.value}
-                    </KenosDatePicker.YearCell>
-                  ))}
-                </>
-              )}
-            </KenosDatePicker.YearGrid>
-          </KenosDatePicker.View>
+          <DemoCalendarBody locale={locale} size={size} />
         </KenosDatePicker.Content>
       </div>
     </KenosDatePicker.Root>
@@ -554,9 +632,6 @@ export function DateRangePicker({
   const [range, setRange] = useState<DateRange>({ start: null, end: null });
   const compact = size === "compact";
   const shell = demoShell(size);
-  const weekdayCls = DEMO_WEEKDAY[size];
-  const headNav = DEMO_HEAD_NAV[size];
-  const headTitle = DEMO_HEAD_TITLE[size];
 
   return (
     <KenosDatePicker.Root
@@ -567,11 +642,11 @@ export function DateRangePicker({
       closeOnSelect={false}
     >
       <div className={`${compact ? fieldWrap(compact) : rangeFieldWrap} mx-auto`}>
-        <label className={labelCls}>{label}</label>
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
         <div
           className={
             compact
-              ? "flex items-center gap-2"
+              ? DP_CONTROL_ROW_CLS
               : "grid w-full grid-cols-[minmax(0,108px)_auto_minmax(0,108px)_auto] items-center gap-x-2 gap-y-0"
           }
         >
@@ -605,33 +680,7 @@ export function DateRangePicker({
           aria-label={label}
           data-cal-size={size}
         >
-          <div className={`flex items-center justify-between ${compact ? "mb-2" : "mb-2.5"}`}>
-            <KenosDatePicker.PrevTrigger className={headNav} aria-label="Previous">
-              <LeftIcon />
-            </KenosDatePicker.PrevTrigger>
-            <KenosDatePicker.ViewTrigger className={headTitle} />
-            <KenosDatePicker.NextTrigger className={headNav} aria-label="Next">
-              <RightIcon />
-            </KenosDatePicker.NextTrigger>
-          </div>
-
-          <KenosDatePicker.View view="day">
-            <KenosDatePicker.Grid
-              className="w-full border-collapse table-fixed"
-              header={<KenosDatePicker.WeekDays className={weekdayCls} />}
-            >
-              {({ weeks }) =>
-                weeks.map((week, wi) => (
-                  <tr key={wi}>
-                    {week.map((date, di) => (
-                      <KenosDatePicker.Day key={di} date={date} className={demoRangeDayCls(size)} />
-                    ))}
-                  </tr>
-                ))
-              }
-            </KenosDatePicker.Grid>
-          </KenosDatePicker.View>
-
+          <DemoRangeCalendarBody locale={locale} size={size} />
           {presets && <RangePresets />}
         </KenosDatePicker.Content>
       </div>
@@ -652,7 +701,7 @@ export function DateField({
   return (
     <KenosDatePicker.Root mode="single" locale={locale} defaultValue={defaultValue}>
       <div className={`${dateFieldWrap} mx-auto`}>
-        <label className={labelCls}>{label}</label>
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
         <KenosDatePicker.Input className={dateFieldInputCls} />
       </div>
     </KenosDatePicker.Root>
@@ -942,22 +991,440 @@ export function ComboboxDialogDemo() {
   );
 }
 
+const dateFormSchema = z.object({
+  date: z.union([z.date(), z.null()]).refine((d) => d !== null, { message: "Select a date" }),
+});
+
+type DateFormValues = z.input<typeof dateFormSchema>;
+
+function DatePickerFieldControlled({
+  value,
+  onChange,
+  label = "Appointment",
+  locale = "en-US",
+}: {
+  value: Date | null;
+  onChange: (d: Date | null) => void;
+  label?: string;
+  locale?: string;
+}) {
+  return (
+    <KenosDatePicker.Root value={value} onValueChange={onChange} locale={locale}>
+      <div className={fieldWrap()}>
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
+        <div className={DP_CONTROL_ROW_CLS}>
+          <KenosDatePicker.Input className={inputCls} />
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+            <CalIcon />
+          </KenosDatePicker.Trigger>
+        </div>
+        <KenosDatePicker.Content
+          portal
+          {...popoverAlign}
+          className={demoShell("default")}
+          role="dialog"
+          aria-label={label}
+          data-cal-size="default"
+        >
+          <DemoCalendarBody locale={locale} size="default" />
+        </KenosDatePicker.Content>
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerControlledDemo() {
+  const [value, setValue] = useState<Date | null>(null);
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-3">
+      <DatePickerFieldControlled value={value} onChange={setValue} />
+      <p className="text-[13px] text-zinc-500 dark:text-zinc-400">
+        Selected:{" "}
+        <span className="font-mono text-zinc-800 dark:text-zinc-200">
+          {value ? value.toLocaleDateString() : "—"}
+        </span>
+      </p>
+    </div>
+  );
+}
+
+export function DatePickerMinMaxDemo() {
+  const min = new Date();
+  min.setMonth(min.getMonth() - 1);
+  const max = new Date();
+  max.setMonth(max.getMonth() + 2);
+  return (
+    <KenosDatePicker.Root minDate={min} maxDate={max}>
+      <div className={demoShell("default")} data-cal-size="default">
+        <DemoCalendarBody size="default" />
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerDisabledDemo() {
+  return (
+    <KenosDatePicker.Root disabled={(date) => date.getDay() === 0 || date.getDay() === 6}>
+      <div className={demoShell("default")} data-cal-size="default">
+        <DemoCalendarBody size="default" />
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerMultipleDemo() {
+  const [dates, setDates] = useState<Date[]>([]);
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-3">
+      <KenosDatePicker.Root mode="multiple" onValueChange={setDates} closeOnSelect={false}>
+        <div className={fieldWrap()}>
+          <KenosDatePicker.Label className={labelCls}>Select dates</KenosDatePicker.Label>
+          <div className={DP_CONTROL_ROW_CLS}>
+            <KenosDatePicker.Input className={inputCls} />
+            <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+              <CalIcon />
+            </KenosDatePicker.Trigger>
+          </div>
+          <KenosDatePicker.Content
+            portal
+            {...popoverAlign}
+            className={demoShell("default")}
+            role="dialog"
+            aria-label="Select dates"
+            data-cal-size="default"
+          >
+            <DemoCalendarBody size="default" />
+          </KenosDatePicker.Content>
+        </div>
+      </KenosDatePicker.Root>
+      <p className="text-[13px] text-zinc-500 dark:text-zinc-400">
+        {dates.length} date{dates.length === 1 ? "" : "s"} selected
+      </p>
+    </div>
+  );
+}
+
+export function DatePickerRHFFormDemo() {
+  const [result, setResult] = useState<string | null>(null);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<DateFormValues>({
+    resolver: zodResolver(dateFormSchema),
+    defaultValues: { date: null },
+  });
+
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={handleSubmit((data) => {
+        setResult(data.date?.toLocaleDateString() ?? "");
+      })}
+    >
+      <Controller
+        control={control}
+        name="date"
+        render={({ field }) => (
+          <DatePickerFieldControlled
+            value={field.value}
+            onChange={field.onChange}
+            label="Appointment"
+          />
+        )}
+      />
+      {errors.date && (
+        <p className="text-[13px] text-red-600 dark:text-red-400">{errors.date.message}</p>
+      )}
+      {result && (
+        <p className="text-[13px] text-emerald-700 dark:text-emerald-400">
+          Submitted: {result} — React Hook Form (Single)
+        </p>
+      )}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            reset();
+            setResult(null);
+          }}
+          className="min-h-9 rounded-lg border border-zinc-300 px-4 text-sm font-medium dark:border-zinc-700"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  );
+}
+
+const dateRangeFormSchema = z.object({
+  range: z
+    .object({
+      start: z.union([z.date(), z.null()]),
+      end: z.union([z.date(), z.null()]),
+    })
+    .refine((r) => r.start !== null && r.end !== null, { message: "Select a date range" }),
+});
+
+type DateRangeFormValues = z.input<typeof dateRangeFormSchema>;
+
+function DateRangePickerFieldControlled({
+  value,
+  onChange,
+  label = "Trip dates",
+  locale = "en-US",
+}: {
+  value: DateRange;
+  onChange: (r: DateRange) => void;
+  label?: string;
+  locale?: string;
+}) {
+  return (
+    <KenosDatePicker.Root
+      mode="range"
+      value={value}
+      onValueChange={onChange}
+      locale={locale}
+      closeOnSelect={false}
+    >
+      <div className={rangeFieldWrap}>
+        <KenosDatePicker.Label className={labelCls}>{label}</KenosDatePicker.Label>
+        <div className="grid w-full grid-cols-[minmax(0,108px)_auto_minmax(0,108px)_auto] items-center gap-x-2 gap-y-0">
+          <KenosDatePicker.Input index={0} className={rangeInputCls} />
+          <span className="shrink-0 font-medium text-zinc-500 dark:text-zinc-400" aria-hidden>
+            →
+          </span>
+          <KenosDatePicker.Input index={1} className={rangeInputCls} />
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+            <CalIcon />
+          </KenosDatePicker.Trigger>
+        </div>
+        <KenosDatePicker.Content
+          portal
+          {...popoverAlign}
+          className={demoShell("default")}
+          role="dialog"
+          aria-label={label}
+          data-cal-size="default"
+        >
+          <DemoRangeCalendarBody locale={locale} size="default" />
+        </KenosDatePicker.Content>
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerRangeRHFFormDemo() {
+  const [result, setResult] = useState<string | null>(null);
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<DateRangeFormValues>({
+    resolver: zodResolver(dateRangeFormSchema),
+    defaultValues: { range: { start: null, end: null } },
+  });
+
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={handleSubmit((data) => {
+        const { start, end } = data.range;
+        setResult(`${start?.toLocaleDateString() ?? ""} → ${end?.toLocaleDateString() ?? ""}`);
+      })}
+    >
+      <Controller
+        control={control}
+        name="range"
+        render={({ field }) => (
+          <DateRangePickerFieldControlled
+            value={field.value}
+            onChange={field.onChange}
+            label="Trip dates"
+          />
+        )}
+      />
+      {errors.range && (
+        <p className="text-[13px] text-red-600 dark:text-red-400">{errors.range.message}</p>
+      )}
+      {result && (
+        <p className="text-[13px] text-emerald-700 dark:text-emerald-400">
+          Submitted: {result} — React Hook Form (Range)
+        </p>
+      )}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            reset();
+            setResult(null);
+          }}
+          className="min-h-9 rounded-lg border border-zinc-300 px-4 text-sm font-medium dark:border-zinc-700"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export function DatePickerRangeTanStackFormDemo() {
+  const [result, setResult] = useState<string | null>(null);
+  const form = useTanStackForm({
+    defaultValues: { range: { start: null, end: null } as DateRange },
+    validators: {
+      onSubmit: ({ value }) => {
+        if (!value.range.start || !value.range.end) {
+          return { fields: { range: "Select a date range" } };
+        }
+        return undefined;
+      },
+    },
+    onSubmit: ({ value }) => {
+      setResult(
+        `${value.range.start?.toLocaleDateString() ?? ""} → ${value.range.end?.toLocaleDateString() ?? ""}`,
+      );
+    },
+  });
+
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void form.handleSubmit();
+      }}
+    >
+      <form.Field name="range">
+        {(field) => (
+          <div>
+            <DateRangePickerFieldControlled
+              value={field.state.value}
+              onChange={field.handleChange}
+              label="Trip dates"
+            />
+            {field.state.meta.errors.length > 0 && (
+              <p className="mt-1 text-[13px] text-red-600 dark:text-red-400">
+                {String(field.state.meta.errors[0])}
+              </p>
+            )}
+          </div>
+        )}
+      </form.Field>
+      {result && (
+        <p className="text-[13px] text-emerald-700 dark:text-emerald-400">
+          Submitted: {result} — TanStack Form (Range)
+        </p>
+      )}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            form.reset();
+            setResult(null);
+          }}
+          className="min-h-9 rounded-lg border border-zinc-300 px-4 text-sm font-medium dark:border-zinc-700"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export function DatePickerTanStackFormDemo() {
+  const [result, setResult] = useState<string | null>(null);
+  const form = useTanStackForm({
+    defaultValues: { date: null as Date | null },
+    validators: {
+      onSubmit: ({ value }) => {
+        if (!value.date) return { fields: { date: "Select a date" } };
+        return undefined;
+      },
+    },
+    onSubmit: ({ value }) => {
+      setResult(value.date?.toLocaleDateString() ?? "");
+    },
+  });
+
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void form.handleSubmit();
+      }}
+    >
+      <form.Field name="date">
+        {(field) => (
+          <div>
+            <DatePickerFieldControlled
+              value={field.state.value}
+              onChange={field.handleChange}
+              label="Appointment"
+            />
+            {field.state.meta.errors.length > 0 && (
+              <p className="mt-1 text-[13px] text-red-600 dark:text-red-400">
+                {String(field.state.meta.errors[0])}
+              </p>
+            )}
+          </div>
+        )}
+      </form.Field>
+      {result && (
+        <p className="text-[13px] text-emerald-700 dark:text-emerald-400">
+          Submitted: {result} — TanStack Form (Single)
+        </p>
+      )}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+        >
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            form.reset();
+            setResult(null);
+          }}
+          className="min-h-9 rounded-lg border border-zinc-300 px-4 text-sm font-medium dark:border-zinc-700"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+  );
+}
+
 /* ---------------- LiveDemo dispatcher (used by component pages) ---------------- */
 export function LiveDemo({ kind, locale = "en-US" }: { kind: DemoKind; locale?: string }) {
-  if (kind === "calendar") {
-    return <InlineCalendar locale={locale} defaultValue={today()} />;
-  }
   if (kind === "date-picker") {
     return <DatePicker locale={locale} label="Pick a date" />;
-  }
-  if (kind === "date-range-picker") {
-    return <DateRangePicker locale={locale} label="Trip dates" />;
   }
   if (kind === "select") {
     return <SelectDemo />;
   }
-  if (kind === "combobox") {
-    return <ComboboxDemo />;
-  }
-  return <DateField locale={locale} label="Date of birth" />;
+  return <ComboboxDemo />;
 }
