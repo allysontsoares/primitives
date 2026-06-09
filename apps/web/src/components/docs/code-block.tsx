@@ -192,8 +192,7 @@ export function CodeBlock({
   onStyleTabsEnabledChange,
 }: CodeBlockProps) {
   const allTabs = useMemo<CodeTab[]>(
-    () =>
-      tabs ?? [{ label: label || lang || "code", lang: lang ?? "", code: code ?? "" }],
+    () => tabs ?? [{ label: label || lang || "code", lang: lang ?? "", code: code ?? "" }],
     [tabs, label, lang, code],
   );
 
