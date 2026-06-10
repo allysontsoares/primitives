@@ -296,7 +296,7 @@ export function DatePickerPage() {
       <Example code={DATE_PICKER_SNIPPETS.rtl} lang="tsx" previewTall>
         <DatePickerRTLDemo />
       </Example>
-      <H3 id="presets">Presets</H3>
+      <H3 id="using-presets">Presets</H3>
       <P>
         Wrap shortcut buttons in <InlineCode>DatePicker.Presets</InlineCode> inside{" "}
         <InlineCode>Content</InlineCode>. Use <InlineCode>useDatePickerActions()</InlineCode> for{" "}

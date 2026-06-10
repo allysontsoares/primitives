@@ -174,7 +174,7 @@ export const DATE_PICKER_API: ApiGroup[] = [
     ],
   },
   {
-    group: "Presets",
+    group: "Presets component",
     props: [
       {
         name: "children",
