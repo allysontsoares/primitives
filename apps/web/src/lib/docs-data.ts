@@ -91,7 +91,7 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-picker": {
     name: "Date Picker",
     eyebrow: "Primitive",
-    desc: "Headless date primitives — segmented input, popover calendar, range and multiple selection. Built on Intl, timescape, and Floating UI. Zero CSS shipped.",
+    desc: "Headless date primitives — segmented input, popover calendar, range and multiple selection, time granularity, presets, unavailable dates, HiddenInput, RTL keyboard. Built on Intl, timescape, and Floating UI. Zero CSS shipped.",
     demo: "date-picker",
     npmPackage: "@kenos-ui/react-datepicker",
     importName: "DatePicker",
@@ -406,6 +406,8 @@ export const SEARCH: SearchEntry[] = [
   { title: "Quick Start", route: "quickstart", crumb: "Get Started", kind: "page" },
   { title: "Date Picker", route: "date-picker", crumb: "Primitives", kind: "comp" },
   { title: "Form Integration", route: "date-picker", crumb: "Date Picker", kind: "comp" },
+  { title: "Time Granularity", route: "date-picker", crumb: "Date Picker", kind: "comp" },
+  { title: "Presets", route: "date-picker", crumb: "Date Picker", kind: "comp" },
   { title: "Accessibility", route: "date-picker", crumb: "Date Picker", kind: "comp" },
   { title: "Changelog", route: "changelog", crumb: "Get Started", kind: "page" },
 ];

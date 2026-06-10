@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useDatePickerContext } from "./context";
 import { MonthGridFocusContext } from "./context";
+import { preventGridScrollOnKeyDown } from "../utils/grid-keyboard";
 
 export interface MonthCellProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -9,7 +10,7 @@ export interface MonthCellProps extends Omit<
   value: number;
 }
 
-export function MonthCell({ value, children, onClick, ...props }: MonthCellProps) {
+export function MonthCell({ value, children, onClick, onKeyDown, ...props }: MonthCellProps) {
   const { dispatch } = useDatePickerContext();
   const focusedIndex = useContext(MonthGridFocusContext);
   const isFocused = focusedIndex === value;
@@ -24,6 +25,10 @@ export function MonthCell({ value, children, onClick, ...props }: MonthCellProps
       onClick={(e) => {
         dispatch({ type: "SELECT_MONTH", month: value });
         onClick?.(e);
+      }}
+      onKeyDown={(e) => {
+        preventGridScrollOnKeyDown(e);
+        onKeyDown?.(e);
       }}
       {...props}
     >

@@ -130,7 +130,7 @@ export function LandingStats() {
           </p>
           <Link
             href="/docs/date-picker#accessibility"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zinc-100 transition-all hover:gap-3"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 transition-all hover:gap-3 hover:text-indigo-300"
           >
             Read the accessibility guide
             <svg

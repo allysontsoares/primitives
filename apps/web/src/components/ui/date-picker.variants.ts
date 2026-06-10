@@ -12,10 +12,10 @@ export const DP_DATE_FIELD_WRAP_CLS = "flex w-fit max-w-full flex-col items-star
 export const DP_CONTROL_ROW_CLS = "flex items-center gap-2";
 
 const DP_SEGMENT_FOCUS =
-  "[&_input]:rounded-md [&_input]:transition-[background-color,color,box-shadow] [&_input:focus]:!bg-zinc-100 [&_input:focus]:!text-white [&_input:focus]:shadow-sm [&_input::placeholder]:text-zinc-500 dark:[&_input::placeholder]:text-zinc-400 [&_[data-separator]]:font-medium [&_[data-separator]]:text-zinc-500 dark:[&_[data-separator]]:text-zinc-400";
+  "[&_input]:rounded-md [&_input]:transition-[background-color,color,box-shadow] [&_input:focus]:!bg-indigo-600 [&_input:focus]:!text-white dark:[&_input:focus]:!bg-indigo-500 dark:[&_input:focus]:!text-white [&_input:focus]:shadow-sm [&_input::selection]:bg-transparent [&_input::placeholder]:text-zinc-500 dark:[&_input::placeholder]:text-zinc-400 [&_[data-separator]]:font-medium [&_[data-separator]]:text-zinc-500 dark:[&_[data-separator]]:text-zinc-400";
 
 const DP_INPUT_FOCUS_WITHIN =
-  "transition-[border-color,box-shadow,background-color] duration-150 focus-within:border-zinc-100 focus-within:bg-white dark:focus-within:bg-zinc-950 focus-within:shadow-[0_0_0_3px_rgb(250_250_250_/_0.15)] dark:focus-within:shadow-[0_0_0_3px_rgb(250_250_250_/_0.12)]";
+  "transition-[border-color,box-shadow,background-color] duration-150 focus-within:border-indigo-500 dark:focus-within:border-indigo-400 focus-within:bg-white dark:focus-within:bg-zinc-950 focus-within:shadow-[0_0_0_3px_rgb(99_102_241_/_0.18)] dark:focus-within:shadow-[0_0_0_3px_rgb(129_140_248_/_0.18)]";
 
 const DP_INPUT_BASE =
   "inline-flex h-[42px] items-center justify-start gap-0.5 rounded-[10px] border border-zinc-300/90 bg-white px-2.5 font-mono text-sm tabular-nums text-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
@@ -45,10 +45,10 @@ export const DP_TRIGGER_CLS = [
   "grid h-[42px] w-[42px] shrink-0 cursor-pointer place-items-center rounded-[10px]",
   "border border-zinc-300/90 bg-white text-zinc-600 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300",
   "transition-[border-color,background-color,color,transform,box-shadow] duration-150",
-  "hover:border-zinc-100 hover:bg-zinc-100/5 hover:text-zinc-200 dark:hover:text-zinc-300",
+  "hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:border-indigo-400/70 dark:hover:bg-indigo-500/15 dark:hover:text-indigo-300",
   "active:scale-[0.97]",
-  "aria-expanded:border-zinc-100 aria-expanded:bg-zinc-100/12 aria-expanded:text-zinc-200 dark:aria-expanded:text-zinc-300",
-  "outline-none focus-visible:ring-2 focus-visible:ring-zinc-100 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900",
+  "aria-expanded:border-indigo-500 aria-expanded:bg-indigo-50 aria-expanded:text-indigo-700 dark:aria-expanded:border-indigo-400 dark:aria-expanded:bg-indigo-500/15 dark:aria-expanded:text-indigo-300",
+  "outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900",
   "disabled:pointer-events-none disabled:opacity-40",
 ].join(" ");
 
@@ -69,23 +69,23 @@ export const DP_CAL_SHORTHAND_POPOVER_CLS = [
   "[&_table_th]:text-[12px] [&_table_th]:font-bold [&_table_th]:uppercase [&_table_th]:tracking-[0.05em] [&_table_th]:text-zinc-600 [&_table_th]:py-2 dark:[&_table_th]:text-zinc-300",
   "[&_[role=gridcell]]:relative [&_[role=gridcell]]:mx-auto [&_[role=gridcell]]:size-[36px] [&_[role=gridcell]]:rounded-lg [&_[role=gridcell]]:text-[14px] [&_[role=gridcell]]:font-medium [&_[role=gridcell]]:tabular-nums [&_[role=gridcell]]:text-zinc-800 [&_[role=gridcell]]:transition-[background-color,color] [&_[role=gridcell]]:duration-150",
   "dark:[&_[role=gridcell]]:text-zinc-100",
-  "[&_[role=gridcell]]:hover:bg-zinc-200/90 [&_[role=gridcell]]:hover:text-zinc-950 dark:[&_[role=gridcell]]:hover:bg-zinc-700/90 dark:[&_[role=gridcell]]:hover:text-zinc-50",
-  "[&_[role=gridcell][data-selected]]:bg-zinc-800 [&_[role=gridcell][data-selected]]:font-semibold [&_[role=gridcell][data-selected]]:text-white",
-  "dark:[&_[role=gridcell][data-selected]]:bg-zinc-200 dark:[&_[role=gridcell][data-selected]]:text-zinc-900",
-  "[&_[role=gridcell][data-today]:not([data-selected])]:font-bold [&_[role=gridcell][data-today]:not([data-selected])]:text-zinc-700 dark:[&_[role=gridcell][data-today]:not([data-selected])]:text-zinc-200",
+  "[&_[role=gridcell]]:hover:bg-indigo-50 [&_[role=gridcell]]:hover:text-indigo-900 dark:[&_[role=gridcell]]:hover:bg-indigo-500/15 dark:[&_[role=gridcell]]:hover:text-indigo-100",
+  "[&_[role=gridcell][data-selected]]:bg-indigo-600 [&_[role=gridcell][data-selected]]:font-semibold [&_[role=gridcell][data-selected]]:text-white",
+  "dark:[&_[role=gridcell][data-selected]]:bg-indigo-500 dark:[&_[role=gridcell][data-selected]]:text-white",
+  "[&_[role=gridcell][data-today]:not([data-selected])]:font-bold [&_[role=gridcell][data-today]:not([data-selected])]:text-indigo-600 dark:[&_[role=gridcell][data-today]:not([data-selected])]:text-indigo-400",
   "[&_[role=gridcell][data-outside-month]]:text-zinc-400 dark:[&_[role=gridcell][data-outside-month]]:text-zinc-500",
   "[&_[role=gridcell][data-disabled]]:cursor-not-allowed [&_[role=gridcell][data-disabled]]:opacity-30",
-  "[&_button[aria-label^='Go']]:grid [&_button[aria-label^='Go']]:size-[30px] [&_button[aria-label^='Go']]:place-items-center [&_button[aria-label^='Go']]:rounded-lg [&_button[aria-label^='Go']]:text-zinc-600 [&_button[aria-label^='Go']]:transition-colors [&_button[aria-label^='Go']]:hover:bg-zinc-200/90 dark:[&_button[aria-label^='Go']]:text-zinc-300 dark:[&_button[aria-label^='Go']]:hover:bg-zinc-700/90",
-  "[&_button[aria-label^='Switch']]:rounded-lg [&_button[aria-label^='Switch']]:px-2.5 [&_button[aria-label^='Switch']]:py-1 [&_button[aria-label^='Switch']]:text-[15px] [&_button[aria-label^='Switch']]:font-[650] [&_button[aria-label^='Switch']]:text-zinc-900 [&_button[aria-label^='Switch']]:hover:bg-zinc-200/90 dark:[&_button[aria-label^='Switch']]:text-zinc-100 dark:[&_button[aria-label^='Switch']]:hover:bg-zinc-700/90",
+  "[&_button[aria-label^='Go']]:grid [&_button[aria-label^='Go']]:size-[30px] [&_button[aria-label^='Go']]:place-items-center [&_button[aria-label^='Go']]:rounded-lg [&_button[aria-label^='Go']]:text-zinc-600 [&_button[aria-label^='Go']]:transition-colors [&_button[aria-label^='Go']]:hover:bg-indigo-50 [&_button[aria-label^='Go']]:hover:text-indigo-700 dark:[&_button[aria-label^='Go']]:text-zinc-300 dark:[&_button[aria-label^='Go']]:hover:bg-indigo-500/15 dark:[&_button[aria-label^='Go']]:hover:text-indigo-300",
+  "[&_button[aria-label^='Switch']]:rounded-lg [&_button[aria-label^='Switch']]:px-2.5 [&_button[aria-label^='Switch']]:py-1 [&_button[aria-label^='Switch']]:text-[15px] [&_button[aria-label^='Switch']]:font-[650] [&_button[aria-label^='Switch']]:text-zinc-900 [&_button[aria-label^='Switch']]:hover:bg-indigo-50 [&_button[aria-label^='Switch']]:hover:text-indigo-700 dark:[&_button[aria-label^='Switch']]:text-zinc-100 dark:[&_button[aria-label^='Switch']]:hover:bg-indigo-500/15 dark:[&_button[aria-label^='Switch']]:hover:text-indigo-300",
 ].join(" ");
 
 export const DP_FOCUS_RING =
-  "outline-none focus-visible:ring-2 focus-visible:ring-zinc-100 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900";
+  "outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 dark:focus-visible:ring-offset-zinc-900";
 
 export const DP_HEAD_NAV_CLS = [
   "grid place-items-center w-[30px] h-[30px] shrink-0 rounded-lg text-zinc-600 dark:text-zinc-300",
   "transition-[background-color,color,transform,box-shadow] duration-150",
-  "hover:bg-zinc-200/90 hover:text-zinc-900 dark:hover:bg-zinc-700/90 dark:hover:text-zinc-50",
+  "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-500/15 dark:hover:text-indigo-300",
   "active:scale-95 disabled:pointer-events-none disabled:opacity-35",
   DP_FOCUS_RING,
 ].join(" ");
@@ -93,8 +93,8 @@ export const DP_HEAD_NAV_CLS = [
 export const DP_HEAD_TITLE_CLS = [
   "rounded-lg px-2.5 py-1 text-[15px] font-[650] text-zinc-900 dark:text-zinc-100",
   "transition-[background-color,color,box-shadow] duration-150",
-  "hover:bg-zinc-200/90 dark:hover:bg-zinc-700/90",
-  "active:bg-zinc-300/80 dark:active:bg-zinc-600/80",
+  "hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-500/15 dark:hover:text-indigo-300",
+  "active:bg-indigo-100/80 dark:active:bg-indigo-500/25",
   DP_FOCUS_RING,
 ].join(" ");
 
@@ -102,16 +102,16 @@ export const DP_WEEKDAY_CLS =
   "text-[12px] font-bold text-zinc-600 dark:text-zinc-300 py-2 text-center uppercase tracking-[0.05em]";
 
 export const DP_SELECTED_CLS =
-  "aria-selected:bg-zinc-800 aria-selected:text-white aria-selected:font-semibold dark:aria-selected:bg-zinc-200 dark:aria-selected:text-zinc-900 aria-selected:hover:bg-zinc-700 dark:aria-selected:hover:bg-zinc-300";
+  "aria-selected:bg-indigo-600 aria-selected:text-white aria-selected:font-semibold dark:aria-selected:bg-indigo-500 dark:aria-selected:text-white aria-selected:hover:bg-indigo-700 dark:aria-selected:hover:bg-indigo-400 aria-selected:shadow-sm aria-selected:shadow-indigo-600/25";
 
 export const DP_DAY_CLS = [
   "relative z-0 mx-auto grid size-[36px] cursor-default place-items-center rounded-lg text-[14px] font-medium tabular-nums",
   "transition-[background-color,color,box-shadow,transform] duration-150",
-  "hover:bg-zinc-200/90 hover:text-zinc-950 dark:hover:bg-zinc-700/90 dark:hover:text-zinc-50",
+  "hover:bg-indigo-50 hover:text-indigo-900 dark:hover:bg-indigo-500/15 dark:hover:text-indigo-100",
   "text-zinc-800 dark:text-zinc-100",
   "data-disabled:cursor-not-allowed data-disabled:opacity-30 data-disabled:hover:bg-transparent",
   DP_SELECTED_CLS,
-  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-zinc-700 dark:data-[today]:[&:not([aria-selected=true])]:text-zinc-200",
+  "data-[today]:font-bold data-[today]:[&:not([aria-selected=true])]:text-indigo-600 dark:data-[today]:[&:not([aria-selected=true])]:text-indigo-400",
   "data-[outside-month]:text-zinc-400 dark:data-[outside-month]:text-zinc-500",
   DP_FOCUS_RING,
 ].join(" ");
@@ -163,9 +163,9 @@ export const DP_FIELD_CSS = `.dp-label {
 }
 
 .dp-input:focus-within {
-  border-color: #fafafa;
+  border-color: #6366f1;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(250, 250, 250, 0.15);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
   outline: none;
 }
 
@@ -182,9 +182,13 @@ export const DP_FIELD_CSS = `.dp-label {
 }
 
 .dp-input input:focus {
-  background: #f4f4f5;
+  background: #4f46e5;
   color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.dp-input input::selection {
+  background: transparent;
 }
 
 .dp-input [data-separator] {
@@ -212,8 +216,8 @@ export const DP_FIELD_CSS = `.dp-label {
 }
 
 .dp-date-field:focus-within {
-  border-color: #fafafa;
-  box-shadow: 0 0 0 3px rgba(250, 250, 250, 0.15);
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
   outline: none;
 }
 
@@ -228,7 +232,7 @@ export const DP_FIELD_CSS = `.dp-label {
 }
 
 .dp-date-field input:focus {
-  background: #f4f4f5;
+  background: #4f46e5;
   color: #fff;
 }
 
@@ -248,9 +252,9 @@ export const DP_FIELD_CSS = `.dp-label {
 
 .dp-trigger:hover,
 .dp-trigger[aria-expanded="true"] {
-  border-color: #fafafa;
-  background: rgba(250, 250, 250, 0.05);
-  color: #e4e4e7;
+  border-color: #6366f1;
+  background: #eef2ff;
+  color: #4338ca;
 }`;
 
 export const DP_POPOVER_SHELL_CSS = `.dp-popover {
@@ -280,13 +284,13 @@ export const DP_DAY_CSS = `.dp-day {
 }
 
 .dp-day:hover {
-  background: rgba(228, 228, 231, 0.9);
-  color: #09090b;
+  background: #eef2ff;
+  color: #312e81;
 }
 
 .dp-day[aria-selected="true"],
 .dp-day[data-selected] {
-  background: #27272a;
+  background: #4f46e5;
   color: #fff;
   font-weight: 600;
 }
@@ -346,12 +350,12 @@ export const DP_CAL_SHORTHAND_CSS = `${DP_POPOVER_SHELL_CSS}
 }
 
 .dp-popover [role="gridcell"]:hover:not([data-disabled]) {
-  background: rgba(228, 228, 231, 0.9);
-  color: #09090b;
+  background: #eef2ff;
+  color: #312e81;
 }
 
 .dp-popover [role="gridcell"][data-selected] {
-  background: #27272a;
+  background: #4f46e5;
   color: #fff;
   font-weight: 600;
 }
@@ -384,7 +388,7 @@ const input = css({
   fontFamily: "mono",
   fontSize: "14px",
   "& input": { border: "none", background: "transparent", padding: "2px 4px", textAlign: "center", outline: "none", borderRadius: "6px" },
-  "& input:focus": { background: "zinc.100", color: "white" },
+  "& input:focus": { background: "indigo.600", color: "white", _dark: { background: "indigo.500", color: "white" } },
   "& [data-separator]": { fontWeight: "medium", color: "zinc.500", paddingX: "2px" },
 });
 const trigger = css({
@@ -415,5 +419,5 @@ export const DP_PANDA_DATE_FIELD_INPUT = `const dateField = css({
   fontFamily: "mono",
   fontSize: "14px",
   cursor: "text",
-  "& input:focus": { background: "zinc.100", color: "white" },
+  "& input:focus": { background: "indigo.600", color: "white", _dark: { background: "indigo.500", color: "white" } },
 });`;

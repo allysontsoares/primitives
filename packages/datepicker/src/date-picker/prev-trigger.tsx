@@ -4,11 +4,11 @@ import { useDatePickerContext } from "./context";
 export type PrevTriggerProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "aria-label">;
 
 export function PrevTrigger({ children, onClick, ...props }: PrevTriggerProps) {
-  const { state, dispatch } = useDatePickerContext();
+  const { state, dispatch, config } = useDatePickerContext();
   const labels: Record<string, string> = {
-    day: "Go to previous month",
-    month: "Go to previous year",
-    year: "Go to previous years",
+    day: config.messages.previousMonth,
+    month: config.messages.previousYear,
+    year: config.messages.previousYears,
   };
 
   return (

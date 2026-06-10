@@ -17,17 +17,17 @@ export function LandingHero() {
     <section className="relative overflow-hidden border-b border-white/[0.07]">
       <div className="relative mx-auto max-w-[1200px] border-x border-white/[0.07]">
         <div className="kenos-landing-dot-bg pointer-events-none absolute inset-0 opacity-40" />
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[700px] -translate-x-1/2 bg-zinc-100/5 blur-[140px]" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[700px] -translate-x-1/2 bg-indigo-500/10 blur-[140px]" />
 
         <div className="relative flex flex-col items-center px-6 pb-10 pt-16 text-center">
           <div className="mb-10 flex items-center gap-3 font-mono text-[11px]">
             <span className="flex items-center gap-1.5 rounded-full border border-white/[0.07] bg-zinc-900 px-2.5 py-1 text-zinc-500">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
               unstyled primitives
             </span>
             <span className="text-zinc-600">/</span>
-            <span className="flex items-center gap-1.5 text-emerald-400">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className="flex items-center gap-1.5 text-indigo-400">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
               React 19+
             </span>
           </div>
@@ -44,10 +44,7 @@ export function LandingHero() {
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-            <Link
-              href="/docs/installation"
-              className="rounded-md bg-zinc-100 px-6 py-3 text-sm font-semibold text-zinc-900 transition-all duration-200 hover:bg-white hover:shadow-[0_0_24px_rgba(250,250,250,0.12)]"
-            >
+            <Link href="/docs/installation" className="kenos-cta">
               Get Started
             </Link>
             <button
@@ -140,7 +137,7 @@ function ConnectorLabel({
       className={`flex items-center gap-2 ${side === "right" ? "flex-row" : "flex-row-reverse"}`}
     >
       <span
-        className={`rounded border border-white/[0.07] bg-zinc-900 px-1.5 py-0.5 ${accent ? "text-zinc-100" : "text-zinc-400"}`}
+        className={`rounded border border-white/[0.07] bg-zinc-900 px-1.5 py-0.5 ${accent ? "border-indigo-500/30 text-indigo-300" : "text-zinc-400"}`}
       >
         {symbol}
       </span>

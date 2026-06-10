@@ -1,27 +1,54 @@
 import { useReducer, useMemo, useEffect, useRef, useId } from "react";
 import { datePickerReducer, createInitialState } from "./reducer";
 import type { DatePickerState, DatePickerAction } from "./reducer";
-import type { DatePickerConfig, DatePickerRootProps } from "../types";
+import type { DatePickerConfig, DatePickerRangeProps, DatePickerRootProps } from "../types";
 import {
   buildCalendarGrid,
   buildWeekDays,
   buildMonthItems,
   buildYearItems,
 } from "../utils/calendar";
-import { getWeekStartDay } from "../utils/locale";
+import { getWeekStartDay, resolveHourCycle } from "../utils/locale";
+import { DEFAULT_MESSAGES } from "../utils/messages";
 import type { Dispatch } from "react";
+import type { TextDirection } from "../types";
+
+function resolveDir(props: DatePickerRootProps): TextDirection {
+  if (props.dir) return props.dir;
+  if (typeof document !== "undefined" && document.documentElement.dir === "rtl") {
+    return "rtl";
+  }
+  return "ltr";
+}
 
 function resolveConfig(props: DatePickerRootProps): DatePickerConfig {
+  const mode = props.mode ?? "single";
+  const locale = props.locale ?? (typeof navigator !== "undefined" ? navigator.language : "en-US");
   const base: DatePickerConfig = {
-    mode: props.mode ?? "single",
-    locale: props.locale ?? (typeof navigator !== "undefined" ? navigator.language : "en-US"),
+    mode,
+    locale,
+    dir: resolveDir(props),
     readOnly: props.readOnly ?? false,
     modal: props.modal ?? false,
-    closeOnSelect: props.closeOnSelect ?? (props.mode !== "range" && props.mode !== "multiple"),
+    closeOnSelect: props.closeOnSelect ?? (mode !== "range" && mode !== "multiple"),
+    granularity: props.granularity ?? "day",
+    hourCycle: resolveHourCycle(props.hourCycle, locale),
+    pageBehavior: props.pageBehavior ?? "visible",
+    allowsNonContiguousRanges:
+      mode === "range"
+        ? ((props as DatePickerRangeProps).allowsNonContiguousRanges ?? false)
+        : false,
+    messages: { ...DEFAULT_MESSAGES, ...props.messages },
     ...(props.weekStartsOn !== undefined && { weekStartsOn: props.weekStartsOn }),
     ...(props.minDate !== undefined && { minDate: props.minDate }),
     ...(props.maxDate !== undefined && { maxDate: props.maxDate }),
     ...(props.disabled !== undefined && { disabled: props.disabled }),
+    ...(props.unavailable !== undefined && { unavailable: props.unavailable }),
+    ...(props.placeholderDate !== undefined && { placeholderDate: props.placeholderDate }),
+    ...(props.name !== undefined && { name: props.name }),
+    ...(props.required !== undefined && { required: props.required }),
+    ...(props.invalid !== undefined && { invalid: props.invalid }),
+    ...(props.errorMessage !== undefined && { errorMessage: props.errorMessage }),
   };
   return base;
 }
@@ -46,7 +73,12 @@ function resolveInitialValue(props: DatePickerRootProps) {
     return { rangeStart: v?.start ?? null, rangeEnd: v?.end ?? null };
   }
   if (props.mode === "multiple") {
-    const v = "defaultValue" in props ? props.defaultValue : undefined;
+    const v =
+      "value" in props && props.value !== undefined
+        ? props.value
+        : "defaultValue" in props
+          ? props.defaultValue
+          : undefined;
     return { selectedDates: v ?? [] };
   }
   return {};
@@ -54,22 +86,78 @@ function resolveInitialValue(props: DatePickerRootProps) {
 
 export function useDatePicker(props: DatePickerRootProps) {
   const uid = useId();
-  const { mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal } =
-    props;
+  const {
+    mode,
+    locale,
+    dir,
+    weekStartsOn,
+    minDate,
+    maxDate,
+    disabled,
+    unavailable,
+    readOnly,
+    closeOnSelect,
+    modal,
+    placeholderDate,
+    granularity,
+    hourCycle,
+    pageBehavior,
+    messages,
+    name,
+    required,
+    invalid,
+    errorMessage,
+  } = props;
+  const allowsNonContiguousRanges =
+    mode === "range" ? (props as DatePickerRangeProps).allowsNonContiguousRanges : undefined;
   const config = useMemo(
     () =>
       resolveConfig({
         mode,
         locale,
+        dir,
         weekStartsOn,
         minDate,
         maxDate,
         disabled,
+        unavailable,
         readOnly,
         closeOnSelect,
         modal,
+        placeholderDate,
+        granularity,
+        hourCycle,
+        pageBehavior,
+        ...(allowsNonContiguousRanges !== undefined && { allowsNonContiguousRanges }),
+        messages,
+        name,
+        required,
+        invalid,
+        errorMessage,
       } as DatePickerRootProps),
-    [mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal],
+    [
+      mode,
+      locale,
+      dir,
+      weekStartsOn,
+      minDate,
+      maxDate,
+      disabled,
+      unavailable,
+      readOnly,
+      closeOnSelect,
+      modal,
+      placeholderDate,
+      granularity,
+      hourCycle,
+      pageBehavior,
+      allowsNonContiguousRanges,
+      messages,
+      name,
+      required,
+      invalid,
+      errorMessage,
+    ],
   );
 
   const initialValue = resolveInitialValue(props);
@@ -77,6 +165,9 @@ export function useDatePicker(props: DatePickerRootProps) {
     (s: DatePickerState, a: DatePickerAction) => datePickerReducer(s, a, config),
     createInitialState({
       locale: config.locale,
+      granularity: config.granularity,
+      hourCycle: config.hourCycle,
+      ...(config.placeholderDate !== undefined && { placeholderDate: config.placeholderDate }),
       ...(props.defaultOpen !== undefined && { open: props.defaultOpen }),
       ...initialValue,
     }),
@@ -181,6 +272,38 @@ export function useDatePicker(props: DatePickerRootProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- props is a new object each render; mode/onValueChange accessed via closure intentionally
   }, [state.rangeStart, state.rangeEnd]);
+
+  const controlledMultipleValue =
+    props.mode === "multiple" && "value" in props && props.value !== undefined
+      ? props.value
+      : undefined;
+  const propMultipleSignature = useMemo(
+    () =>
+      controlledMultipleValue
+        ? controlledMultipleValue
+            .map((d) => d.getTime())
+            .sort((a, b) => a - b)
+            .join(",")
+        : "",
+    [controlledMultipleValue],
+  );
+  const lastSyncedPropMultipleRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (controlledMultipleValue === undefined) return;
+
+    if (lastSyncedPropMultipleRef.current === propMultipleSignature) return;
+    lastSyncedPropMultipleRef.current = propMultipleSignature;
+
+    const stateSignature = state.selectedDates
+      .map((d) => d.getTime())
+      .sort((a, b) => a - b)
+      .join(",");
+    if (propMultipleSignature === stateSignature) return;
+
+    dispatch({ type: "SET_SELECTED_DATES", dates: controlledMultipleValue });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only sync when the controlled prop changes
+  }, [propMultipleSignature, dispatch]);
 
   const prevMultipleRef = useRef<Date[] | undefined>(undefined);
   useEffect(() => {

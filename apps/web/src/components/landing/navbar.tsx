@@ -30,7 +30,7 @@ export function LandingNavbar() {
             <span className="sm:hidden">@kenos-ui/react-datepicker</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
             <span>registry / synced</span>
           </div>
         </div>
@@ -76,7 +76,7 @@ export function LandingNavbar() {
             </Link>
             <Link
               href="/docs/installation"
-              className="flex h-full items-center bg-zinc-100 px-5 text-[13px] font-semibold text-zinc-900 transition-colors hover:bg-white"
+              className="flex h-full items-center bg-indigo-600 px-5 text-[13px] font-semibold text-white transition-colors hover:bg-indigo-500"
             >
               Get Started
             </Link>
@@ -119,7 +119,7 @@ export function LandingNavbar() {
           ))}
           <Link
             href="/docs/installation"
-            className="mt-3 block rounded-md bg-zinc-100 px-4 py-2.5 text-center text-sm font-semibold text-zinc-900"
+            className="mt-3 block rounded-md bg-indigo-600 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-indigo-500"
             onClick={() => setMobileOpen(false)}
           >
             Get Started

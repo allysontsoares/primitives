@@ -31,7 +31,7 @@ const HERO_PILLS = [
 export function DocsHeroCard() {
   return (
     <section
-      className="relative isolate overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-br from-zinc-50 via-white to-zinc-100 shadow-lg dark:border-zinc-800 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-900"
+      className="relative isolate overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-br from-indigo-50/40 via-white to-zinc-100 shadow-lg dark:border-zinc-800 dark:from-indigo-950/30 dark:via-zinc-950 dark:to-zinc-900"
       aria-labelledby="home-hero-title"
     >
       <HeroCircles />

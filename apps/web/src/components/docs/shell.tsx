@@ -120,7 +120,7 @@ function useTheme() {
 }
 
 const topbarGithubLinkCls =
-  "hidden sm:inline-flex h-7 shrink-0 items-center justify-center rounded-2xl border border-transparent bg-zinc-900 px-3 text-sm font-medium text-white no-underline transition-colors hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200";
+  "hidden sm:inline-flex h-7 shrink-0 items-center justify-center rounded-2xl border border-indigo-600/20 bg-indigo-600 px-3 text-sm font-medium text-white no-underline transition-colors hover:bg-indigo-500 dark:border-indigo-400/20 dark:bg-indigo-500 dark:hover:bg-indigo-400";
 
 /* ============================ SEARCH MODAL ============================ */
 function SearchModal({ onClose }: { onClose: () => void }) {
@@ -347,7 +347,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
                 disabled
                   ? "cursor-not-allowed text-zinc-400 opacity-60 dark:text-zinc-500"
                   : on
-                    ? "bg-zinc-100 dark:bg-zinc-800 font-semibold text-zinc-900 dark:text-zinc-100"
+                    ? "bg-indigo-500/10 font-semibold text-indigo-700 dark:bg-indigo-400/10 dark:text-indigo-300"
                     : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100"
               }`;
             if (item.soon) {

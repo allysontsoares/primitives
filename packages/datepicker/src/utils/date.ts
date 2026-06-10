@@ -29,8 +29,45 @@ export function isInRange(date: Date, start: Date | null, end: Date | null): boo
   return date.getTime() > from.getTime() && date.getTime() < to.getTime();
 }
 
+import type { DateGranularity } from "../types";
+
 export function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+export function normalizeDateValue(
+  date: Date,
+  granularity: DateGranularity,
+  preserveFrom?: Date | null,
+): Date {
+  if (granularity === "day") return startOfDay(date);
+  const next = new Date(date);
+  if (preserveFrom) {
+    next.setHours(
+      preserveFrom.getHours(),
+      preserveFrom.getMinutes(),
+      preserveFrom.getSeconds(),
+      preserveFrom.getMilliseconds(),
+    );
+  }
+  return next;
+}
+
+export function rangeSpansUnavailable(
+  start: Date,
+  end: Date,
+  config: DateConstraintConfig,
+): boolean {
+  const [from, to] =
+    start.getTime() <= end.getTime()
+      ? [startOfDay(start), startOfDay(end)]
+      : [startOfDay(end), startOfDay(start)];
+  let current = addDays(from, 1);
+  while (current.getTime() < to.getTime()) {
+    if (isDateUnavailable(current, config)) return true;
+    current = addDays(current, 1);
+  }
+  return false;
 }
 
 export function today(): Date {
@@ -62,13 +99,41 @@ export function clampDate(date: Date, min?: Date, max?: Date): Date {
   return date;
 }
 
-export function isDateDisabled(
-  date: Date,
-  config: { minDate?: Date; maxDate?: Date; disabled?: boolean | ((d: Date) => boolean) },
-): boolean {
+export interface DateConstraintConfig {
+  minDate?: Date;
+  maxDate?: Date;
+  disabled?: boolean | ((d: Date) => boolean);
+  unavailable?: (d: Date) => boolean;
+}
+
+export function isDateDisabled(date: Date, config: DateConstraintConfig): boolean {
   if (config.disabled === true) return true;
   if (typeof config.disabled === "function" && config.disabled(date)) return true;
   if (config.minDate && date.getTime() < startOfDay(config.minDate).getTime()) return true;
   if (config.maxDate && date.getTime() > startOfDay(config.maxDate).getTime()) return true;
   return false;
+}
+
+export function isDateUnavailable(date: Date, config: DateConstraintConfig): boolean {
+  if (isDateDisabled(date, config)) return false;
+  return config.unavailable?.(date) ?? false;
+}
+
+export function isDateSelectable(date: Date, config: DateConstraintConfig): boolean {
+  return !isDateDisabled(date, config) && !isDateUnavailable(date, config);
+}
+
+/** Returns the next date that can receive focus (skips disabled, allows unavailable). */
+export function findNextFocusableDate(
+  start: Date,
+  deltaDays: number,
+  config: DateConstraintConfig,
+  maxAttempts = 62,
+): Date {
+  let current = start;
+  for (let i = 0; i < maxAttempts; i++) {
+    current = addDays(current, deltaDays);
+    if (!isDateDisabled(current, config)) return current;
+  }
+  return addDays(start, deltaDays);
 }

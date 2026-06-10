@@ -12,10 +12,12 @@ describe("useClickOutside (popup-policy dismiss)", () => {
 
     renderHook(() => useClickOutside([insideRef], handler, true));
 
-    outside.dispatchEvent(new Event("pointerdown", { bubbles: true }) as PointerEvent);
+    outside.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    outside.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(handler).toHaveBeenCalledTimes(1);
 
-    inside.dispatchEvent(new Event("pointerdown", { bubbles: true }) as PointerEvent);
+    inside.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    inside.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(handler).toHaveBeenCalledTimes(1);
 
     document.body.removeChild(inside);
@@ -30,7 +32,8 @@ describe("useClickOutside (popup-policy dismiss)", () => {
     const ref = { current: null as HTMLDivElement | null };
     renderHook(() => useClickOutside([ref], handler, false));
 
-    outside.dispatchEvent(new Event("pointerdown", { bubbles: true }) as PointerEvent);
+    outside.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    outside.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     expect(handler).not.toHaveBeenCalled();
 
     document.body.removeChild(outside);

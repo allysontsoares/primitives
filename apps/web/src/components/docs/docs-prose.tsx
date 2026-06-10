@@ -11,7 +11,7 @@ export function DocsProse({ className, ...props }: React.ComponentProps<"div">) 
         "prose-p:text-zinc-600 dark:prose-p:text-zinc-300",
         "prose-li:text-zinc-600 dark:prose-li:text-zinc-300",
         "prose-a:text-zinc-900 dark:prose-a:text-zinc-100 prose-a:underline prose-a:decoration-zinc-300 dark:prose-a:decoration-zinc-600 prose-a:underline-offset-[3px]",
-        "hover:prose-a:text-zinc-700 dark:text-zinc-300 hover:prose-a:decoration-zinc-100 dark:hover:prose-a:text-zinc-300",
+        "hover:prose-a:text-indigo-700 dark:text-zinc-300 hover:prose-a:decoration-indigo-500 dark:hover:prose-a:text-indigo-400 dark:hover:prose-a:decoration-indigo-400",
         "prose-strong:text-zinc-900 dark:prose-strong:text-zinc-100",
         "prose-code:rounded-md prose-code:bg-zinc-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.86em] prose-code:font-medium prose-code:text-zinc-800 dark:text-zinc-200 prose-code:before:content-none prose-code:after:content-none dark:prose-code:bg-zinc-300/15 dark:prose-code:text-zinc-300",
         className,

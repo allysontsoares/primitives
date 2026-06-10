@@ -22,7 +22,10 @@
   --topbar-h: 60px;
   --color-kenos-mark: #fafafa;
   --color-kenos-grid: rgb(255 255 255 / 0.06);
+  --color-kenos-accent: var(--kenos-accent);
 }
+
+/* Tailwind indigo — brand accent */
 
 :root {
   --radius: 0.45rem;
@@ -33,7 +36,9 @@
   --kenos-border: rgb(24 24 27 / 0.12);
   --kenos-grid: rgb(24 24 27 / 0.06);
   --kenos-mark: #18181b;
-  --kenos-accent-muted: rgb(24 24 27 / 0.06);
+  --kenos-accent: #4f46e5;
+  --kenos-accent-muted: rgb(79 70 229 / 0.14);
+  --kenos-accent-soft: rgb(79 70 229 / 0.08);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --border: oklch(0.922 0 0);
@@ -49,7 +54,9 @@
   --kenos-border: rgb(255 255 255 / 0.08);
   --kenos-grid: rgb(255 255 255 / 0.06);
   --kenos-mark: #fafafa;
-  --kenos-accent-muted: rgb(250 250 250 / 0.08);
+  --kenos-accent: #818cf8;
+  --kenos-accent-muted: rgb(129 140 248 / 0.2);
+  --kenos-accent-soft: rgb(99 102 241 / 0.12);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
@@ -123,6 +130,9 @@
     background: var(--kenos-accent-muted);
     color: inherit;
   }
+  :focus-visible {
+    outline-color: var(--kenos-accent);
+  }
   a {
     color: inherit;
     text-decoration: none;
@@ -188,6 +198,18 @@
 
 .landing-code-string {
   color: #a1a1aa;
+}
+
+@utility decoration-accent {
+  text-decoration-color: var(--kenos-accent);
+}
+
+@utility decoration-line-strong {
+  text-decoration-thickness: 2px;
+}
+
+.kenos-cta {
+  @apply rounded-md bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-indigo-500 hover:shadow-[0_0_24px_rgb(99_102_241/0.35)];
 }
 *::-webkit-scrollbar-track {
   background: transparent;

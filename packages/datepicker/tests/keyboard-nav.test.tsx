@@ -23,11 +23,6 @@ function BasicPicker({
       <DatePicker.Input data-testid="input" />
       <DatePicker.Trigger data-testid="trigger">Open</DatePicker.Trigger>
       <DatePicker.Content forceMount data-testid="content">
-        <DatePicker.ViewControl>
-          <DatePicker.PrevTrigger data-testid="prev" />
-          <DatePicker.ViewTrigger data-testid="view-trigger" />
-          <DatePicker.NextTrigger data-testid="next" />
-        </DatePicker.ViewControl>
         <DatePicker.Calendar />
       </DatePicker.Content>
     </DatePicker.Root>
@@ -290,7 +285,7 @@ describe("Calendar navigation", () => {
     render(<BasicPicker defaultOpen />);
     const grid = screen.getAllByRole("grid").find((el) => el.tagName === "TABLE")!;
     expect(grid.getAttribute("aria-label")).toMatch(/june/i);
-    await user.click(screen.getByTestId("prev"));
+    await user.click(screen.getByRole("button", { name: /previous month/i }));
     expect(grid.getAttribute("aria-label")).toMatch(/may/i);
   });
 
@@ -298,14 +293,14 @@ describe("Calendar navigation", () => {
     const user = userEvent.setup();
     render(<BasicPicker defaultOpen />);
     const grid = screen.getAllByRole("grid").find((el) => el.tagName === "TABLE")!;
-    await user.click(screen.getByTestId("next"));
+    await user.click(screen.getByRole("button", { name: /next month/i }));
     expect(grid.getAttribute("aria-label")).toMatch(/july/i);
   });
 
   it("ViewTrigger switches to month view", async () => {
     const user = userEvent.setup();
     render(<BasicPicker defaultOpen />);
-    await user.click(screen.getByTestId("view-trigger"));
+    await user.click(screen.getByRole("button", { name: /switch to month view/i }));
     const grids = screen.getAllByRole("grid");
     const monthGrid = grids.find((g) => g.getAttribute("aria-label") === "2024");
     expect(monthGrid).toBeInTheDocument();
@@ -314,7 +309,7 @@ describe("Calendar navigation", () => {
   it("selecting a month returns to day view", async () => {
     const user = userEvent.setup();
     render(<BasicPicker defaultOpen />);
-    await user.click(screen.getByTestId("view-trigger"));
+    await user.click(screen.getByRole("button", { name: /switch to month view/i }));
     const augustCell = screen.getByRole("gridcell", { name: /august/i });
     await user.click(augustCell);
     const grid = screen.getAllByRole("grid").find((el) => el.tagName === "TABLE")!;
@@ -452,12 +447,212 @@ describe("Grid keyboard navigation", () => {
   });
 });
 
+describe("Month grid keyboard navigation", () => {
+  it("ArrowRight prevents default page scroll while moving focus", async () => {
+    const user = userEvent.setup();
+    render(<BasicPicker defaultOpen />);
+    await user.click(screen.getByRole("button", { name: /switch to month view/i }));
+
+    const monthGrid = screen.getByRole("grid", { name: "2024" });
+    const focused = monthGrid.querySelector<HTMLElement>('[tabindex="0"]');
+    focused?.focus();
+
+    const preventDefault = vi.spyOn(KeyboardEvent.prototype, "preventDefault");
+    await user.keyboard("{ArrowRight}");
+    expect(preventDefault).toHaveBeenCalled();
+    preventDefault.mockRestore();
+  });
+});
+
+describe("Keyboard: header ↔ grid traversal across views", () => {
+  function activeRole() {
+    return document.activeElement?.getAttribute("role");
+  }
+
+  // The ViewControl order is Prev → ViewTrigger → Next, so the Next button is the
+  // last header tab stop; Tab from it must enter the grid below.
+  function tabFromHeaderInto(grid: HTMLElement, nextName: RegExp) {
+    screen.getByRole("button", { name: nextName }).focus();
+    return grid;
+  }
+
+  it("Tab from a header button returns focus into the day grid", async () => {
+    const user = userEvent.setup();
+    render(<BasicPicker defaultOpen />);
+
+    screen.getByRole("button", { name: /next month/i }).focus();
+
+    // The grid is a single tab stop (roving tabindex) — Tab lands on the focused day.
+    await user.tab();
+
+    const grid = screen.getAllByRole("grid").find((g) => g.tagName === "TABLE")!;
+    expect(grid.contains(document.activeElement)).toBe(true);
+    expect(activeRole()).toBe("gridcell");
+  });
+
+  it("cycles day → month → year → day via the ViewTrigger and Tab returns to the grid in each view", async () => {
+    const user = userEvent.setup();
+    render(<BasicPicker defaultOpen />);
+
+    // Day view is shown initially.
+    const dayGrid = screen.getAllByRole("grid").find((g) => g.tagName === "TABLE")!;
+    expect(dayGrid.getAttribute("aria-label")).toMatch(/june/i);
+
+    // day → month (Enter on the focused ViewTrigger).
+    screen.getByRole("button", { name: /switch to month view/i }).focus();
+    await user.keyboard("{Enter}");
+    const monthGrid = screen.getByRole("grid", { name: "2024" });
+    expect(monthGrid).toBeInTheDocument();
+
+    // Tab from the header lands in the month grid (focused month cell).
+    tabFromHeaderInto(monthGrid, /next year/i);
+    await user.tab();
+    expect(monthGrid.contains(document.activeElement)).toBe(true);
+    expect(activeRole()).toBe("gridcell");
+
+    // month → year.
+    screen.getByRole("button", { name: /switch to year view/i }).focus();
+    await user.keyboard("{Enter}");
+    const yearGrid = screen
+      .getAllByRole("grid")
+      .find((g) => /\d{4}.*\d{4}/.test(g.getAttribute("aria-label") ?? ""))!;
+    expect(yearGrid).toBeDefined();
+
+    // Tab from the header lands in the year grid (focused year cell).
+    tabFromHeaderInto(yearGrid, /next years/i);
+    await user.tab();
+    expect(yearGrid.contains(document.activeElement)).toBe(true);
+    expect(activeRole()).toBe("gridcell");
+
+    // year → day (the ViewTrigger cycles back to the day view).
+    screen.getByRole("button", { name: /switch to day view/i }).focus();
+    await user.keyboard("{Enter}");
+    const dayGridAgain = screen.getAllByRole("grid").find((g) => g.tagName === "TABLE")!;
+    expect(dayGridAgain.getAttribute("aria-label")).toMatch(/june/i);
+
+    // And Tab from the header returns into the day grid again.
+    screen.getByRole("button", { name: /next month/i }).focus();
+    await user.tab();
+    expect(dayGridAgain.contains(document.activeElement)).toBe(true);
+    expect(activeRole()).toBe("gridcell");
+  });
+});
+
+describe("Grid keyboard — crossing month boundaries (FX-2)", () => {
+  it("ArrowUp on the first row navigates into the previous month", async () => {
+    const user = userEvent.setup();
+    // June 1, 2024 sits on the top row; ArrowUp must cross into May.
+    render(<BasicPicker defaultOpen defaultValue={new Date(2024, 5, 1)} />);
+
+    const grid = screen.getAllByRole("grid").find((g) => g.tagName === "TABLE")!;
+    const focused = grid.querySelector<HTMLElement>('[tabindex="0"]');
+    focused?.focus();
+    expect(grid.getAttribute("aria-label")).toMatch(/june/i);
+
+    await user.keyboard("{ArrowUp}");
+
+    expect(grid.getAttribute("aria-label")).toMatch(/may/i);
+  });
+
+  it("ArrowLeft on the first day navigates into the previous month", async () => {
+    const user = userEvent.setup();
+    render(<BasicPicker defaultOpen defaultValue={new Date(2024, 5, 1)} />);
+
+    const grid = screen.getAllByRole("grid").find((g) => g.tagName === "TABLE")!;
+    const focused = grid.querySelector<HTMLElement>('[tabindex="0"]');
+    focused?.focus();
+
+    await user.keyboard("{ArrowLeft}");
+
+    expect(grid.getAttribute("aria-label")).toMatch(/may/i);
+  });
+});
+
+describe("Range selection by click (FX-1)", () => {
+  function RangePicker({ onValueChange }: { onValueChange?: (r: unknown) => void }) {
+    return (
+      <DatePicker.Root
+        mode="range"
+        defaultOpen
+        closeOnSelect={false}
+        {...(onValueChange ? { onValueChange } : {})}
+      >
+        <DatePicker.Input index={0} />
+        <DatePicker.Input index={1} />
+        <DatePicker.Trigger>Open</DatePicker.Trigger>
+        <DatePicker.Content forceMount>
+          <DatePicker.Calendar />
+        </DatePicker.Content>
+      </DatePicker.Root>
+    );
+  }
+
+  function dayCell(n: number) {
+    return screen
+      .getAllByRole("gridcell")
+      .find((c) => c.textContent?.trim() === String(n) && !c.hasAttribute("data-outside-month"));
+  }
+
+  it("first click anchors, second click completes the range", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<RangePicker onValueChange={onChange} />);
+
+    await user.click(dayCell(10)!);
+    // Anchor set, no end yet.
+    expect(dayCell(10)).toHaveAttribute("data-range-start");
+
+    await user.click(dayCell(15)!);
+
+    expect(dayCell(10)).toHaveAttribute("data-range-start");
+    expect(dayCell(15)).toHaveAttribute("data-range-end");
+    expect(dayCell(12)).toHaveAttribute("data-in-range");
+
+    const last = onChange.mock.calls.at(-1)?.[0] as { start: Date; end: Date };
+    expect(last.start.getDate()).toBe(10);
+    expect(last.end.getDate()).toBe(15);
+  });
+
+  it("clicking a third date after a complete range starts a new range", async () => {
+    const user = userEvent.setup();
+    render(<RangePicker />);
+
+    await user.click(dayCell(10)!);
+    await user.click(dayCell(15)!);
+    await user.click(dayCell(20)!);
+
+    expect(dayCell(20)).toHaveAttribute("data-range-start");
+    expect(dayCell(15)).not.toHaveAttribute("data-range-end");
+  });
+
+  it("press-and-drag selects a range in one gesture (FX-1b)", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<RangePicker onValueChange={onChange} />);
+
+    // Mouse down on day 10, drag onto day 18, release there.
+    await user.pointer([
+      { keys: "[MouseLeft>]", target: dayCell(10)! },
+      { target: dayCell(18)! },
+      { keys: "[/MouseLeft]", target: dayCell(18)! },
+    ]);
+
+    expect(dayCell(10)).toHaveAttribute("data-range-start");
+    expect(dayCell(18)).toHaveAttribute("data-range-end");
+    expect(dayCell(14)).toHaveAttribute("data-in-range");
+
+    const last = onChange.mock.calls.at(-1)?.[0] as { start: Date; end: Date };
+    expect(last.start.getDate()).toBe(10);
+    expect(last.end.getDate()).toBe(18);
+  });
+});
+
 describe("Year view navigation", () => {
   it("clicking ViewTrigger twice opens year view", async () => {
     const user = userEvent.setup();
     render(<BasicPicker defaultOpen />);
-    await user.click(screen.getByTestId("view-trigger")); // → month
-    await user.click(screen.getByTestId("view-trigger")); // → year
+    await user.click(screen.getByRole("button", { name: /switch to month view/i })); // → month
+    await user.click(screen.getByRole("button", { name: /switch to year view/i })); // → year
     const grids = screen.getAllByRole("grid");
     const yearGrid = grids.find((g) => /\d{4}.*\d{4}/.test(g.getAttribute("aria-label") ?? ""));
     expect(yearGrid).toBeInTheDocument();

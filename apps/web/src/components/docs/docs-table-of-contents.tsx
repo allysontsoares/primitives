@@ -160,7 +160,7 @@ export function DocsTableOfContents() {
                     "-ml-px block border-l py-1.5 leading-snug transition-colors",
                     heading.level === 3 ? "pl-7 pr-2 text-[12.5px]" : "pl-4 pr-2 text-[13px]",
                     active
-                      ? "border-zinc-400 font-medium text-zinc-500"
+                      ? "border-indigo-500 font-medium text-indigo-600 dark:text-indigo-400"
                       : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
                   ].join(" ")}
                 >

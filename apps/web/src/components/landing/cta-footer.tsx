@@ -84,7 +84,7 @@ export function LandingCtaFooter() {
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Link
                 href="/docs/installation"
-                className="rounded-md bg-zinc-100 px-6 py-3 text-sm font-semibold text-zinc-900 transition-all duration-200 hover:bg-white hover:shadow-[0_0_30px_rgba(250,250,250,0.15)]"
+                className="kenos-cta hover:shadow-[0_0_30px_rgb(99_102_241/0.4)]"
               >
                 Get started
               </Link>
@@ -172,7 +172,7 @@ export function LandingCtaFooter() {
             </p>
             <Link
               href="/docs"
-              className="font-mono text-xs text-zinc-500 transition-colors hover:text-zinc-100"
+              className="font-mono text-xs text-zinc-500 transition-colors hover:text-indigo-400"
             >
               Documentation →
             </Link>

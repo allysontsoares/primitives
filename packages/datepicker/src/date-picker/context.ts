@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Dispatch } from "react";
+import type { Dispatch, MutableRefObject } from "react";
 import type { DatePickerState, DatePickerAction } from "./reducer";
 import type { DatePickerConfig, ViewMode } from "../types";
 
@@ -44,3 +44,15 @@ export function useDatePickerViewContext(): DatePickerViewContextValue {
 
 export const MonthGridFocusContext = createContext<number>(-1);
 export const YearGridFocusContext = createContext<number>(-1);
+
+// ── Range drag (mouse/pen) ───────────────────────────────────────────────────
+// Shared, render-free state so day cells can coordinate a press-and-drag range
+// selection across cells (each <Day> is a separate component instance).
+export interface RangeDragState {
+  /** The cell where the press started, or null when no press is in progress. */
+  startDate: Date | null;
+  /** Becomes true once the pointer moves onto a different cell (a real drag). */
+  active: boolean;
+}
+
+export const RangeDragContext = createContext<MutableRefObject<RangeDragState> | null>(null);

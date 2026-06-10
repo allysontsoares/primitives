@@ -1,7 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTimescape } from "timescape/react";
-import { isDateDisabled } from "../utils/date";
-import { getSegmentInfo } from "../utils/locale";
+import { createFocusManager, useKeyboardShortcuts } from "@kenos-ui/utils";
+import { isDateSelectable } from "../utils/date";
+import { formatSelectedDateDescription } from "../utils/day-aria";
+import { getSegmentInfo, getTimeSegments } from "../utils/locale";
+import type { TimeSegment } from "../utils/locale";
 import { useDatePickerContext } from "./context";
 
 // React 19 ref callbacks must return void, not null. timescape still uses the
@@ -12,11 +15,25 @@ function wrapRef<T extends HTMLElement>(ref: (el: T | null) => void | null): Rea
   };
 }
 
-const DEFAULT_LABELS = { month: "Month", day: "Day", year: "Year" };
+const DEFAULT_LABELS = {
+  month: "Month",
+  day: "Day",
+  year: "Year",
+  hour: "Hour",
+  minute: "Minute",
+  second: "Second",
+  ampm: "AM/PM",
+};
 const FIELD_MAP = {
   year: "years" as const,
   month: "months" as const,
   day: "days" as const,
+};
+const TIME_FIELD_MAP = {
+  hour: "hours" as const,
+  minute: "minutes" as const,
+  second: "seconds" as const,
+  ampm: "am/pm" as const,
 };
 
 export interface InputProps {
@@ -36,10 +53,12 @@ export interface InputProps {
 interface SegmentsProps {
   sourceDate: Date | null;
   segmentOrder: string[];
+  timeSegments: TimeSegment[];
   separator: string;
   labels: Record<string, string>;
   onDateChange: (date: Date | undefined) => void;
   groupId?: string | undefined;
+  describedById?: string | undefined;
   className?: string | undefined;
   style?: React.CSSProperties | undefined;
 }
@@ -47,14 +66,17 @@ interface SegmentsProps {
 function Segments({
   sourceDate,
   segmentOrder,
+  timeSegments,
   separator,
   labels,
   onDateChange,
   groupId,
+  describedById,
   className,
   style,
 }: SegmentsProps) {
   const { state, dispatch, ids, config } = useDatePickerContext();
+  const groupRef = useRef<HTMLDivElement>(null);
 
   // Keep onDateChange stable inside timescape even when the prop reference changes.
   const onDateChangeRef = useRef(onDateChange);
@@ -63,12 +85,15 @@ function Segments({
   const opts: Record<string, unknown> = {
     wrapAround: true,
     onChangeDate: (d: Date | undefined) => onDateChangeRef.current(d),
+    hour12: config.hourCycle === 12,
   };
   if (config.minDate) opts.minDate = config.minDate;
   if (config.maxDate) opts.maxDate = config.maxDate;
   if (sourceDate) opts.date = sourceDate;
 
-  const { getRootProps, getInputProps } = useTimescape(opts as Parameters<typeof useTimescape>[0]);
+  const { getRootProps, getInputProps, ampm } = useTimescape(
+    opts as Parameters<typeof useTimescape>[0],
+  );
 
   const [focused, setFocused] = useState<string | null>(null);
 
@@ -95,6 +120,17 @@ function Segments({
     }
   }
 
+  const shortcutHandlers = useKeyboardShortcuts({
+    bindings: {
+      "Alt+ArrowDown": () => {
+        if (!config.readOnly && !state.open) dispatch({ type: "OPEN", source: "input" });
+      },
+      "Alt+ArrowUp": () => {
+        if (!config.readOnly && state.open) dispatch({ type: "CLOSE" });
+      },
+    },
+  });
+
   const { ref: rootRef, ...rootProps } = getRootProps();
 
   return (
@@ -102,11 +138,25 @@ function Segments({
       role="group"
       id={groupId ?? ids.input}
       aria-labelledby={ids.label}
+      aria-describedby={describedById}
+      aria-invalid={config.invalid || undefined}
+      aria-errormessage={config.invalid && config.errorMessage ? `${ids.input}-error` : undefined}
       tabIndex={-1}
       className={className}
       style={style}
       {...rootProps}
-      ref={wrapRef(rootRef as (el: HTMLElement | null) => void | null)}
+      ref={(el) => {
+        groupRef.current = el;
+        wrapRef(rootRef as (el: HTMLElement | null) => void | null)(el);
+      }}
+      onMouseDown={(e) => {
+        if (config.readOnly) return;
+        if (e.target === e.currentTarget) {
+          e.preventDefault();
+          createFocusManager(() => groupRef.current).focusLast();
+        }
+      }}
+      onKeyDown={shortcutHandlers.onKeyDown}
       {...(config.readOnly ? { "data-readonly": "true" } : {})}
     >
       {segmentOrder.map((field, i) => {
@@ -151,6 +201,82 @@ function Segments({
           </React.Fragment>
         );
       })}
+      {timeSegments.length > 0 && (
+        <span aria-hidden="true" data-separator="true" style={{ marginInline: "0.25ch" }}>
+          {" "}
+        </span>
+      )}
+      {timeSegments.map((field, i) => {
+        const segmentKey = `time-${field}`;
+        const isFocused = focused === segmentKey;
+        const isTabStop = isFocused || (focused === null && segmentOrder.length === 0 && i === 0);
+
+        if (field === "ampm") {
+          const selectProps = ampm.getSelectProps();
+          return (
+            <select
+              key={segmentKey}
+              {...selectProps}
+              aria-label={labels.ampm}
+              data-segment={field}
+              tabIndex={config.readOnly ? -1 : isTabStop ? 0 : -1}
+              disabled={config.readOnly}
+              onFocus={() => handleSegmentFocus(segmentKey)}
+              onBlur={(e) =>
+                handleSegmentBlur(segmentKey, e as unknown as React.FocusEvent<HTMLInputElement>)
+              }
+              className="timescape-input"
+              style={{
+                border: "none",
+                background: "transparent",
+                padding: 0,
+                margin: 0,
+                font: "inherit",
+                outline: "none",
+              }}
+            />
+          );
+        }
+
+        const type = TIME_FIELD_MAP[field];
+        const { ref: inputRef, ...inputProps } = getInputProps(type);
+        const wrappedInputRef = wrapRef(inputRef as (el: HTMLInputElement | null) => void | null);
+
+        return (
+          <React.Fragment key={segmentKey}>
+            {i > 0 && (
+              <span aria-hidden="true" data-separator="true">
+                :
+              </span>
+            )}
+            <input
+              {...inputProps}
+              ref={wrappedInputRef}
+              aria-label={labels[field]}
+              data-segment={field}
+              tabIndex={config.readOnly ? -1 : isTabStop ? 0 : -1}
+              disabled={config.readOnly}
+              onFocus={(e) => {
+                inputRef(e.currentTarget);
+                handleSegmentFocus(segmentKey);
+              }}
+              onBlur={(e) => handleSegmentBlur(segmentKey, e)}
+              onKeyDown={handleKeyDown}
+              className="timescape-input"
+              style={{
+                width: "2ch",
+                border: "none",
+                background: "transparent",
+                padding: 0,
+                margin: 0,
+                textAlign: "center",
+                font: "inherit",
+                outline: "none",
+              }}
+            />
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
@@ -159,16 +285,26 @@ function Segments({
 
 export function Input({ index, segmentLabels, className, style }: InputProps) {
   const { state, dispatch, config, ids } = useDatePickerContext();
+  const descriptionId = useId();
+  const rangeDescriptionId = useId();
 
   const { order: segmentOrder, separator } = useMemo(
     () => getSegmentInfo(config.locale),
     [config.locale],
+  );
+  const timeSegments = useMemo(
+    () => getTimeSegments(config.granularity, config.hourCycle),
+    [config.granularity, config.hourCycle],
   );
 
   const labels = {
     month: segmentLabels?.month ?? DEFAULT_LABELS.month,
     day: segmentLabels?.day ?? DEFAULT_LABELS.day,
     year: segmentLabels?.year ?? DEFAULT_LABELS.year,
+    hour: DEFAULT_LABELS.hour,
+    minute: DEFAULT_LABELS.minute,
+    second: DEFAULT_LABELS.second,
+    ampm: DEFAULT_LABELS.ampm,
   };
 
   const sourceDate =
@@ -204,7 +340,7 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
   const onDateChange = useCallback(
     (nextDate: Date | undefined) => {
       if (!nextDate) return;
-      if (isDateDisabled(nextDate, config)) return;
+      if (!isDateSelectable(nextDate, config)) return;
 
       const prevDate = prevSourceDateRef.current;
       if (prevDate && prevDate.getTime() === nextDate.getTime()) return;
@@ -235,18 +371,46 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
   );
 
   const groupId = index !== undefined ? `${ids.input}-${index}` : ids.input;
+  const showDescription = index === undefined || index === 0;
+  const describedByIds = [
+    showDescription && sourceDate ? descriptionId : null,
+    showDescription && config.mode === "range" && state.rangeStart && !state.rangeEnd
+      ? rangeDescriptionId
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <Segments
-      key={timescapeKey}
-      sourceDate={sourceDate}
-      segmentOrder={segmentOrder}
-      separator={separator}
-      labels={labels}
-      onDateChange={onDateChange}
-      groupId={groupId}
-      className={className}
-      style={style}
-    />
+    <>
+      {showDescription && sourceDate ? (
+        <span id={descriptionId} className="sr-only">
+          {config.messages.selectedDate}: {formatSelectedDateDescription(sourceDate, config.locale)}
+        </span>
+      ) : null}
+      {showDescription && config.mode === "range" && state.rangeStart && !state.rangeEnd ? (
+        <span id={rangeDescriptionId} className="sr-only">
+          {config.messages.finishRangeSelection}
+        </span>
+      ) : null}
+      {config.invalid && config.errorMessage ? (
+        <span id={`${ids.input}-error`} role="alert" className="sr-only">
+          {config.errorMessage}
+        </span>
+      ) : null}
+      <Segments
+        key={timescapeKey}
+        sourceDate={sourceDate}
+        segmentOrder={segmentOrder}
+        timeSegments={timeSegments}
+        separator={separator}
+        labels={labels}
+        onDateChange={onDateChange}
+        groupId={groupId}
+        describedById={describedByIds || undefined}
+        className={className}
+        style={style}
+      />
+    </>
   );
 }

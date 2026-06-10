@@ -8,7 +8,7 @@ import { DatePickerComposed, ComboboxDemo, SelectDemo } from "./demos";
 
 const CheckIcon = () => (
   <span
-    className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-zinc-500/10 text-zinc-500"
+    className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:border-indigo-400/25 dark:bg-indigo-400/10 dark:text-indigo-400"
     aria-hidden
   >
     <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -135,7 +135,7 @@ export function HomeHighlights() {
         </div>
         <Link
           href="/docs/date-picker"
-          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-zinc-500"
+          className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:text-indigo-600 dark:hover:text-indigo-400"
         >
           View all docs
           <span aria-hidden>→</span>
@@ -292,7 +292,7 @@ export function HomeCtaBand() {
       <div className="flex flex-col gap-3 sm:flex-row">
         <Link
           href="/docs/installation"
-          className="inline-flex min-h-11 items-center justify-center rounded-[11px] bg-zinc-900 dark:bg-zinc-100 px-5 text-sm font-semibold text-white dark:text-zinc-900 transition-opacity hover:opacity-90"
+          className="inline-flex min-h-11 items-center justify-center rounded-[11px] bg-indigo-600 px-5 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400"
         >
           Installation
         </Link>

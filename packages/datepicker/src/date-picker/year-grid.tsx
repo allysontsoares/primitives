@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { focusWithoutScrolling, useGridNavigation } from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
 import { YearGridFocusContext } from "./context";
 import { buildYearItems } from "../utils/calendar";
@@ -24,81 +25,56 @@ export function YearGrid({ children, className }: YearGridProps) {
     config.maxDate,
   );
 
-  const [focusedYear, setFocusedYear] = useState(state.focusedYear);
+  const pageStart = state.yearPageStart;
+  const [focusedIndex, setFocusedIndex] = useState(state.focusedYear - pageStart);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Keep focused year within the current page when page changes
   useEffect(() => {
-    const inPage = focusedYear >= state.yearPageStart && focusedYear < state.yearPageStart + 12;
-    if (!inPage) setFocusedYear(state.yearPageStart);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional: only re-check when page changes, not on every focusedYear navigation
+    const inPage =
+      state.focusedYear >= state.yearPageStart && state.focusedYear < state.yearPageStart + 12;
+    if (inPage) {
+      setFocusedIndex(state.focusedYear - state.yearPageStart);
+    } else {
+      setFocusedIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only re-check when page changes
   }, [state.yearPageStart]);
 
-  // Move DOM focus to the focused cell
   useEffect(() => {
     const focused = gridRef.current?.querySelector<HTMLElement>('[tabindex="0"]');
     if (focused && gridRef.current?.contains(document.activeElement)) {
-      focused.focus();
+      focusWithoutScrolling(focused);
     }
-  }, [focusedYear, state.yearPageStart]);
+  }, [focusedIndex, state.yearPageStart]);
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    let next = focusedYear;
-    const pageStart = state.yearPageStart;
-    const pageEnd = pageStart + 11;
+  const { onKeyDown } = useGridNavigation({
+    columns: 4,
+    itemCount: 12,
+    focusedIndex,
+    direction: config.dir,
+    onFocusedIndexChange: setFocusedIndex,
+    isItemDisabled: (index) => years[index]?.isDisabled ?? false,
+    onPageUp: () => dispatch({ type: "YEAR_PAGE_PREV" }),
+    onPageDown: () => dispatch({ type: "YEAR_PAGE_NEXT" }),
+    onEscape: () => dispatch({ type: "SET_VIEW", view: "month" }),
+    onSelect: (index) => dispatch({ type: "SELECT_YEAR", year: pageStart + index }),
+  });
 
-    switch (e.key) {
-      case "ArrowRight":
-        next = Math.min(focusedYear + 1, pageEnd);
-        break;
-      case "ArrowLeft":
-        next = Math.max(focusedYear - 1, pageStart);
-        break;
-      // 4-column grid: ↓/↑ = ±4 years (next/prev row)
-      case "ArrowDown":
-        next = Math.min(focusedYear + 4, pageEnd);
-        break;
-      case "ArrowUp":
-        next = Math.max(focusedYear - 4, pageStart);
-        break;
-      case "Home":
-        next = pageStart;
-        break;
-      case "End":
-        next = pageEnd;
-        break;
-      case "PageDown":
-        dispatch({ type: "YEAR_PAGE_NEXT" });
-        e.preventDefault();
-        return;
-      case "PageUp":
-        dispatch({ type: "YEAR_PAGE_PREV" });
-        e.preventDefault();
-        return;
-      case "Escape":
-        dispatch({ type: "SET_VIEW", view: "month" });
-        e.preventDefault();
-        return;
-      case "Enter":
-      case " ":
-        dispatch({ type: "SELECT_YEAR", year: focusedYear });
-        e.preventDefault();
-        return;
-      default:
-        return;
-    }
-    e.preventDefault();
-    setFocusedYear(next);
-  }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown(e);
+    },
+    [onKeyDown],
+  );
 
   return (
-    <YearGridFocusContext.Provider value={focusedYear}>
+    <YearGridFocusContext.Provider value={pageStart + focusedIndex}>
       <div
         ref={gridRef}
         role="grid"
         aria-label={`${state.yearPageStart}–${state.yearPageStart + 11}`}
         className={className}
-        onKeyDown={handleKeyDown}
+        onKeyDownCapture={handleKeyDown}
       >
         {children({ years })}
       </div>

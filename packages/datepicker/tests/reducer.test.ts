@@ -6,11 +6,19 @@ import {
 } from "../src/date-picker/reducer";
 import type { DatePickerConfig } from "../src/types";
 
+import { DEFAULT_MESSAGES } from "../src/utils/messages";
+
 const config: DatePickerConfig = {
   mode: "single",
   locale: "en-US",
+  dir: "ltr",
   readOnly: false,
   closeOnSelect: true,
+  granularity: "day",
+  hourCycle: 24,
+  pageBehavior: "visible",
+  allowsNonContiguousRanges: false,
+  messages: DEFAULT_MESSAGES,
   modal: false,
 };
 

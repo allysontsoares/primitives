@@ -11,14 +11,13 @@ const nextView: Record<ViewMode, ViewMode> = {
   year: "day",
 };
 
-const ariaLabel: Record<ViewMode, string> = {
-  day: "Switch to month view",
-  month: "Switch to year view",
-  year: "Switch to day view",
-};
-
 export function ViewTrigger({ children, onClick, ...props }: ViewTriggerProps) {
   const { state, dispatch, config } = useDatePickerContext();
+  const ariaLabel: Record<ViewMode, string> = {
+    day: config.messages.switchToMonthView,
+    month: config.messages.switchToYearView,
+    year: config.messages.switchToDayView,
+  };
   const label = formatMonthYear(new Date(state.focusedYear, state.focusedMonth, 1), config.locale);
   const yearRange = `${state.yearPageStart}–${state.yearPageStart + 11}`;
 

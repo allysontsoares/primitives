@@ -102,7 +102,20 @@ export function DatePickerAnatomy() {
           strokeWidth={1.5}
           rx={4}
         />
-        <text x={158} y={252} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
+        <rect
+          x={158}
+          y={236}
+          width={200}
+          height={24}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
+        <text x={168} y={252} fill="var(--anatomy-label)" fontSize={10}>
+          DatePicker.Presets (optional)
+        </text>
+        <text x={158} y={278} fill="var(--anatomy-label)" fontSize={11} fontWeight={600}>
           DatePicker.Calendar (or ViewControl + Grid + Day)
         </text>
 
@@ -120,6 +133,24 @@ export function DatePickerAnatomy() {
           Content
         </AnatomyLabel>
         <AnatomyLeader d="M748 260 L680 260" />
+
+        <rect
+          x={128}
+          y={472}
+          width={180}
+          height={24}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
+        <text x={138} y={488} fill="var(--anatomy-label)" fontSize={10}>
+          DatePicker.HiddenInput
+        </text>
+        <AnatomyLabel x={20} y={484}>
+          HiddenInput
+        </AnatomyLabel>
+        <AnatomyLeader d="M128 484 L72 484" />
       </svg>
     </AnatomyDiagram>
   );

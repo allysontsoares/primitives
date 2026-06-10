@@ -239,3 +239,36 @@ describe("Navigation buttons", () => {
     expect(viewBtn).toBeInTheDocument();
   });
 });
+
+describe("ErrorMessage", () => {
+  it("renders nothing when the picker is valid", () => {
+    render(
+      <DatePicker.Root errorMessage="Required">
+        <DatePicker.Input />
+        <DatePicker.ErrorMessage />
+      </DatePicker.Root>,
+    );
+    expect(screen.queryByText("Required")).not.toBeInTheDocument();
+  });
+
+  it("renders the Root errorMessage when invalid (aria-hidden, a11y handled by the input group)", () => {
+    render(
+      <DatePicker.Root invalid errorMessage="Please select a valid date">
+        <DatePicker.Input />
+        <DatePicker.ErrorMessage />
+      </DatePicker.Root>,
+    );
+    const visible = screen
+      .getAllByText("Please select a valid date")
+      .find((el) => el.hasAttribute("data-date-picker-error"))!;
+    expect(visible).toBeDefined();
+    expect(visible).toHaveAttribute("aria-hidden", "true");
+
+    // The input group references an sr-only alert carrying the same message.
+    const group = screen.getByRole("group");
+    const errorId = group.getAttribute("aria-errormessage");
+    expect(errorId).toBeTruthy();
+    expect(group).toHaveAttribute("aria-invalid", "true");
+    expect(document.getElementById(errorId!)).toHaveTextContent("Please select a valid date");
+  });
+});

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { useDatePickerContext } from "./context";
 import { YearGridFocusContext } from "./context";
+import { preventGridScrollOnKeyDown } from "../utils/grid-keyboard";
 
 export interface YearCellProps extends Omit<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
@@ -9,7 +10,7 @@ export interface YearCellProps extends Omit<
   value: number;
 }
 
-export function YearCell({ value, children, onClick, ...props }: YearCellProps) {
+export function YearCell({ value, children, onClick, onKeyDown, ...props }: YearCellProps) {
   const { dispatch } = useDatePickerContext();
   const focusedYear = useContext(YearGridFocusContext);
   const isFocused = focusedYear === value;
@@ -24,6 +25,10 @@ export function YearCell({ value, children, onClick, ...props }: YearCellProps) 
       onClick={(e) => {
         dispatch({ type: "SELECT_YEAR", year: value });
         onClick?.(e);
+      }}
+      onKeyDown={(e) => {
+        preventGridScrollOnKeyDown(e);
+        onKeyDown?.(e);
       }}
       {...props}
     >

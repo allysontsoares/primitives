@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { focusWithoutScrolling, useGridNavigation } from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
 import { MonthGridFocusContext } from "./context";
 import { buildMonthItems } from "../utils/calendar";
@@ -22,69 +23,39 @@ export function MonthGrid({ children, className }: MonthGridProps) {
   const [focusedIndex, setFocusedIndex] = useState(state.focusedMonth);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Always holds the latest focusedMonth so the year-change effect below can
-  // read it without listing it as a dep (which would re-run on every month
-  // keyboard navigation and interfere with arrow-key focus).
   const focusedMonthRef = useRef(state.focusedMonth);
   focusedMonthRef.current = state.focusedMonth;
 
-  // Sync focused cell when the user navigates to a different year.
   useEffect(() => {
     setFocusedIndex(focusedMonthRef.current);
   }, [state.focusedYear]);
 
-  // Move DOM focus to the focused cell after state change
   useEffect(() => {
     const focused = gridRef.current?.querySelector<HTMLElement>('[tabindex="0"]');
     if (focused && gridRef.current?.contains(document.activeElement)) {
-      focused.focus();
+      focusWithoutScrolling(focused);
     }
   }, [focusedIndex, state.focusedYear]);
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    let next = focusedIndex;
-    switch (e.key) {
-      case "ArrowRight":
-        next = Math.min(focusedIndex + 1, 11);
-        break;
-      case "ArrowLeft":
-        next = Math.max(focusedIndex - 1, 0);
-        break;
-      case "ArrowDown":
-        next = Math.min(focusedIndex + 3, 11);
-        break;
-      case "ArrowUp":
-        next = Math.max(focusedIndex - 3, 0);
-        break;
-      case "Home":
-        next = 0;
-        break;
-      case "End":
-        next = 11;
-        break;
-      case "PageDown":
-        dispatch({ type: "NAV_NEXT" });
-        e.preventDefault();
-        return;
-      case "PageUp":
-        dispatch({ type: "NAV_PREV" });
-        e.preventDefault();
-        return;
-      case "Escape":
-        dispatch({ type: "SET_VIEW", view: "day" });
-        e.preventDefault();
-        return;
-      case "Enter":
-      case " ":
-        dispatch({ type: "SELECT_MONTH", month: focusedIndex });
-        e.preventDefault();
-        return;
-      default:
-        return;
-    }
-    e.preventDefault();
-    setFocusedIndex(next);
-  }
+  const { onKeyDown } = useGridNavigation({
+    columns: 3,
+    itemCount: 12,
+    focusedIndex,
+    direction: config.dir,
+    onFocusedIndexChange: setFocusedIndex,
+    isItemDisabled: (index) => months[index]?.isDisabled ?? false,
+    onPageUp: () => dispatch({ type: "NAV_PREV" }),
+    onPageDown: () => dispatch({ type: "NAV_NEXT" }),
+    onEscape: () => dispatch({ type: "SET_VIEW", view: "day" }),
+    onSelect: (index) => dispatch({ type: "SELECT_MONTH", month: index }),
+  });
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown(e);
+    },
+    [onKeyDown],
+  );
 
   return (
     <MonthGridFocusContext.Provider value={focusedIndex}>
@@ -93,7 +64,7 @@ export function MonthGrid({ children, className }: MonthGridProps) {
         role="grid"
         aria-label={String(state.focusedYear)}
         className={className}
-        onKeyDown={handleKeyDown}
+        onKeyDownCapture={handleKeyDown}
       >
         {children({ months })}
       </div>

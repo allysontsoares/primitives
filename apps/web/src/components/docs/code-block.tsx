@@ -126,7 +126,7 @@ const tabVariants = cva(
   {
     variants: {
       state: {
-        active: "border-zinc-100 text-[#f0f1f4]",
+        active: "border-indigo-400 text-[#f0f1f4]",
         inactive: "border-transparent text-[#7d8089] hover:text-[#c9ccd3]",
       },
     },

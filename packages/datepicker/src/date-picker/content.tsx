@@ -1,9 +1,15 @@
 import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import { useClickOutside, useEscapeKey, useFocusTrap, restoreFocus } from "@kenos-ui/utils";
+import {
+  useClickOutside,
+  useEscapeKey,
+  useFocusTrap,
+  useFloating,
+  restoreFocus,
+  captureActiveElement,
+} from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
-import { formatMonthYear, formatYear } from "../utils/locale";
-import { useDatePickerFloating } from "./use-floating";
+import { useDatePickerAnnouncer } from "./use-date-picker-announcer";
 
 export interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
   forceMount?: boolean;
@@ -47,7 +53,15 @@ export function Content({
     input1Ref.current = document.getElementById(`${ids.input}-1`);
   });
 
-  const { setReference, setFloating, floatingStyles, isPositioned } = useDatePickerFloating({
+  const previousActiveElementRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousActiveElementRef.current = captureActiveElement();
+    }
+  }, [isOpen]);
+
+  const { setReference, setFloating, floatingStyles, isPositioned } = useFloating({
     open: isOpen,
     ...(side !== undefined && { side }),
     ...(align !== undefined && { align }),
@@ -116,6 +130,7 @@ export function Content({
       openSource: source === "input" ? "input" : source === "trigger" ? "trigger" : "unknown",
       trigger: document.getElementById(ids.trigger),
       input: document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`),
+      previousActiveElement: previousActiveElementRef.current,
     });
   }, [dispatch, ids.input, ids.trigger, state.openSource]);
 
@@ -124,7 +139,14 @@ export function Content({
   useEscapeKey({
     enabled: isOpen,
     stopPropagation: true,
-    onEscape: close,
+    scopeRef: contentRef,
+    onEscape: () => {
+      if (config.mode === "range" && state.rangeStart && !state.rangeEnd) {
+        dispatch({ type: "CANCEL_RANGE_ANCHOR" });
+        return;
+      }
+      close();
+    },
   });
 
   useFocusTrap(contentRef, isOpen && config.modal);
@@ -145,6 +167,13 @@ export function Content({
     return () => cancelAnimationFrame(raf);
   }, [isOpen, isPositioned]);
 
+  // Portal targets document.body, which is unavailable during SSR. Rendering inline on
+  // the server and portaling on the client causes hydration mismatches in popover content.
+  const [portalReady, setPortalReady] = useState(!portal);
+  useEffect(() => {
+    if (portal) setPortalReady(true);
+  }, [portal]);
+
   useEffect(() => {
     if (!isOpen || !contentRef.current) return;
     if (state.openSource === "input") return;
@@ -157,14 +186,9 @@ export function Content({
     firstFocusable?.focus();
   }, [isOpen, state.openSource]);
 
-  const announcement =
-    state.view === "day"
-      ? formatMonthYear(new Date(state.focusedYear, state.focusedMonth, 1), config.locale)
-      : state.view === "month"
-        ? formatYear(state.focusedYear, config.locale)
-        : `${state.yearPageStart}–${state.yearPageStart + 11}`;
+  const liveRegionProps = useDatePickerAnnouncer(state, config, isOpen);
 
-  if (!shouldRender) return null;
+  if (!shouldRender || (portal && !portalReady)) return null;
 
   const content = (
     <div
@@ -189,8 +213,7 @@ export function Content({
       {...props}
     >
       <span
-        aria-live="polite"
-        aria-atomic="true"
+        {...liveRegionProps}
         style={{
           position: "absolute",
           width: 1,
@@ -199,12 +222,13 @@ export function Content({
           clip: "rect(0,0,0,0)",
           whiteSpace: "nowrap",
         }}
-      >
-        {isOpen ? announcement : ""}
-      </span>
+      />
       {children}
     </div>
   );
 
-  return portal ? createPortal(content, document.body) : content;
+  if (portal) {
+    return createPortal(content, document.body);
+  }
+  return content;
 }

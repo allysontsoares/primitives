@@ -7,8 +7,8 @@ const COMPONENTS = [
     slug: "date-picker",
     tag: "input",
     description:
-      "Input + popover calendar with segmented fields, floating positioning, and full keyboard navigation. The common case ships as DatePicker.Calendar.",
-    accent: "#fafafa",
+      "Input + popover calendar with segmented date/time fields, range and multiple modes, presets, and full keyboard navigation. Ships as DatePicker.Calendar.",
+    accent: "#6366f1",
     art: "/streak-amber.png",
     code: `import { DatePicker } from "@kenos-ui/react-datepicker";
 
@@ -114,7 +114,7 @@ export function LandingComponentShowcase() {
                 <div className="mt-auto flex items-center gap-6 pt-8">
                   <Link
                     href={`/docs/${comp.slug}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-100 transition-all hover:gap-2.5"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-100 transition-all hover:gap-2.5 hover:text-indigo-300"
                   >
                     Explore {comp.name}
                     <svg

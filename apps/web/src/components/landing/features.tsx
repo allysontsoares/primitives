@@ -31,7 +31,7 @@ export function LandingFeatures() {
                   <span className="w-32 text-zinc-500">{row.name}</span>
                   <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-900">
                     <div
-                      className={`h-full rounded-full ${row.active ? "bg-zinc-100" : "bg-zinc-700/40"}`}
+                      className={`h-full rounded-full ${row.active ? "bg-indigo-500" : "bg-zinc-700/40"}`}
                       style={{ width: row.w }}
                     />
                   </div>
@@ -135,7 +135,7 @@ function CellLabel({ index, name, accent }: { index: string; name: string; accen
       <span
         className={`rounded border px-1.5 py-0.5 ${
           accent
-            ? "border-zinc-500/30 bg-zinc-500/5 text-zinc-300"
+            ? "border-indigo-500/35 bg-indigo-500/10 text-indigo-300"
             : "border-zinc-100/20 bg-zinc-100/5 text-zinc-300"
         }`}
       >

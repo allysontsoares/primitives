@@ -33,8 +33,14 @@ export function Calendar({ className }: CalendarProps) {
           {({ months }) => (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
               {months.map((m) => (
-                <MonthCell key={m.value} value={m.value} disabled={m.isDisabled}>
-                  {m.label}
+                <MonthCell
+                  key={m.value}
+                  value={m.value}
+                  disabled={m.isDisabled}
+                  title={m.label}
+                  aria-label={m.label}
+                >
+                  {m.shortLabel}
                 </MonthCell>
               ))}
             </div>

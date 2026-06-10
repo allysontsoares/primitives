@@ -74,7 +74,7 @@ export function Installation() {
         Nothing renders styled out of the box — you attach classes to each part. See the{" "}
         <Link
           href="/docs/date-picker#default"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
         >
           Date Picker examples
         </Link>
@@ -143,14 +143,14 @@ export function QuickStart() {
         Next, explore each{" "}
         <Link
           href="/docs/date-picker"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
         >
           primitive
         </Link>{" "}
         or read the{" "}
         <Link
           href="/docs/date-picker#accessibility"
-          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-zinc-500 hover:decoration-accent"
+          className="text-zinc-900 dark:text-zinc-100 underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
         >
           accessibility section
         </Link>
@@ -160,29 +160,52 @@ export function QuickStart() {
   );
 }
 
+const CHANGELOG_TAG_VARIANT = {
+  Unreleased: "beta",
+  Minor: "brand",
+  Patch: "secondary",
+  Beta: "beta",
+} as const;
+
 export function Changelog() {
   const rel = [
     {
-      v: "1.0.0",
-      date: "May 2026",
-      tag: "Stable",
+      v: "Unreleased",
+      date: "Jun 2026",
+      tag: "Unreleased" as const,
       items: [
-        "First stable release.",
-        "React 19 peer dependency.",
-        'Range support via mode="range" + presets in examples.',
+        "DatePicker — time granularity (hour/minute segments), Presets, pageBehavior, allowsNonContiguousRanges, and controlled multiple selection.",
+        "DatePicker — Grid navigation refactor via useGridNavigation; range drag selection, range re-anchor, and Ctrl/Cmd+click toggle in multiple mode.",
+        "DatePicker — useDatePickerAnnouncer for month, selection, and range-complete screen reader updates.",
+        "DatePicker — CLDR-based week start lookup fixes SSR hydration mismatches for locales such as ar-EG.",
+        "DatePicker — Arrow keys in day/month/year grids call preventDefault so the page no longer scrolls alongside grid focus.",
+        "DatePicker — Portaled Content waits for client mount before rendering (SSR-safe popovers).",
+        "@kenos-ui/utils — useGridNavigation: getNextIndex override, GridNavigationKey export, optional onEscape.",
+        "Docs — Date Picker API reference, interactive demos, and updated snippets.",
+        "Docs — Indigo accent branding on landing, shell, CTAs, and overview quality checks.",
+        "Docs — Keyboard tables expanded (Page Up/Down, Tab/Shift+Tab for header controls).",
       ],
     },
     {
-      v: "0.9.0",
-      date: "Apr 2026",
-      tag: "RC",
-      items: ["DateField segment spinbuttons.", "Saturday week-start for RTL locales."],
+      v: "0.4.2",
+      date: "Jun 2026",
+      tag: "Patch" as const,
+      items: [
+        "Sync controlled single value into reducer state (SET_SELECTED_DATE) so external value changes update the segmented input and focused month.",
+      ],
     },
     {
-      v: "0.8.0",
-      date: "Mar 2026",
-      tag: "Beta",
-      items: ["Calendar month/year panes.", "isDateUnavailable callback."],
+      v: "0.4.1",
+      date: "May 2026",
+      tag: "Minor" as const,
+      items: [
+        "First Kenos UI DatePicker feature release: single, range, and multiple modes with unified DatePicker.Root.",
+        "Segmented Input via timescape — locale-aware segments, bidirectional calendar sync, dual inputs for range.",
+        "Compound parts: ViewControl, Grid, Day (render prop), MonthGrid, YearGrid, Calendar shorthand.",
+        "Floating UI Content (portal, collision, forceMount, modal opt-in) with dialog-safe Escape handling.",
+        "Intl locale: week start, segment order, month/year labels; weekStartsOn override.",
+        "WAI-ARIA grid + spinbutton patterns, keyboard suite, vitest-axe, and Storybook stories.",
+      ],
     },
   ];
   return (
@@ -191,19 +214,26 @@ export function Changelog() {
         <Eyebrow>Get Started</Eyebrow>
         <PageTitle>Changelog</PageTitle>
         <Lead>
-          Notable changes to <InlineCode>@kenos-ui/react-datepicker</InlineCode>.
+          Release notes for <InlineCode>@kenos-ui/react-datepicker</InlineCode> and this
+          documentation site. Package versions follow{" "}
+          <a
+            href="https://github.com/allysontsoares/kenos-ui/blob/main/packages/datepicker/CHANGELOG.md"
+            className="font-semibold underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            packages/datepicker/CHANGELOG.md
+          </a>
+          .
         </Lead>
       </PageIntro>
       {rel.map((r) => (
         <div key={r.v} className="border-t border-zinc-200 dark:border-zinc-800 py-[22px]">
           <div className="mb-2 flex items-center gap-3">
             <span className="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              v{r.v}
+              {r.v === "Unreleased" ? "Unreleased" : `v${r.v}`}
             </span>
-            <Badge
-              variant={r.tag === "Beta" ? "beta" : "secondary"}
-              className="h-5 px-1.5 py-0 text-[10px]"
-            >
+            <Badge variant={CHANGELOG_TAG_VARIANT[r.tag]} className="h-5 px-1.5 py-0 text-[10px]">
               {r.tag}
             </Badge>
             <span className="ml-auto text-[13px] text-zinc-500 dark:text-zinc-400">{r.date}</span>

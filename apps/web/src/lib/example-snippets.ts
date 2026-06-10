@@ -54,7 +54,7 @@ const calDayCss = `.cal-day {
 }
 
 .cal-day[data-selected] {
-  background: #ff5b29;
+  background: #4f46e5;
   color: #fff;
   font-weight: 600;
 }
@@ -71,7 +71,7 @@ const calDayCss = `.cal-day {
 const fieldCss = `.field-label {
   font-size: 13px;
   font-weight: 600;
-  color: #ff5b29;
+  color: #4f46e5;
 }
 
 .field-input {
@@ -87,8 +87,8 @@ const fieldCss = `.field-label {
 }
 
 .field-input:focus-within {
-  border-color: #ff5b29;
-  box-shadow: 0 0 0 3px rgba(255, 91, 41, 0.12);
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
   outline: none;
 }
 
@@ -119,9 +119,9 @@ const pickerExtraCss = `.picker-trigger {
 
 .picker-trigger:hover,
 .picker-trigger[aria-expanded="true"] {
-  border-color: #ff5b29;
-  color: #ff5b29;
-  background: rgba(255, 91, 41, 0.12);
+  border-color: #4f46e5;
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.12);
 }
 
 .popover {
@@ -133,7 +133,7 @@ const pickerExtraCss = `.picker-trigger {
 }`;
 
 const rangeDayCss = `.cal-day[data-in-range] {
-  background: rgba(255, 91, 41, 0.12);
+  background: rgba(99, 102, 241, 0.12);
   border-radius: 0;
 }
 
@@ -226,7 +226,7 @@ import "./styles.css";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 aria-selected:bg-zinc-800 aria-selected:text-white aria-selected:font-semibold data-[today]:font-bold data-[outside-month]:text-zinc-500"
+                  className="grid size-[34px] place-items-center rounded-lg text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 aria-selected:bg-indigo-600 aria-selected:text-white aria-selected:font-semibold data-[today]:font-bold data-[outside-month]:text-zinc-500"
                 />
               ))}
             </tr>
@@ -697,7 +697,7 @@ import type { DateRange } from "@kenos-ui/react-datepicker";
                 <DatePicker.Day
                   key={di}
                   date={day}
-                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-zinc-100/10 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:bg-zinc-800 data-[range-end]:bg-zinc-800 data-[range-start]:text-white data-[range-end]:text-white"
+                  className="grid size-[34px] place-items-center rounded-none text-[13.5px] tabular-nums text-zinc-100 hover:bg-white/5 data-[in-range]:bg-indigo-500/20 data-[range-start]:rounded-l-lg data-[range-end]:rounded-r-lg data-[range-start]:bg-indigo-600 data-[range-end]:bg-indigo-600 data-[range-start]:text-white data-[range-end]:text-white"
                 />
               ))}
             </tr>
@@ -744,7 +744,7 @@ const day = css({
   color: "gray.100",
   borderRadius: 0,
   _hover: { backgroundColor: "rgba(255, 255, 255, 0.05)" },
-  "&[data-in-range]": { backgroundColor: "rgba(255, 91, 41, 0.12)" },
+  "&[data-in-range]": { backgroundColor: "rgba(99, 102, 241, 0.12)" },
   "&[data-selected]": { backgroundColor: "orange.500", color: "white" },
   "&[data-range-start]": { borderTopLeftRadius: "8px", borderBottomLeftRadius: "8px" },
   "&[data-range-end]": { borderTopRightRadius: "8px", borderBottomRightRadius: "8px" },

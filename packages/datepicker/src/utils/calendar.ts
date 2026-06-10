@@ -28,6 +28,7 @@ export function buildMonthItems(
   maxDate?: Date,
 ): MonthItem[] {
   const names = getMonthNames(locale, "long");
+  const shortNames = getMonthNames(locale, "short");
   return names.map((label, i) => {
     const isDisabled =
       (minDate !== undefined && year < minDate.getFullYear()) ||
@@ -38,6 +39,7 @@ export function buildMonthItems(
     return {
       value: i,
       label,
+      shortLabel: shortNames[i] ?? label,
       isSelected: selectedMonth === i,
       isDisabled,
     };

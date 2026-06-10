@@ -20,7 +20,7 @@ const buttonVariants = cva(
           "bg-oklch(0.577 0.245 27.325)/10 text-oklch(0.577 0.245 27.325) hover:bg-oklch(0.577 0.245 27.325)/20 focus-visible:border-oklch(0.577 0.245 27.325)/40 focus-visible:ring-oklch(0.577 0.245 27.325)/20 dark:bg-oklch(0.577 0.245 27.325)/20 dark:hover:bg-oklch(0.577 0.245 27.325)/30 dark:focus-visible:ring-oklch(0.577 0.245 27.325)/40 dark:bg-oklch(0.704 0.191 22.216)/10 dark:text-oklch(0.704 0.191 22.216) dark:hover:bg-oklch(0.704 0.191 22.216)/20 dark:focus-visible:border-oklch(0.704 0.191 22.216)/40 dark:focus-visible:ring-oklch(0.704 0.191 22.216)/20 dark:dark:bg-oklch(0.704 0.191 22.216)/20 dark:dark:hover:bg-oklch(0.704 0.191 22.216)/30 dark:dark:focus-visible:ring-oklch(0.704 0.191 22.216)/40",
         link: "text-oklch(0.205 0 0) underline-offset-4 hover:underline dark:text-oklch(0.922 0 0)",
         brand:
-          "border-zinc-900/10 bg-zinc-900 text-white hover:bg-zinc-800 dark:border-zinc-100/10 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+          "border-indigo-600/20 bg-indigo-600 text-white hover:bg-indigo-500 hover:shadow-[0_0_20px_rgb(99_102_241/0.3)] dark:border-indigo-400/20 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400",
         inverse:
           "border-transparent bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
       },
