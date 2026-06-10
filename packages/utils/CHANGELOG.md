@@ -1,5 +1,17 @@
 # @kenos-ui/utils
 
+## 1.0.0
+
+### Major Changes
+
+- f2ea00f: - Extend `useGridNavigation` with `getNextIndex`, `GridNavigationKey` export, and optional Escape handling (`onEscape` may return `false` to defer). `getNextIndex` returning `null` now means the consumer handled navigation (preventDefault + stop).
+  - Add `packages/utils/docs/popup-policy.md` documenting `POPUP_POLICY_DEFAULTS` and dismiss/focus behavior.
+  - Add unit tests for `useGridNavigation`.
+
+### Minor Changes
+
+- 9c9de3d: Extend `useGridNavigation` with `getNextIndex` (returning `null` means the consumer handled navigation) and scoped Escape handling. Refactor datepicker grids to use the shared hook. Add range drag, resize, Ctrl+click multiple, and live announcer. Document popup policy.
+
 ## 0.0.2
 
 ### Minor Changes
@@ -9,21 +21,26 @@
   Internal hooks and helpers shared across Kenos UI headless components.
 
   **Floating & presence**
+
   - `useFloating` — Floating UI positioning (`side`, `align`, offsets, collision)
   - `usePresence` — mount/unmount lifecycle for animated overlays
 
   **Dismiss & focus**
+
   - `useClickOutside`, `useEscapeKey` (with `stopPropagation` for dialog interop)
   - `useFocusTrap`, `getFocusableElements`, `restoreFocus` with `OpenSource`
 
   **Composite / collection**
+
   - `useListNavigation`, `useTypeahead`
   - `useSelectCollection` — type-to-filter for Combobox (and similar patterns)
 
   **Popup policy**
+
   - `POPUP_POLICY_DEFAULTS` — interop-first defaults (`modal={false}`, `portal={false}`)
 
   **Packaging**
+
   - Add `license: MIT` to `package.json` (fixes npm registry showing "no license")
 
 ## 0.0.1

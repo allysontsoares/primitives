@@ -1,5 +1,16 @@
 # @kenos-ui/react
 
+## 0.3.6
+
+### Patch Changes
+
+- Updated dependencies [b0fd79e]
+- Updated dependencies [9c9de3d]
+- Updated dependencies [f2ea00f]
+  - @kenos-ui/react-datepicker@0.5.0
+  - @kenos-ui/react-combobox@0.2.2
+  - @kenos-ui/react-select@0.2.3
+
 ## 0.3.5
 
 ### Patch Changes
@@ -16,11 +27,13 @@
   Single install for all Kenos UI headless primitives.
 
   **Re-exports**
+
   - `DatePicker` from `@kenos-ui/react-datepicker`
   - `Select` from `@kenos-ui/react-select`
   - `Combobox` from `@kenos-ui/react-combobox`
 
   **Packaging**
+
   - Add `license: MIT` to `package.json` (fixes npm registry showing "no license")
 
 ### Patch Changes
@@ -50,6 +63,7 @@
 ### Patch Changes
 
 - aaa8a57: Initial Combobox scaffold (`@kenos-ui/react-combobox@0.1.0`):
+
   - Parts: Root, Label, Input, Trigger, Content, List, Item, ItemText, Empty, Clear
   - `ComboboxStore` with `open`, `value`, `inputValue`, `highlightedValue`, item registry
   - `useSelectCollection` hook in `@kenos-ui/utils` for type-to-filter
@@ -87,6 +101,7 @@
 ### Minor Changes
 
 - Axis lift-and-shift: publish DatePicker under `@at5/axis-datepicker`.
+
   - Add `@at5/axis-datepicker` — same DatePicker API and behavior as `@at5/kairo` (migrated from `packages/kairo` to `packages/datepicker`)
   - Add `@at5/axis` — aggregator re-exporting `DatePicker`
   - `@at5/kairo` — deprecated; thin re-export of `@at5/axis-datepicker` for transition
