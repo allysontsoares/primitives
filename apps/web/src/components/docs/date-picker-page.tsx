@@ -19,8 +19,13 @@ import {
   DatePickerComposed,
   DatePickerControlledDemo,
   DatePickerDisabledDemo,
+  DatePickerFormNativeDemo,
+  DatePickerInvalidDemo,
   DatePickerMinMaxDemo,
   DatePickerMultipleDemo,
+  DatePickerRangeEscapeDemo,
+  DatePickerRTLDemo,
+  DatePickerUnavailableDemo,
   DatePickerRangeRHFFormDemo,
   DatePickerRangeTanStackFormDemo,
   DatePickerRHFFormDemo,
@@ -193,10 +198,14 @@ export function DatePickerPage() {
         Set <InlineCode>mode="range"</InlineCode> with dual inputs (
         <InlineCode>index=&#123;0&#125;</InlineCode> and{" "}
         <InlineCode>index=&#123;1&#125;</InlineCode>). Live hover preview styles days with{" "}
-        <InlineCode>data-in-range</InlineCode>.
+        <InlineCode>data-in-range</InlineCode>. Press <InlineCode>Escape</InlineCode> after picking
+        a start date to cancel the pending anchor without closing the popover.
       </P>
       <Example code={DATE_PICKER_SNIPPETS.range} lang="tsx" previewTall>
         <DateRangePicker label="Trip dates" />
+      </Example>
+      <Example code={DATE_PICKER_SNIPPETS.range} lang="tsx" previewTall>
+        <DatePickerRangeEscapeDemo />
       </Example>
       <H3 id="multiple">Multiple Dates</H3>
       <P>
@@ -242,10 +251,46 @@ export function DatePickerPage() {
       <H3 id="disabled-dates">Disabled Dates</H3>
       <P>
         Pass <InlineCode>disabled=&#123;(date) =&gt; boolean&#125;</InlineCode> to disable specific
-        dates — weekends in this example.
+        dates — weekends in this example. Disabled cells receive no focus and use{" "}
+        <InlineCode>aria-disabled</InlineCode>.
       </P>
       <Example code={DATE_PICKER_SNIPPETS.disabled} lang="tsx" previewTall>
         <DatePickerDisabledDemo />
+      </Example>
+      <H3 id="unavailable-dates">Unavailable Dates</H3>
+      <P>
+        Use <InlineCode>unavailable</InlineCode> when dates should stay focusable for keyboard users
+        but must not be selected — e.g. booked slots. Cells expose{" "}
+        <InlineCode>data-unavailable</InlineCode> and rich <InlineCode>aria-label</InlineCode> text.
+      </P>
+      <Example code={DATE_PICKER_SNIPPETS.unavailable} lang="tsx" previewTall>
+        <DatePickerUnavailableDemo />
+      </Example>
+      <H3 id="form-native">Form Native</H3>
+      <P>
+        Add <InlineCode>DatePicker.HiddenInput</InlineCode> with <InlineCode>name</InlineCode> on
+        Root for native <InlineCode>&lt;form&gt;</InlineCode> submission. Pair with{" "}
+        <InlineCode>required</InlineCode> for browser validation.
+      </P>
+      <Example code={DATE_PICKER_SNIPPETS.formNative} lang="tsx" previewTall>
+        <DatePickerFormNativeDemo />
+      </Example>
+      <H3 id="invalid">Invalid State</H3>
+      <P>
+        Set <InlineCode>invalid</InlineCode> and <InlineCode>errorMessage</InlineCode> on Root to
+        wire <InlineCode>aria-invalid</InlineCode> and <InlineCode>aria-errormessage</InlineCode> on
+        the input group. Style with <InlineCode>data-invalid</InlineCode> on Root.
+      </P>
+      <Example code={DATE_PICKER_SNIPPETS.invalid} lang="tsx" previewTall>
+        <DatePickerInvalidDemo />
+      </Example>
+      <H3 id="rtl">RTL</H3>
+      <P>
+        Pass <InlineCode>dir="rtl"</InlineCode> (or rely on <InlineCode>document.dir</InlineCode>)
+        to mirror arrow-key navigation in day, month, and year grids.
+      </P>
+      <Example code={DATE_PICKER_SNIPPETS.rtl} lang="tsx" previewTall>
+        <DatePickerRTLDemo />
       </Example>
       <H3 id="presets">Range Presets</H3>
       <P>
@@ -298,10 +343,20 @@ export function DatePickerPage() {
           </Example>
         </TabsContent>
       </Tabs>
+      <H2 id="styling">Styling</H2>
+      <P>
+        Target <InlineCode>data-*</InlineCode> on Root and day cells. Root exposes{" "}
+        <InlineCode>data-open</InlineCode>, <InlineCode>data-invalid</InlineCode>,{" "}
+        <InlineCode>data-focus-within</InlineCode>, and more for field-level states.
+      </P>
+      <Example code={DATE_PICKER_SNIPPETS.styling} lang="css" previewTall>
+        <DatePicker label="Styled field" defaultOpen />
+      </Example>
       <H2 id="accessibility">Accessibility</H2>
       <P>
         Kenos implements the WAI-ARIA date picker and grid patterns. Roles, labels, and focus
-        management are handled for you.
+        management are handled for you. <strong>Disabled</strong> dates are removed from the tab
+        order; <strong>unavailable</strong> dates remain focusable with descriptive labels.
       </P>
       <H3 id="roles">Roles and state</H3>
       <table className={docsTableClass}>

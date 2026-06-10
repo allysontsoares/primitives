@@ -167,6 +167,7 @@ const demoTodayUnselected =
 const demoDayStates = [
   "text-zinc-800 dark:text-zinc-100",
   "data-disabled:cursor-not-allowed data-disabled:opacity-30 data-disabled:hover:bg-transparent",
+  "data-unavailable:line-through data-unavailable:opacity-60 data-unavailable:hover:bg-transparent",
   demoSelectedCls,
   "aria-selected:focus-visible:ring-offset-zinc-200 dark:aria-selected:focus-visible:ring-offset-zinc-800",
   demoTodayUnselected,
@@ -1069,6 +1070,117 @@ export function DatePickerDisabledDemo() {
         <DemoCalendarBody size="default" />
       </div>
     </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerUnavailableDemo() {
+  return (
+    <KenosDatePicker.Root unavailable={(date) => date.getDay() === 0 || date.getDay() === 6}>
+      <div className={demoShell("default")} data-cal-size="default">
+        <DemoCalendarBody size="default" />
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerFormNativeDemo() {
+  const [submitted, setSubmitted] = useState<string | null>(null);
+  return (
+    <form
+      className="flex w-full max-w-sm flex-col gap-3"
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        setSubmitted(String(fd.get("appointment") ?? ""));
+      }}
+    >
+      <KenosDatePicker.Root name="appointment" required>
+        <div className={fieldWrap()}>
+          <KenosDatePicker.Label className={labelCls}>Appointment</KenosDatePicker.Label>
+          <div className={DP_CONTROL_ROW_CLS}>
+            <KenosDatePicker.Input className={inputCls} />
+            <KenosDatePicker.Trigger className={triggerCls} aria-label="Open calendar">
+              <CalIcon />
+            </KenosDatePicker.Trigger>
+          </div>
+          <KenosDatePicker.HiddenInput />
+          <KenosDatePicker.Content
+            portal
+            {...popoverAlign}
+            className={demoShell("default")}
+            role="dialog"
+            aria-label="Appointment"
+            data-cal-size="default"
+          >
+            <DemoCalendarBody size="default" />
+          </KenosDatePicker.Content>
+        </div>
+      </KenosDatePicker.Root>
+      <button
+        type="submit"
+        className="min-h-9 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+      >
+        Submit
+      </button>
+      {submitted !== null && (
+        <p className="text-[13px] text-emerald-700 dark:text-emerald-400">
+          FormData appointment: {submitted || "(empty)"}
+        </p>
+      )}
+    </form>
+  );
+}
+
+export function DatePickerInvalidDemo() {
+  return (
+    <KenosDatePicker.Root invalid errorMessage="Please select a valid date">
+      <div
+        className={`${fieldWrap()} rounded-lg p-3 ring-2 ring-red-500/40 data-[invalid]:ring-red-500/60`}
+      >
+        <KenosDatePicker.Label className={labelCls}>Appointment</KenosDatePicker.Label>
+        <KenosDatePicker.Input className={inputCls} />
+        <p className="mt-1.5 text-[13px] text-red-600 dark:text-red-400">
+          Please select a valid date
+        </p>
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerRTLDemo() {
+  return (
+    <KenosDatePicker.Root locale="ar-EG" dir="rtl" defaultOpen>
+      <div className={fieldWrap()} dir="rtl">
+        <KenosDatePicker.Label className={labelCls}>التاريخ</KenosDatePicker.Label>
+        <div className={DP_CONTROL_ROW_CLS}>
+          <KenosDatePicker.Input className={inputCls} />
+          <KenosDatePicker.Trigger className={triggerCls} aria-label="فتح التقويم">
+            <CalIcon />
+          </KenosDatePicker.Trigger>
+        </div>
+        <KenosDatePicker.Content
+          portal
+          {...popoverAlign}
+          className={demoShell("default")}
+          role="dialog"
+          aria-label="التاريخ"
+          data-cal-size="default"
+        >
+          <DemoCalendarBody locale="ar-EG" size="default" />
+        </KenosDatePicker.Content>
+      </div>
+    </KenosDatePicker.Root>
+  );
+}
+
+export function DatePickerRangeEscapeDemo() {
+  return (
+    <div className="flex w-full max-w-sm flex-col gap-2">
+      <p className="text-[13px] text-zinc-500 dark:text-zinc-400">
+        Select a start date, then press Escape to cancel the pending range without closing.
+      </p>
+      <DateRangePicker label="Trip" presets={false} defaultOpen />
+    </div>
   );
 }
 

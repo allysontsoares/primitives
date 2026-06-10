@@ -120,6 +120,24 @@ export function DatePickerAnatomy() {
           Content
         </AnatomyLabel>
         <AnatomyLeader d="M748 260 L680 260" />
+
+        <rect
+          x={128}
+          y={472}
+          width={180}
+          height={24}
+          fill="var(--anatomy-surface-2)"
+          stroke="var(--anatomy-stroke)"
+          strokeWidth={1.5}
+          rx={3}
+        />
+        <text x={138} y={488} fill="var(--anatomy-label)" fontSize={10}>
+          DatePicker.HiddenInput
+        </text>
+        <AnatomyLabel x={20} y={484}>
+          HiddenInput
+        </AnatomyLabel>
+        <AnatomyLeader d="M128 484 L72 484" />
       </svg>
     </AnatomyDiagram>
   );

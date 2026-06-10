@@ -91,7 +91,7 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
   "date-picker": {
     name: "Date Picker",
     eyebrow: "Primitive",
-    desc: "Headless date primitives — segmented input, popover calendar, range and multiple selection. Built on Intl, timescape, and Floating UI. Zero CSS shipped.",
+    desc: "Headless date primitives — segmented input, popover calendar, range and multiple selection, unavailable dates, HiddenInput, RTL keyboard. Built on Intl, timescape, and Floating UI. Zero CSS shipped.",
     demo: "date-picker",
     npmPackage: "@kenos-ui/react-datepicker",
     importName: "DatePicker",
