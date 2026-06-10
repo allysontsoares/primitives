@@ -214,8 +214,8 @@ export function Changelog() {
         <Eyebrow>Get Started</Eyebrow>
         <PageTitle>Changelog</PageTitle>
         <Lead>
-          Release notes for <InlineCode>@kenos-ui/react-datepicker</InlineCode> and this documentation
-          site. Package versions follow{" "}
+          Release notes for <InlineCode>@kenos-ui/react-datepicker</InlineCode> and this
+          documentation site. Package versions follow{" "}
           <a
             href="https://github.com/allysontsoares/kenos-ui/blob/main/packages/datepicker/CHANGELOG.md"
             className="font-semibold underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
@@ -233,10 +233,7 @@ export function Changelog() {
             <span className="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
               {r.v === "Unreleased" ? "Unreleased" : `v${r.v}`}
             </span>
-            <Badge
-              variant={CHANGELOG_TAG_VARIANT[r.tag]}
-              className="h-5 px-1.5 py-0 text-[10px]"
-            >
+            <Badge variant={CHANGELOG_TAG_VARIANT[r.tag]} className="h-5 px-1.5 py-0 text-[10px]">
               {r.tag}
             </Badge>
             <span className="ml-auto text-[13px] text-zinc-500 dark:text-zinc-400">{r.date}</span>
