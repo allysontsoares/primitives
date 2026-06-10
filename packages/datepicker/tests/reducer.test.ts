@@ -14,6 +14,10 @@ const config: DatePickerConfig = {
   dir: "ltr",
   readOnly: false,
   closeOnSelect: true,
+  granularity: "day",
+  hourCycle: 24,
+  pageBehavior: "visible",
+  allowsNonContiguousRanges: false,
   messages: DEFAULT_MESSAGES,
   modal: false,
 };

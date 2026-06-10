@@ -3,7 +3,8 @@ import { useTimescape } from "timescape/react";
 import { createFocusManager, useKeyboardShortcuts } from "@kenos-ui/utils";
 import { isDateSelectable } from "../utils/date";
 import { formatSelectedDateDescription } from "../utils/day-aria";
-import { getSegmentInfo } from "../utils/locale";
+import { getSegmentInfo, getTimeSegments } from "../utils/locale";
+import type { TimeSegment } from "../utils/locale";
 import { useDatePickerContext } from "./context";
 
 // React 19 ref callbacks must return void, not null. timescape still uses the
@@ -14,11 +15,25 @@ function wrapRef<T extends HTMLElement>(ref: (el: T | null) => void | null): Rea
   };
 }
 
-const DEFAULT_LABELS = { month: "Month", day: "Day", year: "Year" };
+const DEFAULT_LABELS = {
+  month: "Month",
+  day: "Day",
+  year: "Year",
+  hour: "Hour",
+  minute: "Minute",
+  second: "Second",
+  ampm: "AM/PM",
+};
 const FIELD_MAP = {
   year: "years" as const,
   month: "months" as const,
   day: "days" as const,
+};
+const TIME_FIELD_MAP = {
+  hour: "hours" as const,
+  minute: "minutes" as const,
+  second: "seconds" as const,
+  ampm: "am/pm" as const,
 };
 
 export interface InputProps {
@@ -38,6 +53,7 @@ export interface InputProps {
 interface SegmentsProps {
   sourceDate: Date | null;
   segmentOrder: string[];
+  timeSegments: TimeSegment[];
   separator: string;
   labels: Record<string, string>;
   onDateChange: (date: Date | undefined) => void;
@@ -50,6 +66,7 @@ interface SegmentsProps {
 function Segments({
   sourceDate,
   segmentOrder,
+  timeSegments,
   separator,
   labels,
   onDateChange,
@@ -68,12 +85,15 @@ function Segments({
   const opts: Record<string, unknown> = {
     wrapAround: true,
     onChangeDate: (d: Date | undefined) => onDateChangeRef.current(d),
+    hour12: config.hourCycle === 12,
   };
   if (config.minDate) opts.minDate = config.minDate;
   if (config.maxDate) opts.maxDate = config.maxDate;
   if (sourceDate) opts.date = sourceDate;
 
-  const { getRootProps, getInputProps } = useTimescape(opts as Parameters<typeof useTimescape>[0]);
+  const { getRootProps, getInputProps, ampm } = useTimescape(
+    opts as Parameters<typeof useTimescape>[0],
+  );
 
   const [focused, setFocused] = useState<string | null>(null);
 
@@ -181,6 +201,82 @@ function Segments({
           </React.Fragment>
         );
       })}
+      {timeSegments.length > 0 && (
+        <span aria-hidden="true" data-separator="true" style={{ marginInline: "0.25ch" }}>
+          {" "}
+        </span>
+      )}
+      {timeSegments.map((field, i) => {
+        const segmentKey = `time-${field}`;
+        const isFocused = focused === segmentKey;
+        const isTabStop = isFocused || (focused === null && segmentOrder.length === 0 && i === 0);
+
+        if (field === "ampm") {
+          const selectProps = ampm.getSelectProps();
+          return (
+            <select
+              key={segmentKey}
+              {...selectProps}
+              aria-label={labels.ampm}
+              data-segment={field}
+              tabIndex={config.readOnly ? -1 : isTabStop ? 0 : -1}
+              disabled={config.readOnly}
+              onFocus={() => handleSegmentFocus(segmentKey)}
+              onBlur={(e) =>
+                handleSegmentBlur(segmentKey, e as unknown as React.FocusEvent<HTMLInputElement>)
+              }
+              className="timescape-input"
+              style={{
+                border: "none",
+                background: "transparent",
+                padding: 0,
+                margin: 0,
+                font: "inherit",
+                outline: "none",
+              }}
+            />
+          );
+        }
+
+        const type = TIME_FIELD_MAP[field];
+        const { ref: inputRef, ...inputProps } = getInputProps(type);
+        const wrappedInputRef = wrapRef(inputRef as (el: HTMLInputElement | null) => void | null);
+
+        return (
+          <React.Fragment key={segmentKey}>
+            {i > 0 && (
+              <span aria-hidden="true" data-separator="true">
+                :
+              </span>
+            )}
+            <input
+              {...inputProps}
+              ref={wrappedInputRef}
+              aria-label={labels[field]}
+              data-segment={field}
+              tabIndex={config.readOnly ? -1 : isTabStop ? 0 : -1}
+              disabled={config.readOnly}
+              onFocus={(e) => {
+                inputRef(e.currentTarget);
+                handleSegmentFocus(segmentKey);
+              }}
+              onBlur={(e) => handleSegmentBlur(segmentKey, e)}
+              onKeyDown={handleKeyDown}
+              className="timescape-input"
+              style={{
+                width: "2ch",
+                border: "none",
+                background: "transparent",
+                padding: 0,
+                margin: 0,
+                textAlign: "center",
+                font: "inherit",
+                outline: "none",
+              }}
+            />
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
@@ -196,11 +292,19 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
     () => getSegmentInfo(config.locale),
     [config.locale],
   );
+  const timeSegments = useMemo(
+    () => getTimeSegments(config.granularity, config.hourCycle),
+    [config.granularity, config.hourCycle],
+  );
 
   const labels = {
     month: segmentLabels?.month ?? DEFAULT_LABELS.month,
     day: segmentLabels?.day ?? DEFAULT_LABELS.day,
     year: segmentLabels?.year ?? DEFAULT_LABELS.year,
+    hour: DEFAULT_LABELS.hour,
+    minute: DEFAULT_LABELS.minute,
+    second: DEFAULT_LABELS.second,
+    ampm: DEFAULT_LABELS.ampm,
   };
 
   const sourceDate =
@@ -298,6 +402,7 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
         key={timescapeKey}
         sourceDate={sourceDate}
         segmentOrder={segmentOrder}
+        timeSegments={timeSegments}
         separator={separator}
         labels={labels}
         onDateChange={onDateChange}

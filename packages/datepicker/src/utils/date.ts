@@ -29,8 +29,45 @@ export function isInRange(date: Date, start: Date | null, end: Date | null): boo
   return date.getTime() > from.getTime() && date.getTime() < to.getTime();
 }
 
+import type { DateGranularity } from "../types";
+
 export function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+export function normalizeDateValue(
+  date: Date,
+  granularity: DateGranularity,
+  preserveFrom?: Date | null,
+): Date {
+  if (granularity === "day") return startOfDay(date);
+  const next = new Date(date);
+  if (preserveFrom) {
+    next.setHours(
+      preserveFrom.getHours(),
+      preserveFrom.getMinutes(),
+      preserveFrom.getSeconds(),
+      preserveFrom.getMilliseconds(),
+    );
+  }
+  return next;
+}
+
+export function rangeSpansUnavailable(
+  start: Date,
+  end: Date,
+  config: DateConstraintConfig,
+): boolean {
+  const [from, to] =
+    start.getTime() <= end.getTime()
+      ? [startOfDay(start), startOfDay(end)]
+      : [startOfDay(end), startOfDay(start)];
+  let current = addDays(from, 1);
+  while (current.getTime() < to.getTime()) {
+    if (isDateUnavailable(current, config)) return true;
+    current = addDays(current, 1);
+  }
+  return false;
 }
 
 export function today(): Date {

@@ -12,6 +12,7 @@ export interface DatePickerMessages {
   startRangeSelection: string;
   finishRangeSelection: string;
   selectedDate: string;
+  presets: string;
   empty: string;
 }
 
@@ -29,5 +30,6 @@ export const DEFAULT_MESSAGES: DatePickerMessages = {
   startRangeSelection: "Start selecting date range",
   finishRangeSelection: "Finish selecting date range",
   selectedDate: "Selected date",
+  presets: "Date presets",
   empty: "Empty",
 };

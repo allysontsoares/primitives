@@ -4,7 +4,7 @@ import type { GridNavigationKey } from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
 import { buildCalendarGrid } from "../utils/calendar";
 import { getWeekStartDay, formatMonthYear } from "../utils/locale";
-import { addMonths, findNextFocusableDate, isSameDay } from "../utils/date";
+import { addMonths, findNextFocusableDate, isSameDay, isSameMonth } from "../utils/date";
 import { Day } from "./day";
 
 export interface GridProps {
@@ -88,6 +88,33 @@ export function Grid({ children, header, className }: GridProps) {
     [flatDates, state.focusedDate, rtl, config, weekStartDay],
   );
 
+  const focusDateByPage = useCallback(
+    (deltaMonths: number) => {
+      if (!state.focusedDate) return;
+      const next = addMonths(state.focusedDate, deltaMonths);
+      const visibleMonth = new Date(state.focusedYear, state.focusedMonth, 1);
+      const inVisibleGrid = flatDates.some((d) => isSameDay(d, next));
+
+      if (config.pageBehavior === "single" && inVisibleGrid) {
+        dispatch({ type: "FOCUS_DATE", date: next, preserveView: true });
+        return;
+      }
+
+      if (!isSameMonth(next, visibleMonth)) {
+        dispatch({ type: deltaMonths < 0 ? "NAV_PREV" : "NAV_NEXT" });
+      }
+      dispatch({ type: "FOCUS_DATE", date: next });
+    },
+    [
+      state.focusedDate,
+      state.focusedYear,
+      state.focusedMonth,
+      flatDates,
+      config.pageBehavior,
+      dispatch,
+    ],
+  );
+
   const { onKeyDown } = useGridNavigation({
     columns: 7,
     itemCount: flatDates.length,
@@ -100,7 +127,7 @@ export function Grid({ children, header, className }: GridProps) {
       if (event?.shiftKey) {
         dispatch({ type: "FOCUS_DATE", date: addMonths(state.focusedDate, -12) });
       } else {
-        dispatch({ type: "NAV_PREV" });
+        focusDateByPage(-1);
       }
     },
     onPageDown: (event) => {
@@ -108,7 +135,7 @@ export function Grid({ children, header, className }: GridProps) {
       if (event?.shiftKey) {
         dispatch({ type: "FOCUS_DATE", date: addMonths(state.focusedDate, 12) });
       } else {
-        dispatch({ type: "NAV_NEXT" });
+        focusDateByPage(1);
       }
     },
     onSelect: () => {

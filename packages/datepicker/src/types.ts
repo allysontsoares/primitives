@@ -7,6 +7,12 @@ export type SelectionMode = "single" | "range" | "multiple";
 
 export type TextDirection = "ltr" | "rtl";
 
+export type DateGranularity = "day" | "hour" | "minute" | "second";
+
+export type PageBehavior = "visible" | "single";
+
+export type HourCycle = 12 | 24;
+
 export interface DateRange {
   start: Date | null;
   end: Date | null;
@@ -67,6 +73,9 @@ export interface DatePickerSharedProps {
   modal?: boolean;
   closeOnSelect?: boolean | CloseOnSelectConfig;
   placeholderDate?: Date;
+  granularity?: DateGranularity;
+  hourCycle?: HourCycle;
+  pageBehavior?: PageBehavior;
   messages?: Partial<DatePickerMessages>;
   name?: string;
   required?: boolean;
@@ -86,6 +95,7 @@ export interface DatePickerRangeProps extends DatePickerSharedProps {
   value?: DateRange;
   defaultValue?: DateRange;
   onValueChange?: (range: DateRange) => void;
+  allowsNonContiguousRanges?: boolean;
 }
 
 export interface DatePickerMultipleProps extends DatePickerSharedProps {
@@ -112,6 +122,10 @@ export interface DatePickerConfig {
   readOnly: boolean;
   closeOnSelect: boolean | CloseOnSelectConfig;
   placeholderDate?: Date;
+  granularity: DateGranularity;
+  hourCycle: HourCycle;
+  pageBehavior: PageBehavior;
+  allowsNonContiguousRanges: boolean;
   messages: DatePickerMessages;
   name?: string;
   required?: boolean;

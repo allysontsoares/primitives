@@ -19,3 +19,6 @@ export { YearGrid } from "./year-grid";
 export { YearCell } from "./year-cell";
 export { HiddenInput } from "./hidden-input";
 export type { HiddenInputProps } from "./hidden-input";
+export { Presets } from "./presets";
+export type { PresetsProps } from "./presets";
+export { useDatePickerActions } from "./use-date-picker-actions";

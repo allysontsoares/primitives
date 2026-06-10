@@ -11,12 +11,59 @@ export function getWeekStartDay(locale: string, override?: 0 | 1 | 2 | 3 | 4 | 5
   }
 }
 
+import type { DateGranularity, HourCycle } from "../types";
+
 export function formatDate(date: Date, locale: string): string {
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(date);
+}
+
+export function formatDateTime(
+  date: Date,
+  locale: string,
+  granularity: DateGranularity,
+  hourCycle?: HourCycle,
+): string {
+  if (granularity === "day") return formatDate(date, locale);
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+  };
+  if (granularity === "minute" || granularity === "second") {
+    options.minute = "2-digit";
+  }
+  if (granularity === "second") {
+    options.second = "2-digit";
+  }
+  if (hourCycle === 12) options.hour12 = true;
+  if (hourCycle === 24) options.hour12 = false;
+
+  return new Intl.DateTimeFormat(locale, options).format(date);
+}
+
+export type TimeSegment = "hour" | "minute" | "second" | "ampm";
+
+export function getTimeSegments(granularity: DateGranularity, hourCycle: HourCycle): TimeSegment[] {
+  if (granularity === "day") return [];
+  const segments: TimeSegment[] = ["hour"];
+  if (granularity === "minute" || granularity === "second") segments.push("minute");
+  if (granularity === "second") segments.push("second");
+  if (hourCycle === 12) segments.push("ampm");
+  return segments;
+}
+
+export function resolveHourCycle(hourCycle: HourCycle | undefined, locale: string): HourCycle {
+  if (hourCycle) return hourCycle;
+  const formatted = new Intl.DateTimeFormat(locale, { hour: "numeric" }).format(
+    new Date(2024, 0, 1, 13),
+  );
+  return formatted.includes("13") ? 24 : 12;
 }
 
 export function formatMonthYear(date: Date, locale: string): string {

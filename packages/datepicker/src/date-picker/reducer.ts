@@ -1,7 +1,14 @@
 import type { DatePickerConfig, ViewMode } from "../types";
 import { yearPageStart } from "../utils/calendar";
-import { isDateDisabled, isDateSelectable, isSameDay, startOfDay } from "../utils/date";
-import { formatDate, parseDate } from "../utils/locale";
+import {
+  isDateDisabled,
+  isDateSelectable,
+  isSameDay,
+  normalizeDateValue,
+  rangeSpansUnavailable,
+  startOfDay,
+} from "../utils/date";
+import { formatDate, formatDateTime, parseDate } from "../utils/locale";
 
 export type OpenSource = "trigger" | "input" | null;
 
@@ -29,7 +36,7 @@ export type DatePickerAction =
   | { type: "NAV_PREV" }
   | { type: "NAV_NEXT" }
   | { type: "NAV_TO_DATE"; date: Date }
-  | { type: "FOCUS_DATE"; date: Date }
+  | { type: "FOCUS_DATE"; date: Date; preserveView?: boolean }
   | { type: "SELECT_DATE"; date: Date }
   | { type: "ANCHOR_DATE"; date: Date }
   | { type: "EXTEND_RANGE"; date: Date }
@@ -37,6 +44,7 @@ export type DatePickerAction =
   | { type: "HOVER_DATE"; date: Date | null }
   | { type: "SET_RANGE"; start: Date | null; end: Date | null }
   | { type: "SET_SELECTED_DATE"; date: Date | null }
+  | { type: "SET_SELECTED_DATES"; dates: Date[] }
   | { type: "SET_INPUT"; value: string }
   | { type: "COMMIT_INPUT" }
   | { type: "SELECT_MONTH"; month: number }
@@ -83,6 +91,25 @@ function openState(
 function navMonth(state: DatePickerState, delta: number): DatePickerState {
   const d = new Date(state.focusedYear, state.focusedMonth + delta, 1);
   return { ...state, focusedMonth: d.getMonth(), focusedYear: d.getFullYear() };
+}
+
+function normalizeSelectionDate(
+  date: Date,
+  config: DatePickerConfig,
+  preserveFrom?: Date | null,
+): Date {
+  return normalizeDateValue(date, config.granularity, preserveFrom);
+}
+
+function formatSelectionValue(date: Date, config: DatePickerConfig): string {
+  return config.granularity === "day"
+    ? formatDate(date, config.locale)
+    : formatDateTime(date, config.locale, config.granularity, config.hourCycle);
+}
+
+function canCompleteRange(start: Date, end: Date, config: DatePickerConfig): boolean {
+  if (config.allowsNonContiguousRanges) return true;
+  return !rangeSpansUnavailable(start, end, config);
 }
 
 export function datePickerReducer(
@@ -150,6 +177,9 @@ export function datePickerReducer(
 
     case "FOCUS_DATE": {
       const d = action.date;
+      if (action.preserveView) {
+        return { ...state, focusedDate: d };
+      }
       return {
         ...state,
         focusedDate: d,
@@ -159,14 +189,20 @@ export function datePickerReducer(
     }
 
     case "SELECT_DATE": {
-      const d = startOfDay(action.date);
+      const preserveFrom =
+        config.mode === "single"
+          ? state.selectedDate
+          : config.mode === "range"
+            ? state.rangeStart
+            : null;
+      const d = normalizeSelectionDate(action.date, config, preserveFrom);
       if (!isDateSelectable(d, config)) return state;
 
       if (config.mode === "single") {
         return {
           ...state,
           selectedDate: d,
-          inputValue: formatDate(d, config.locale),
+          inputValue: formatSelectionValue(d, config),
           open: shouldCloseOnSelect(config, "single") ? false : state.open,
           hoverDate: null,
         };
@@ -185,6 +221,7 @@ export function datePickerReducer(
         }
         const [start, end] =
           d.getTime() >= state.rangeStart.getTime() ? [state.rangeStart, d] : [d, state.rangeStart];
+        if (!canCompleteRange(start, end, config)) return state;
         return {
           ...state,
           rangeStart: start,
@@ -215,16 +252,17 @@ export function datePickerReducer(
       return { ...state, rangeStart: null, hoverDate: null };
 
     case "ANCHOR_DATE": {
-      const d = startOfDay(action.date);
+      const d = normalizeSelectionDate(action.date, config, state.rangeStart);
       if (!isDateSelectable(d, config)) return state;
       return { ...state, rangeStart: d, rangeEnd: null, hoverDate: null };
     }
 
     case "EXTEND_RANGE": {
-      const d = startOfDay(action.date);
+      const d = normalizeSelectionDate(action.date, config, state.rangeEnd);
       if (!state.rangeStart || !isDateSelectable(d, config)) return state;
       const [start, end] =
         d.getTime() >= state.rangeStart.getTime() ? [state.rangeStart, d] : [d, state.rangeStart];
+      if (!canCompleteRange(start, end, config)) return state;
       return {
         ...state,
         rangeStart: start,
@@ -235,7 +273,7 @@ export function datePickerReducer(
     }
 
     case "TOGGLE_DATE": {
-      const d = startOfDay(action.date);
+      const d = normalizeSelectionDate(action.date, config);
       if (!isDateSelectable(d, config)) return state;
       const already = state.selectedDates.findIndex((s) => isSameDay(s, d));
       const selectedDates =
@@ -252,8 +290,9 @@ export function datePickerReducer(
       };
 
     case "SET_RANGE": {
-      const start = action.start ? startOfDay(action.start) : null;
-      const end = action.end ? startOfDay(action.end) : null;
+      const start = action.start ? normalizeSelectionDate(action.start, config) : null;
+      const end = action.end ? normalizeSelectionDate(action.end, config, start) : null;
+      if (start && end && !canCompleteRange(start, end, config)) return state;
       const anchor = end ?? start;
       return {
         ...state,
@@ -271,12 +310,31 @@ export function datePickerReducer(
       };
     }
 
+    case "SET_SELECTED_DATES": {
+      const selectedDates = action.dates.map((date) => normalizeSelectionDate(date, config));
+      const anchor = selectedDates[selectedDates.length - 1];
+      return {
+        ...state,
+        selectedDates,
+        ...(anchor
+          ? {
+              focusedDate: anchor,
+              focusedMonth: anchor.getMonth(),
+              focusedYear: anchor.getFullYear(),
+              yearPageStart: yearPageStart(anchor.getFullYear()),
+            }
+          : {}),
+      };
+    }
+
     case "SET_SELECTED_DATE": {
-      const d = action.date ? startOfDay(action.date) : null;
+      const d = action.date
+        ? normalizeSelectionDate(action.date, config, state.selectedDate)
+        : null;
       return {
         ...state,
         selectedDate: d,
-        inputValue: d ? formatDate(d, config.locale) : "",
+        inputValue: d ? formatSelectionValue(d, config) : "",
         ...(d
           ? {
               focusedDate: d,
@@ -294,7 +352,7 @@ export function datePickerReducer(
     case "COMMIT_INPUT": {
       const parsed = parseDate(state.inputValue, config.locale);
       if (!parsed || isDateDisabled(parsed, config)) return { ...state, inputValue: "" };
-      const d = startOfDay(parsed);
+      const d = normalizeSelectionDate(parsed, config, state.selectedDate);
       return {
         ...state,
         selectedDate: d,
@@ -334,8 +392,18 @@ export function createInitialState(config: {
   selectedDates?: Date[];
   open?: boolean;
   locale: string;
+  granularity?: DatePickerConfig["granularity"];
+  hourCycle?: DatePickerConfig["hourCycle"];
+  placeholderDate?: Date;
 }): DatePickerState {
-  const ref = config.selectedDate ?? config.rangeStart ?? new Date();
+  const granularity = config.granularity ?? "day";
+  const hourCycle = config.hourCycle ?? 24;
+  const ref =
+    config.selectedDate ??
+    config.rangeStart ??
+    config.selectedDates?.[0] ??
+    config.placeholderDate ??
+    new Date();
   return {
     open: config.open ?? false,
     openSource: null,
@@ -348,7 +416,11 @@ export function createInitialState(config: {
     rangeEnd: config.rangeEnd ?? null,
     hoverDate: null,
     selectedDates: config.selectedDates ?? [],
-    inputValue: config.selectedDate ? formatDate(config.selectedDate, config.locale) : "",
+    inputValue: config.selectedDate
+      ? granularity === "day"
+        ? formatDate(config.selectedDate, config.locale)
+        : formatDateTime(config.selectedDate, config.locale, granularity, hourCycle)
+      : "",
     yearPageStart: yearPageStart(ref.getFullYear()),
   };
 }
