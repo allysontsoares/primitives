@@ -1,9 +1,15 @@
 import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import { useClickOutside, useEscapeKey, useFocusTrap, restoreFocus } from "@kenos-ui/utils";
+import {
+  useClickOutside,
+  useEscapeKey,
+  useFocusTrap,
+  useFloating,
+  restoreFocus,
+  captureActiveElement,
+} from "@kenos-ui/utils";
 import { useDatePickerContext } from "./context";
 import { formatMonthYear, formatYear } from "../utils/locale";
-import { useDatePickerFloating } from "./use-floating";
 
 export interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
   forceMount?: boolean;
@@ -47,7 +53,15 @@ export function Content({
     input1Ref.current = document.getElementById(`${ids.input}-1`);
   });
 
-  const { setReference, setFloating, floatingStyles, isPositioned } = useDatePickerFloating({
+  const previousActiveElementRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousActiveElementRef.current = captureActiveElement();
+    }
+  }, [isOpen]);
+
+  const { setReference, setFloating, floatingStyles, isPositioned } = useFloating({
     open: isOpen,
     ...(side !== undefined && { side }),
     ...(align !== undefined && { align }),
@@ -116,6 +130,7 @@ export function Content({
       openSource: source === "input" ? "input" : source === "trigger" ? "trigger" : "unknown",
       trigger: document.getElementById(ids.trigger),
       input: document.getElementById(ids.input) ?? document.getElementById(`${ids.input}-0`),
+      previousActiveElement: previousActiveElementRef.current,
     });
   }, [dispatch, ids.input, ids.trigger, state.openSource]);
 
@@ -124,7 +139,14 @@ export function Content({
   useEscapeKey({
     enabled: isOpen,
     stopPropagation: true,
-    onEscape: close,
+    scopeRef: contentRef,
+    onEscape: () => {
+      if (config.mode === "range" && state.rangeStart && !state.rangeEnd) {
+        dispatch({ type: "CANCEL_RANGE_ANCHOR" });
+        return;
+      }
+      close();
+    },
   });
 
   useFocusTrap(contentRef, isOpen && config.modal);

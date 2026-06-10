@@ -1,10 +1,21 @@
+import type { FocusEvent } from "react";
+import type { DatePickerMessages } from "./utils/messages";
+
 export type ViewMode = "day" | "month" | "year";
 
 export type SelectionMode = "single" | "range" | "multiple";
 
+export type TextDirection = "ltr" | "rtl";
+
 export interface DateRange {
   start: Date | null;
   end: Date | null;
+}
+
+export interface CloseOnSelectConfig {
+  single?: boolean;
+  range?: boolean | "start" | "end" | "both";
+  multiple?: boolean;
 }
 
 export interface DayCellMeta {
@@ -13,6 +24,7 @@ export interface DayCellMeta {
   isToday: boolean;
   isSelected: boolean;
   isDisabled: boolean;
+  isUnavailable: boolean;
   isRangeStart: boolean;
   isRangeEnd: boolean;
   isInRange: boolean;
@@ -39,16 +51,27 @@ export interface WeekDayItem {
 
 export interface DatePickerSharedProps {
   locale?: string;
+  dir?: TextDirection;
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   minDate?: Date;
   maxDate?: Date;
   disabled?: boolean | ((date: Date) => boolean);
+  unavailable?: (date: Date) => boolean;
   readOnly?: boolean;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onFocusWithin?: (event: FocusEvent) => void;
+  onBlurWithin?: (event: FocusEvent) => void;
+  onFocusChange?: (focused: boolean) => void;
   modal?: boolean;
-  closeOnSelect?: boolean;
+  closeOnSelect?: boolean | CloseOnSelectConfig;
+  placeholderDate?: Date;
+  messages?: Partial<DatePickerMessages>;
+  name?: string;
+  required?: boolean;
+  invalid?: boolean;
+  errorMessage?: string;
 }
 
 export interface DatePickerSingleProps extends DatePickerSharedProps {
@@ -80,12 +103,19 @@ export type DatePickerRootProps =
 export interface DatePickerConfig {
   mode: SelectionMode;
   locale: string;
+  dir: TextDirection;
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   minDate?: Date;
   maxDate?: Date;
   disabled?: boolean | ((date: Date) => boolean);
+  unavailable?: (date: Date) => boolean;
   readOnly: boolean;
-  closeOnSelect: boolean;
-  /** Opt-in focus trap + aria-modal. Default: false (popup-policy). */
+  closeOnSelect: boolean | CloseOnSelectConfig;
+  placeholderDate?: Date;
+  messages: DatePickerMessages;
+  name?: string;
+  required?: boolean;
+  invalid?: boolean;
+  errorMessage?: string;
   modal: boolean;
 }

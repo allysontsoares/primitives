@@ -62,13 +62,41 @@ export function clampDate(date: Date, min?: Date, max?: Date): Date {
   return date;
 }
 
-export function isDateDisabled(
-  date: Date,
-  config: { minDate?: Date; maxDate?: Date; disabled?: boolean | ((d: Date) => boolean) },
-): boolean {
+export interface DateConstraintConfig {
+  minDate?: Date;
+  maxDate?: Date;
+  disabled?: boolean | ((d: Date) => boolean);
+  unavailable?: (d: Date) => boolean;
+}
+
+export function isDateDisabled(date: Date, config: DateConstraintConfig): boolean {
   if (config.disabled === true) return true;
   if (typeof config.disabled === "function" && config.disabled(date)) return true;
   if (config.minDate && date.getTime() < startOfDay(config.minDate).getTime()) return true;
   if (config.maxDate && date.getTime() > startOfDay(config.maxDate).getTime()) return true;
   return false;
+}
+
+export function isDateUnavailable(date: Date, config: DateConstraintConfig): boolean {
+  if (isDateDisabled(date, config)) return false;
+  return config.unavailable?.(date) ?? false;
+}
+
+export function isDateSelectable(date: Date, config: DateConstraintConfig): boolean {
+  return !isDateDisabled(date, config) && !isDateUnavailable(date, config);
+}
+
+/** Returns the next date that can receive focus (skips disabled, allows unavailable). */
+export function findNextFocusableDate(
+  start: Date,
+  deltaDays: number,
+  config: DateConstraintConfig,
+  maxAttempts = 62,
+): Date {
+  let current = start;
+  for (let i = 0; i < maxAttempts; i++) {
+    current = addDays(current, deltaDays);
+    if (!isDateDisabled(current, config)) return current;
+  }
+  return addDays(start, deltaDays);
 }

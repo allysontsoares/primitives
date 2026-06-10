@@ -17,3 +17,5 @@ export { MonthGrid } from "./month-grid";
 export { MonthCell } from "./month-cell";
 export { YearGrid } from "./year-grid";
 export { YearCell } from "./year-cell";
+export { HiddenInput } from "./hidden-input";
+export type { HiddenInputProps } from "./hidden-input";

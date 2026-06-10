@@ -41,14 +41,16 @@ export function MonthGrid({ children, className }: MonthGridProps) {
     }
   }, [focusedIndex, state.focusedYear]);
 
+  const rtl = config.dir === "rtl";
+
   function handleKeyDown(e: React.KeyboardEvent) {
     let next = focusedIndex;
     switch (e.key) {
       case "ArrowRight":
-        next = Math.min(focusedIndex + 1, 11);
+        next = rtl ? Math.max(focusedIndex - 1, 0) : Math.min(focusedIndex + 1, 11);
         break;
       case "ArrowLeft":
-        next = Math.max(focusedIndex - 1, 0);
+        next = rtl ? Math.min(focusedIndex + 1, 11) : Math.max(focusedIndex - 1, 0);
         break;
       case "ArrowDown":
         next = Math.min(focusedIndex + 3, 11);

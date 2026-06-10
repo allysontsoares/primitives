@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTimescape } from "timescape/react";
-import { isDateDisabled } from "../utils/date";
+import { createFocusManager, useKeyboardShortcuts } from "@kenos-ui/utils";
+import { isDateSelectable } from "../utils/date";
+import { formatSelectedDateDescription } from "../utils/day-aria";
 import { getSegmentInfo } from "../utils/locale";
 import { useDatePickerContext } from "./context";
 
@@ -40,6 +42,7 @@ interface SegmentsProps {
   labels: Record<string, string>;
   onDateChange: (date: Date | undefined) => void;
   groupId?: string | undefined;
+  describedById?: string | undefined;
   className?: string | undefined;
   style?: React.CSSProperties | undefined;
 }
@@ -51,10 +54,12 @@ function Segments({
   labels,
   onDateChange,
   groupId,
+  describedById,
   className,
   style,
 }: SegmentsProps) {
   const { state, dispatch, ids, config } = useDatePickerContext();
+  const groupRef = useRef<HTMLDivElement>(null);
 
   // Keep onDateChange stable inside timescape even when the prop reference changes.
   const onDateChangeRef = useRef(onDateChange);
@@ -95,6 +100,17 @@ function Segments({
     }
   }
 
+  const shortcutHandlers = useKeyboardShortcuts({
+    bindings: {
+      "Alt+ArrowDown": () => {
+        if (!config.readOnly && !state.open) dispatch({ type: "OPEN", source: "input" });
+      },
+      "Alt+ArrowUp": () => {
+        if (!config.readOnly && state.open) dispatch({ type: "CLOSE" });
+      },
+    },
+  });
+
   const { ref: rootRef, ...rootProps } = getRootProps();
 
   return (
@@ -102,11 +118,25 @@ function Segments({
       role="group"
       id={groupId ?? ids.input}
       aria-labelledby={ids.label}
+      aria-describedby={describedById}
+      aria-invalid={config.invalid || undefined}
+      aria-errormessage={config.invalid && config.errorMessage ? `${ids.input}-error` : undefined}
       tabIndex={-1}
       className={className}
       style={style}
       {...rootProps}
-      ref={wrapRef(rootRef as (el: HTMLElement | null) => void | null)}
+      ref={(el) => {
+        groupRef.current = el;
+        wrapRef(rootRef as (el: HTMLElement | null) => void | null)(el);
+      }}
+      onMouseDown={(e) => {
+        if (config.readOnly) return;
+        if (e.target === e.currentTarget) {
+          e.preventDefault();
+          createFocusManager(() => groupRef.current).focusLast();
+        }
+      }}
+      onKeyDown={shortcutHandlers.onKeyDown}
       {...(config.readOnly ? { "data-readonly": "true" } : {})}
     >
       {segmentOrder.map((field, i) => {
@@ -159,6 +189,8 @@ function Segments({
 
 export function Input({ index, segmentLabels, className, style }: InputProps) {
   const { state, dispatch, config, ids } = useDatePickerContext();
+  const descriptionId = useId();
+  const rangeDescriptionId = useId();
 
   const { order: segmentOrder, separator } = useMemo(
     () => getSegmentInfo(config.locale),
@@ -204,7 +236,7 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
   const onDateChange = useCallback(
     (nextDate: Date | undefined) => {
       if (!nextDate) return;
-      if (isDateDisabled(nextDate, config)) return;
+      if (!isDateSelectable(nextDate, config)) return;
 
       const prevDate = prevSourceDateRef.current;
       if (prevDate && prevDate.getTime() === nextDate.getTime()) return;
@@ -235,18 +267,45 @@ export function Input({ index, segmentLabels, className, style }: InputProps) {
   );
 
   const groupId = index !== undefined ? `${ids.input}-${index}` : ids.input;
+  const showDescription = index === undefined || index === 0;
+  const describedByIds = [
+    showDescription && sourceDate ? descriptionId : null,
+    showDescription && config.mode === "range" && state.rangeStart && !state.rangeEnd
+      ? rangeDescriptionId
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <Segments
-      key={timescapeKey}
-      sourceDate={sourceDate}
-      segmentOrder={segmentOrder}
-      separator={separator}
-      labels={labels}
-      onDateChange={onDateChange}
-      groupId={groupId}
-      className={className}
-      style={style}
-    />
+    <>
+      {showDescription && sourceDate ? (
+        <span id={descriptionId} className="sr-only">
+          {config.messages.selectedDate}: {formatSelectedDateDescription(sourceDate, config.locale)}
+        </span>
+      ) : null}
+      {showDescription && config.mode === "range" && state.rangeStart && !state.rangeEnd ? (
+        <span id={rangeDescriptionId} className="sr-only">
+          {config.messages.finishRangeSelection}
+        </span>
+      ) : null}
+      {config.invalid && config.errorMessage ? (
+        <span id={`${ids.input}-error`} role="alert" className="sr-only">
+          {config.errorMessage}
+        </span>
+      ) : null}
+      <Segments
+        key={timescapeKey}
+        sourceDate={sourceDate}
+        segmentOrder={segmentOrder}
+        separator={separator}
+        labels={labels}
+        onDateChange={onDateChange}
+        groupId={groupId}
+        describedById={describedByIds || undefined}
+        className={className}
+        style={style}
+      />
+    </>
   );
 }

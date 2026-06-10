@@ -42,6 +42,8 @@ export function YearGrid({ children, className }: YearGridProps) {
     }
   }, [focusedYear, state.yearPageStart]);
 
+  const rtl = config.dir === "rtl";
+
   function handleKeyDown(e: React.KeyboardEvent) {
     let next = focusedYear;
     const pageStart = state.yearPageStart;
@@ -49,10 +51,10 @@ export function YearGrid({ children, className }: YearGridProps) {
 
     switch (e.key) {
       case "ArrowRight":
-        next = Math.min(focusedYear + 1, pageEnd);
+        next = rtl ? Math.max(focusedYear - 1, pageStart) : Math.min(focusedYear + 1, pageEnd);
         break;
       case "ArrowLeft":
-        next = Math.max(focusedYear - 1, pageStart);
+        next = rtl ? Math.min(focusedYear + 1, pageEnd) : Math.max(focusedYear - 1, pageStart);
         break;
       // 4-column grid: ↓/↑ = ±4 years (next/prev row)
       case "ArrowDown":

@@ -1,6 +1,14 @@
 import React from "react";
 import { useDatePickerContext } from "./context";
-import { isSameDay, isInRange, isDateDisabled, startOfDay } from "../utils/date";
+import {
+  isSameDay,
+  isInRange,
+  isDateDisabled,
+  isDateUnavailable,
+  isDateSelectable,
+  startOfDay,
+} from "../utils/date";
+import { formatDayAriaLabel } from "../utils/day-aria";
 import type { DayCellMeta } from "../types";
 
 export interface DayProps {
@@ -13,6 +21,8 @@ export interface DayProps {
 export function Day({ date, children, className, style }: DayProps) {
   const { state, dispatch, config } = useDatePickerContext();
   const today = startOfDay(new Date());
+  const disabled = isDateDisabled(date, config);
+  const unavailable = isDateUnavailable(date, config);
 
   const meta: DayCellMeta = {
     date,
@@ -24,7 +34,8 @@ export function Day({ date, children, className, style }: DayProps) {
         : config.mode === "multiple"
           ? state.selectedDates.some((d) => isSameDay(d, date))
           : isSameDay(date, state.rangeStart) || isSameDay(date, state.rangeEnd),
-    isDisabled: isDateDisabled(date, config),
+    isDisabled: disabled,
+    isUnavailable: unavailable,
     isRangeStart: isSameDay(date, state.rangeStart),
     isRangeEnd: isSameDay(date, state.rangeEnd ?? state.hoverDate),
     isInRange: isInRange(date, state.rangeStart, state.rangeEnd ?? state.hoverDate),
@@ -32,25 +43,36 @@ export function Day({ date, children, className, style }: DayProps) {
   };
 
   const isFocused = isSameDay(date, state.focusedDate);
+  const canFocus = !disabled;
+  const canSelect = isDateSelectable(date, config) && !config.readOnly;
+
+  const ariaLabel = formatDayAriaLabel(date, config.locale, {
+    isSelected: meta.isSelected,
+    isToday: meta.isToday,
+    isUnavailable: unavailable,
+    isOutsideMonth: !meta.isCurrentMonth,
+  });
 
   return (
     <td
       role="gridcell"
-      aria-selected={meta.isSelected}
-      aria-disabled={meta.isDisabled}
+      aria-label={ariaLabel}
+      aria-selected={meta.isSelected || undefined}
+      aria-disabled={disabled || undefined}
       aria-current={meta.isToday ? "date" : undefined}
-      tabIndex={isFocused ? 0 : -1}
+      tabIndex={isFocused && canFocus ? 0 : -1}
       className={className}
       style={style}
       data-selected={meta.isSelected || undefined}
       data-today={meta.isToday || undefined}
       data-disabled={meta.isDisabled || undefined}
+      data-unavailable={meta.isUnavailable || undefined}
       data-outside-month={!meta.isCurrentMonth || undefined}
       data-range-start={meta.isRangeStart || undefined}
       data-range-end={meta.isRangeEnd || undefined}
       data-in-range={meta.isInRange || undefined}
       onClick={() => {
-        if (!meta.isDisabled && !config.readOnly) dispatch({ type: "SELECT_DATE", date });
+        if (canSelect) dispatch({ type: "SELECT_DATE", date });
       }}
       onMouseEnter={() => {
         if (config.mode === "range") dispatch({ type: "HOVER_DATE", date });
@@ -61,7 +83,7 @@ export function Day({ date, children, className, style }: DayProps) {
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          if (!meta.isDisabled && !config.readOnly) dispatch({ type: "SELECT_DATE", date });
+          if (canSelect) dispatch({ type: "SELECT_DATE", date });
         }
       }}
     >

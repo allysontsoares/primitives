@@ -1,6 +1,6 @@
 import type { DatePickerConfig, ViewMode } from "../types";
 import { yearPageStart } from "../utils/calendar";
-import { isDateDisabled, isSameDay, startOfDay } from "../utils/date";
+import { isDateDisabled, isDateSelectable, isSameDay, startOfDay } from "../utils/date";
 import { formatDate, parseDate } from "../utils/locale";
 
 export type OpenSource = "trigger" | "input" | null;
@@ -42,7 +42,25 @@ export type DatePickerAction =
   | { type: "SELECT_MONTH"; month: number }
   | { type: "SELECT_YEAR"; year: number }
   | { type: "YEAR_PAGE_PREV" }
-  | { type: "YEAR_PAGE_NEXT" };
+  | { type: "YEAR_PAGE_NEXT" }
+  | { type: "CANCEL_RANGE_ANCHOR" };
+
+function shouldCloseOnSelect(
+  config: DatePickerConfig,
+  mode: DatePickerConfig["mode"],
+  rangeComplete = false,
+): boolean {
+  const c = config.closeOnSelect;
+  if (typeof c === "boolean") return c;
+  if (mode === "single") return c.single ?? true;
+  if (mode === "multiple") return c.multiple ?? false;
+  if (mode === "range") {
+    const r = c.range ?? false;
+    if (r === true || r === "both") return rangeComplete;
+    return false;
+  }
+  return false;
+}
 
 function openState(
   state: DatePickerState,
@@ -75,7 +93,11 @@ export function datePickerReducer(
   switch (action.type) {
     case "OPEN":
       if (state.open || config.readOnly) return state;
-      return openState(state, state.selectedDate ?? state.rangeStart, action.source ?? null);
+      return openState(
+        state,
+        config.placeholderDate ?? state.selectedDate ?? state.rangeStart,
+        action.source ?? null,
+      );
 
     case "CLOSE":
       return {
@@ -96,7 +118,11 @@ export function datePickerReducer(
           hoverDate: null,
         };
       if (config.readOnly) return state;
-      return openState(state, state.selectedDate ?? state.rangeStart, action.source ?? "trigger");
+      return openState(
+        state,
+        config.placeholderDate ?? state.selectedDate ?? state.rangeStart,
+        action.source ?? "trigger",
+      );
 
     case "SET_VIEW":
       return { ...state, view: action.view };
@@ -134,20 +160,19 @@ export function datePickerReducer(
 
     case "SELECT_DATE": {
       const d = startOfDay(action.date);
-      if (isDateDisabled(d, config)) return state;
+      if (!isDateSelectable(d, config)) return state;
 
       if (config.mode === "single") {
         return {
           ...state,
           selectedDate: d,
           inputValue: formatDate(d, config.locale),
-          open: config.closeOnSelect ? false : state.open,
+          open: shouldCloseOnSelect(config, "single") ? false : state.open,
           hoverDate: null,
         };
       }
 
       if (config.mode === "range") {
-        // First click: anchor. Second click: complete range.
         if (!state.rangeStart || state.rangeEnd) {
           return { ...state, rangeStart: d, rangeEnd: null, hoverDate: null };
         }
@@ -158,7 +183,7 @@ export function datePickerReducer(
           rangeStart: start,
           rangeEnd: end,
           hoverDate: null,
-          open: config.closeOnSelect ? false : state.open,
+          open: shouldCloseOnSelect(config, "range", true) ? false : state.open,
         };
       }
 
@@ -168,21 +193,29 @@ export function datePickerReducer(
           already >= 0
             ? state.selectedDates.filter((_, i) => i !== already)
             : [...state.selectedDates, d];
-        return { ...state, selectedDates };
+        return {
+          ...state,
+          selectedDates,
+          open: shouldCloseOnSelect(config, "multiple") ? false : state.open,
+        };
       }
 
       return state;
     }
 
+    case "CANCEL_RANGE_ANCHOR":
+      if (!state.rangeStart || state.rangeEnd) return state;
+      return { ...state, rangeStart: null, hoverDate: null };
+
     case "ANCHOR_DATE": {
       const d = startOfDay(action.date);
-      if (isDateDisabled(d, config)) return state;
+      if (!isDateSelectable(d, config)) return state;
       return { ...state, rangeStart: d, rangeEnd: null, hoverDate: null };
     }
 
     case "EXTEND_RANGE": {
       const d = startOfDay(action.date);
-      if (!state.rangeStart || isDateDisabled(d, config)) return state;
+      if (!state.rangeStart || !isDateSelectable(d, config)) return state;
       const [start, end] =
         d.getTime() >= state.rangeStart.getTime() ? [state.rangeStart, d] : [d, state.rangeStart];
       return {
@@ -190,13 +223,13 @@ export function datePickerReducer(
         rangeStart: start,
         rangeEnd: end,
         hoverDate: null,
-        open: config.closeOnSelect ? false : state.open,
+        open: shouldCloseOnSelect(config, "range", true) ? false : state.open,
       };
     }
 
     case "TOGGLE_DATE": {
       const d = startOfDay(action.date);
-      if (isDateDisabled(d, config)) return state;
+      if (!isDateSelectable(d, config)) return state;
       const already = state.selectedDates.findIndex((s) => isSameDay(s, d));
       const selectedDates =
         already >= 0

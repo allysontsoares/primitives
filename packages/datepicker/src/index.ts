@@ -13,4 +13,7 @@ export type {
   WeekDayItem,
   ViewMode,
   SelectionMode,
+  TextDirection,
+  CloseOnSelectConfig,
 } from "./types";
+export type { DatePickerMessages } from "./utils/messages";

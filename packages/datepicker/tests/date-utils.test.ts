@@ -12,6 +12,9 @@ import {
   daysInMonth,
   clampDate,
   isDateDisabled,
+  isDateUnavailable,
+  isDateSelectable,
+  findNextFocusableDate,
   startOfDay,
 } from "../src/utils/date";
 
@@ -172,6 +175,54 @@ describe("isDateDisabled", () => {
   });
   it("returns false with no restrictions", () => {
     expect(isDateDisabled(new Date(), {})).toBe(false);
+  });
+});
+
+describe("isDateUnavailable", () => {
+  it("returns false when date is disabled", () => {
+    expect(
+      isDateUnavailable(new Date(2024, 0, 1), {
+        disabled: true,
+        unavailable: () => true,
+      }),
+    ).toBe(false);
+  });
+
+  it("returns true when unavailable callback matches", () => {
+    expect(
+      isDateUnavailable(new Date(2024, 0, 15), {
+        unavailable: (d) => d.getDate() === 15,
+      }),
+    ).toBe(true);
+  });
+});
+
+describe("isDateSelectable", () => {
+  it("returns false for disabled or unavailable", () => {
+    expect(isDateSelectable(new Date(2024, 0, 1), { disabled: true })).toBe(false);
+    expect(
+      isDateSelectable(new Date(2024, 0, 15), {
+        unavailable: (d) => d.getDate() === 15,
+      }),
+    ).toBe(false);
+  });
+});
+
+describe("findNextFocusableDate", () => {
+  it("skips disabled dates", () => {
+    const start = new Date(2024, 5, 14);
+    const next = findNextFocusableDate(start, 1, {
+      disabled: (d) => d.getDate() === 15,
+    });
+    expect(next.getDate()).toBe(16);
+  });
+
+  it("allows unavailable dates", () => {
+    const start = new Date(2024, 5, 14);
+    const next = findNextFocusableDate(start, 1, {
+      unavailable: (d) => d.getDate() === 15,
+    });
+    expect(next.getDate()).toBe(15);
   });
 });
 

@@ -9,19 +9,38 @@ import {
   buildYearItems,
 } from "../utils/calendar";
 import { getWeekStartDay } from "../utils/locale";
+import { DEFAULT_MESSAGES } from "../utils/messages";
 import type { Dispatch } from "react";
+import type { TextDirection } from "../types";
+
+function resolveDir(props: DatePickerRootProps): TextDirection {
+  if (props.dir) return props.dir;
+  if (typeof document !== "undefined" && document.documentElement.dir === "rtl") {
+    return "rtl";
+  }
+  return "ltr";
+}
 
 function resolveConfig(props: DatePickerRootProps): DatePickerConfig {
+  const mode = props.mode ?? "single";
   const base: DatePickerConfig = {
-    mode: props.mode ?? "single",
+    mode,
     locale: props.locale ?? (typeof navigator !== "undefined" ? navigator.language : "en-US"),
+    dir: resolveDir(props),
     readOnly: props.readOnly ?? false,
     modal: props.modal ?? false,
-    closeOnSelect: props.closeOnSelect ?? (props.mode !== "range" && props.mode !== "multiple"),
+    closeOnSelect: props.closeOnSelect ?? (mode !== "range" && mode !== "multiple"),
+    messages: { ...DEFAULT_MESSAGES, ...props.messages },
     ...(props.weekStartsOn !== undefined && { weekStartsOn: props.weekStartsOn }),
     ...(props.minDate !== undefined && { minDate: props.minDate }),
     ...(props.maxDate !== undefined && { maxDate: props.maxDate }),
     ...(props.disabled !== undefined && { disabled: props.disabled }),
+    ...(props.unavailable !== undefined && { unavailable: props.unavailable }),
+    ...(props.placeholderDate !== undefined && { placeholderDate: props.placeholderDate }),
+    ...(props.name !== undefined && { name: props.name }),
+    ...(props.required !== undefined && { required: props.required }),
+    ...(props.invalid !== undefined && { invalid: props.invalid }),
+    ...(props.errorMessage !== undefined && { errorMessage: props.errorMessage }),
   };
   return base;
 }
@@ -54,22 +73,65 @@ function resolveInitialValue(props: DatePickerRootProps) {
 
 export function useDatePicker(props: DatePickerRootProps) {
   const uid = useId();
-  const { mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal } =
-    props;
+  const {
+    mode,
+    locale,
+    dir,
+    weekStartsOn,
+    minDate,
+    maxDate,
+    disabled,
+    unavailable,
+    readOnly,
+    closeOnSelect,
+    modal,
+    placeholderDate,
+    messages,
+    name,
+    required,
+    invalid,
+    errorMessage,
+  } = props;
   const config = useMemo(
     () =>
       resolveConfig({
         mode,
         locale,
+        dir,
         weekStartsOn,
         minDate,
         maxDate,
         disabled,
+        unavailable,
         readOnly,
         closeOnSelect,
         modal,
+        placeholderDate,
+        messages,
+        name,
+        required,
+        invalid,
+        errorMessage,
       } as DatePickerRootProps),
-    [mode, locale, weekStartsOn, minDate, maxDate, disabled, readOnly, closeOnSelect, modal],
+    [
+      mode,
+      locale,
+      dir,
+      weekStartsOn,
+      minDate,
+      maxDate,
+      disabled,
+      unavailable,
+      readOnly,
+      closeOnSelect,
+      modal,
+      placeholderDate,
+      messages,
+      name,
+      required,
+      invalid,
+      errorMessage,
+    ],
   );
 
   const initialValue = resolveInitialValue(props);
