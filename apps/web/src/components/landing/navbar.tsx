@@ -1,8 +1,8 @@
 "use client";
 
+import { KenosMark } from "@/components/docs/kenos-mark";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { KenosMark } from "@/components/docs/kenos-mark";
 
 export function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,27 +15,17 @@ export function LandingNavbar() {
   }, []);
 
   const navItems = [
-    { label: "Primitives", href: "/#primitives" },
-    { label: "Docs", href: "/docs" },
-    { label: "GitHub", href: "https://github.com/allysontsoares/kenos-ui" },
+    { label: "Features", href: "/#features" },
+    { label: "API", href: "/#api" },
+    { label: "Docs", href: "/docs/" },
+    {
+      label: "GitHub",
+      href: "https://github.com/allysontsoares/kenos-ui/tree/main/packages/datepicker",
+    },
   ];
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="w-full border-b border-white/[0.07] bg-[#09090b] text-[11px] font-mono">
-        <div className="mx-auto flex h-8 max-w-[1200px] items-center justify-between px-4 text-zinc-500">
-          <div className="flex items-center gap-2">
-            <span className="text-zinc-300">{"//"}</span>
-            <span className="hidden sm:inline">@kenos-ui/react-datepicker — published on npm</span>
-            <span className="sm:hidden">@kenos-ui/react-datepicker</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
-            <span>registry / synced</span>
-          </div>
-        </div>
-      </div>
-
       <div
         className={`w-full border-b border-white/[0.07] transition-colors duration-300 ${
           scrolled ? "bg-[#09090b]/85 backdrop-blur-md" : "bg-[#09090b]"
@@ -46,7 +36,7 @@ export function LandingNavbar() {
             <span className="text-zinc-100">
               <KenosMark size={28} strokeWidth={2.5} />
             </span>
-            <span className="text-[15px] font-semibold tracking-tight text-zinc-100">kenos</span>
+            <span className="text-[15px] font-semibold tracking-tight text-zinc-100">kenos UI</span>
           </Link>
 
           <div className="hidden h-full items-center md:flex">
@@ -66,7 +56,7 @@ export function LandingNavbar() {
 
           <div className="hidden h-full items-center border-l border-white/[0.07] md:flex">
             <Link
-              href="https://www.npmjs.com/org/kenos-ui"
+              href="https://www.npmjs.com/package/@kenos-ui/react-datepicker"
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-full items-center border-r border-white/[0.07] px-3 text-zinc-500 transition-colors hover:text-zinc-100"

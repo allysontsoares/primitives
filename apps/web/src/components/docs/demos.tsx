@@ -1431,7 +1431,7 @@ export function DatePickerMultipleDemo() {
   const [dates, setDates] = useState<Date[]>([]);
   // A segmented input holds a single value, so it isn't a good fit for multi-select.
   // Use a summary trigger plus removable chips to show the live selection two-way.
-  const sorted = [...dates].sort((a, b) => a.getTime() - b.getTime());
+  const sorted = dates.toSorted((a, b) => a.getTime() - b.getTime());
   const removeDate = (target: Date) =>
     setDates((prev) => prev.filter((d) => d.getTime() !== target.getTime()));
 

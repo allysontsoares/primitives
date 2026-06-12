@@ -9,12 +9,12 @@ import {
 } from "@/lib/docs-data";
 import { ComponentPage } from "@/components/docs/pages";
 import { DatePickerPage } from "@/components/docs/date-picker-page";
-import { Installation, QuickStart, Changelog } from "@/components/docs/guides";
+import { Changelog } from "@/components/docs/changelog";
+import { Installation, QuickStart } from "@/components/docs/guides";
 
 const GUIDES: Record<string, () => React.ReactElement> = {
   installation: Installation,
   quickstart: QuickStart,
-  changelog: Changelog,
 };
 
 export function generateStaticParams() {
@@ -37,6 +37,7 @@ export default async function DocsSlugPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   if (isSoonRoute(slug)) notFound();
   if (slug === "date-picker") return <DatePickerPage />;
+  if (slug === "changelog") return <Changelog />;
   if (COMPONENTS[slug]) return <ComponentPage slug={slug} />;
   const Guide = GUIDES[slug];
   if (Guide) return <Guide />;

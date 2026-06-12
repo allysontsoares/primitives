@@ -98,7 +98,7 @@ export function DocsTableOfContents() {
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => {
+          .toSorted((a, b) => {
             const aTop = a.boundingClientRect.top;
             const bTop = b.boundingClientRect.top;
             return aTop - bTop;
@@ -110,7 +110,7 @@ export function DocsTableOfContents() {
         }
         const passed = entries
           .filter((e) => e.boundingClientRect.top < SCROLL_OFFSET)
-          .sort((a, b) => b.boundingClientRect.top - a.boundingClientRect.top);
+          .toSorted((a, b) => b.boundingClientRect.top - a.boundingClientRect.top);
         const lastPassed = passed[0];
         if (lastPassed) setActiveId(lastPassed.target.id);
       },

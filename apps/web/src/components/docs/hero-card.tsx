@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { HeroCircles } from "./hero-circles";
 import { KenosMark } from "./kenos-mark";
 
@@ -42,7 +42,7 @@ export function DocsHeroCard() {
               Beta
             </Badge>
             <p className="mb-3 font-mono text-[13px] font-medium tracking-[0.08em] text-zinc-500 dark:text-zinc-400">
-              kenos
+              kenos UI
             </p>
             <h1
               id="home-hero-title"
@@ -76,12 +76,6 @@ export function DocsHeroCard() {
             className={cn(buttonVariants({ variant: "brand", size: "lg" }), "w-full sm:w-auto")}
           >
             Get started <ArrowRight />
-          </Link>
-          <Link
-            href="/docs/date-picker"
-            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto")}
-          >
-            Components
           </Link>
         </div>
       </div>

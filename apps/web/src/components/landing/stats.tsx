@@ -49,14 +49,14 @@ function StatCell({
 }
 
 function TestCount({ started }: { started: boolean }) {
-  const count = useCountUp(147, 2500, started);
+  const count = useCountUp(192, 2500, started);
   return (
     <>
       <div className="text-6xl font-bold tabular-nums tracking-tighter text-zinc-100 md:text-8xl">
         {count.toLocaleString()}
       </div>
       <p className="mt-3 font-mono text-xs text-zinc-500">
-        {"// unit and integration tests in the package"}
+        {"// vitest suites in packages/datepicker"}
       </p>
     </>
   );
@@ -91,6 +91,10 @@ export function LandingStats() {
           <h2 className="max-w-2xl text-balance text-3xl font-bold leading-tight md:text-4xl">
             Tested behavior, not just happy paths
           </h2>
+          <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-zinc-500">
+            Keyboard navigation, ARIA roles, locale rules, range resize, dialog interop, and reducer
+            edge cases — all covered in the package test suite.
+          </p>
         </div>
 
         <div ref={ref} className="relative border-b border-white/[0.07] px-6 py-12">
@@ -99,10 +103,10 @@ export function LandingStats() {
 
         <div className="relative grid grid-cols-1 border-b border-white/[0.07] sm:grid-cols-3">
           <StatCell
-            value={4}
+            value={21}
             suffix=""
-            label="Date primitives"
-            sublabel="calendar through date field"
+            label="Compound parts"
+            sublabel="DatePicker.* primitives"
             start={started}
           />
           <StatCell
@@ -113,17 +117,17 @@ export function LandingStats() {
             start={started}
           />
           <StatCell
-            value={19}
-            suffix="+"
-            label="React version"
-            sublabel="hooks and server components ready"
+            value={3}
+            suffix=""
+            label="Selection modes"
+            sublabel="single, range, multiple"
             start={started}
           />
         </div>
 
         <div className="relative px-6 py-12">
           <p className="max-w-3xl text-pretty text-xl leading-relaxed text-zinc-500 md:text-2xl">
-            Our mission is to make scheduling UI{" "}
+            Scheduling UI should be{" "}
             <span className="font-semibold text-zinc-100">
               faster to build and harder to break.
             </span>

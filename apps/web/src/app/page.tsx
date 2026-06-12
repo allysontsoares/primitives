@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
 import { LandingComponentShowcase } from "@/components/landing/component-showcase";
 import { LandingCtaFooter } from "@/components/landing/cta-footer";
 import { LandingFeatures } from "@/components/landing/features";
 import { LandingHero } from "@/components/landing/hero";
 import { LandingNavbar } from "@/components/landing/navbar";
-import { LandingStats } from "@/components/landing/stats";
+import type { Metadata } from "next";
 
-const title = "kenos — Unstyled React primitives";
+const title = "kenos UI - Headless primitives";
 const description =
-  "The space before design. Composable, accessible and unstyled React primitives for date UI. Start with structure. Finish with style.";
+  "Headless date & scheduling primitives for React. Single, range, and multiple selection with segmented inputs, Intl locales, and WAI-ARIA — fully unstyled.";
 
 export const metadata: Metadata = {
   title: { absolute: title },
@@ -36,7 +35,7 @@ export default function HomePage() {
       <LandingHero />
       <LandingFeatures />
       <LandingComponentShowcase />
-      <LandingStats />
+      {/*<LandingStats />*/}
       <LandingCtaFooter />
     </div>
   );

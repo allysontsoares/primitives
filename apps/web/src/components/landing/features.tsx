@@ -1,15 +1,15 @@
 export function LandingFeatures() {
   return (
-    <section className="border-b border-white/[0.07]">
+    <section id="features" className="border-b border-white/[0.07]">
       <div className="mx-auto max-w-[1200px] border-x border-white/[0.07]">
         <div className="border-b border-white/[0.07] px-6 py-12">
           <p className="kenos-landing-label mb-4">{"// 01 — capabilities"}</p>
           <h2 className="max-w-2xl text-balance text-3xl font-bold leading-tight md:text-4xl">
-            Headless primitives that behave like infrastructure
+            What @kenos-ui/react-datepicker ships
           </h2>
           <p className="mt-4 max-w-xl text-pretty leading-relaxed text-zinc-500">
-            Kenos ships date primitives with full keyboard support, locale rules, and compound
-            composition — no theme to fight, no hidden magic.
+            Headless date &amp; scheduling primitives built for real-world composition — not a
+            themed widget you fight to customize.
           </p>
         </div>
 
@@ -18,24 +18,19 @@ export function LandingFeatures() {
             <CellLabel index="H-01" name="headless" />
             <h3 className="mb-2 mt-4 text-xl font-bold">Zero default styles</h3>
             <p className="mb-8 max-w-md text-sm leading-relaxed text-zinc-500">
-              Every part is unstyled. Wire Tailwind, Panda CSS, CSS modules, or inline styles — the
-              library never ships opinionated CSS you have to override.
+              Every <code className="text-zinc-400">DatePicker.*</code> part is unstyled. Wire
+              Tailwind, CSS modules, or inline styles — the library never ships opinionated CSS you
+              have to override.
             </p>
-            <div className="space-y-3 font-mono text-xs">
+            <div className="grid grid-cols-1 gap-px overflow-hidden rounded border border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
               {[
-                { name: "kenos.datepicker", ms: "0 KB", w: "8%", active: true },
-                { name: "styled-ui-kit", ms: "~42 KB", w: "72%", active: false },
-                { name: "theme-override", ms: "hours", w: "95%", active: false },
-              ].map((row) => (
-                <div key={row.name} className="flex items-center gap-3">
-                  <span className="w-32 text-zinc-500">{row.name}</span>
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-zinc-900">
-                    <div
-                      className={`h-full rounded-full ${row.active ? "bg-indigo-500" : "bg-zinc-700/40"}`}
-                      style={{ width: row.w }}
-                    />
-                  </div>
-                  <span className="w-14 text-right text-zinc-100">{row.ms}</span>
+                { name: "Intl", desc: "locale, week start, RTL" },
+                { name: "timescape", desc: "segmented date input" },
+                { name: "Floating UI", desc: "popover positioning" },
+              ].map((item) => (
+                <div key={item.name} className="bg-zinc-900 p-4">
+                  <div className="font-mono text-sm font-semibold text-indigo-300">{item.name}</div>
+                  <div className="mt-1 font-mono text-[11px] text-zinc-500">{item.desc}</div>
                 </div>
               ))}
             </div>
@@ -45,11 +40,11 @@ export function LandingFeatures() {
             <CellLabel index="A-01" name="accessibility" accent />
             <h3 className="mb-2 mt-4 text-xl font-bold">WAI-ARIA</h3>
             <p className="mb-6 text-sm leading-relaxed text-zinc-500">
-              Grid pattern, roving tabindex, segmented spinbuttons, and focus traps tested for real
-              scheduling flows.
+              Grid pattern, roving tabindex, segmented spinbuttons, and opt-in modal focus trap —
+              tested with axe-core and keyboard suites.
             </p>
             <div className="mt-auto grid grid-cols-2 gap-px overflow-hidden rounded border border-white/[0.07] bg-white/[0.07]">
-              {["keyboard", "focus-ring", "aria-roles", "contrast"].map((item) => (
+              {["keyboard", "focus-ring", "aria-roles", "screen reader"].map((item) => (
                 <div
                   key={item}
                   className="flex items-center gap-2 bg-zinc-900 p-2.5 font-mono text-[11px] text-zinc-500"
@@ -84,14 +79,19 @@ export function LandingFeatures() {
             <div className="grid h-full grid-cols-1 sm:grid-cols-2">
               <div className="border-b border-white/[0.07] p-6 sm:border-b-0 sm:border-r">
                 <CellLabel index="TS-01" name="typescript" />
-                <h3 className="mb-2 mt-4 text-xl font-bold">Typed compound API</h3>
+                <h3 className="mb-2 mt-4 text-xl font-bold">21 compound parts</h3>
                 <p className="text-sm leading-relaxed text-zinc-500">
-                  DatePicker.Root, .Input, .Calendar, .Day — full generics, strict props, and
-                  inferred variants across every part.
+                  <code className="text-zinc-400">DatePicker.Root</code>,{" "}
+                  <code className="text-zinc-400">.Input</code>,{" "}
+                  <code className="text-zinc-400">.Calendar</code>,{" "}
+                  <code className="text-zinc-400">.Day</code>,{" "}
+                  <code className="text-zinc-400">.Presets</code>,{" "}
+                  <code className="text-zinc-400">.HiddenInput</code> — strict props, full generics,
+                  and inferred variants across every part.
                 </p>
               </div>
               <div className="overflow-x-auto bg-[#0a0a10] p-5 font-mono text-xs leading-relaxed">
-                <div className="mb-2 text-zinc-600">{"// compound composition"}</div>
+                <div className="mb-2 text-zinc-600">{"// range with segmented inputs"}</div>
                 <div>
                   <span className="landing-code-keyword">import</span> {"{ DatePicker }"}{" "}
                   <span className="landing-code-keyword">from</span>{" "}
@@ -103,6 +103,16 @@ export function LandingFeatures() {
                   <span className="landing-code-highlight">&lt;DatePicker.Root</span> mode=
                   <span className="landing-code-string">&quot;range&quot;</span>
                   <span className="landing-code-highlight">&gt;</span>
+                </div>
+                <div className="pl-3">
+                  <span className="landing-code-highlight">&lt;DatePicker.Input</span> index=
+                  <span className="landing-code-string">{"{0}"}</span>
+                  <span className="landing-code-highlight"> /&gt;</span>
+                </div>
+                <div className="pl-3">
+                  <span className="landing-code-highlight">&lt;DatePicker.Input</span> index=
+                  <span className="landing-code-string">{"{1}"}</span>
+                  <span className="landing-code-highlight"> /&gt;</span>
                 </div>
                 <div className="pl-3">
                   <span className="landing-code-highlight">&lt;DatePicker.Calendar /&gt;</span>

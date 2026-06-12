@@ -10,7 +10,7 @@ function Slider({
   max = 100,
   ...props
 }: SliderPrimitive.Root.Props) {
-  const _values = Array.isArray(value)
+  const thumbValues = Array.isArray(value)
     ? value
     : Array.isArray(defaultValue)
       ? defaultValue
@@ -37,7 +37,7 @@ function Slider({
             className="bg-oklch(0.205 0 0) select-none data-horizontal:h-full data-vertical:w-full dark:bg-oklch(0.922 0 0)"
           />
         </SliderPrimitive.Track>
-        {Array.from({ length: _values.length }, (_, index) => (
+        {Array.from({ length: thumbValues.length }, (_, index) => (
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}

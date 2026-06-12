@@ -2,6 +2,7 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { useMemo, useState } from "react";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "../../lib/utils";
 
 /* ---------- tiny syntax highlighter (jsx / bash / css) ---------- */
@@ -179,6 +180,8 @@ export type CodeBlockProps = {
   onStyleTabsEnabledChange?: (on: boolean) => void;
 } & VariantProps<typeof codeBlockVariants>;
 
+const codeTabId = (i: number) => `code-tab-${i}`;
+
 export function CodeBlock({
   tabs,
   code,
@@ -202,17 +205,9 @@ export function CodeBlock({
   }, [allTabs, showStyleTabs, styleTabsEnabled]);
 
   const [active, setActive] = useState(0);
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard();
   const safeActive = Math.min(active, Math.max(0, visibleTabs.length - 1));
   const cur = visibleTabs[safeActive] ?? visibleTabs[0]!;
-
-  const tabId = (i: number) => `code-tab-${i}`;
-
-  const copy = () => {
-    navigator.clipboard?.writeText(cur.code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1400);
-  };
 
   const STYLED_TAB_LABELS = new Set(["CSS", "Tailwind", "Panda CSS"]);
   const hasStyleTabs = allTabs.some((t) => STYLED_TAB_LABELS.has(t.label));
@@ -229,9 +224,9 @@ export function CodeBlock({
             key={t.label}
             type="button"
             role="tab"
-            id={tabId(i)}
+            id={codeTabId(i)}
             aria-selected={i === safeActive}
-            aria-controls={`${tabId(i)}-panel`}
+            aria-controls={`${codeTabId(i)}-panel`}
             data-state={i === safeActive ? "active" : "inactive"}
             onClick={() => setActive(i)}
             className={tabVariants({ state: i === safeActive ? "active" : "inactive" })}
@@ -264,7 +259,7 @@ export function CodeBlock({
           )}
           <button
             type="button"
-            onClick={copy}
+            onClick={() => copy(cur.code.trim())}
             aria-label="Copy code"
             className="grid min-h-9 min-w-9 place-items-center rounded-md text-[#7d8089] transition-colors hover:bg-white/[0.06] hover:text-[#f0f1f4] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-100"
           >
@@ -275,9 +270,9 @@ export function CodeBlock({
       {visibleTabs.map((t, i) => (
         <pre
           key={t.label}
-          id={`${tabId(i)}-panel`}
+          id={`${codeTabId(i)}-panel`}
           role="tabpanel"
-          aria-labelledby={tabId(i)}
+          aria-labelledby={codeTabId(i)}
           hidden={i !== safeActive}
           className="code-panel-body m-0 overflow-x-auto px-4 py-4 font-mono whitespace-pre text-[#e4e6eb] sm:px-5 sm:py-5"
         >

@@ -1,25 +1,23 @@
 "use client";
 
+import { KenosMark } from "@/components/docs/kenos-mark";
 import Image from "next/image";
 import Link from "next/link";
-import { KenosMark } from "@/components/docs/kenos-mark";
 import { GithubIcon } from "./navbar";
+
+const NPM_PACKAGE = "https://www.npmjs.com/package/@kenos-ui/react-datepicker";
+const GITHUB_PACKAGE = "https://github.com/allysontsoares/kenos-ui/tree/main/packages/datepicker";
 
 const FOOTER_LINKS = {
   Docs: [
-    { label: "Overview", href: "/docs" },
+    { label: "Date Picker", href: "/docs/date-picker" },
     { label: "Installation", href: "/docs/installation" },
-    { label: "Quick Start", href: "/docs/quickstart" },
     { label: "Changelog", href: "/docs/changelog" },
   ],
-  Primitives: [
-    { label: "Date Picker", href: "/docs/date-picker" },
-    { label: "Select", href: "/docs/select" },
-    { label: "Combobox", href: "/docs/combobox" },
-  ],
-  Links: [
-    { label: "GitHub", href: "https://github.com/allysontsoares/kenos-ui" },
-    { label: "npm", href: "https://www.npmjs.com/org/kenos-ui" },
+  Package: [
+    { label: "npm", href: NPM_PACKAGE },
+    { label: "GitHub", href: GITHUB_PACKAGE },
+    { label: "README", href: `${GITHUB_PACKAGE}#readme` },
   ],
 };
 
@@ -29,20 +27,20 @@ export function LandingCtaFooter() {
       <section className="border-b border-white/[0.07]">
         <div className="mx-auto max-w-[1200px] border-x border-white/[0.07]">
           <div className="border-b border-white/[0.07] px-6 py-8">
-            <p className="kenos-landing-label">{"// 04 — get started"}</p>
+            <p className="kenos-landing-label">{"// 03 — get started"}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2">
             {[
               {
-                tag: "GUIDE",
-                title: "Install and style your first DatePicker",
-                desc: "Step-by-step from npm install to a fully styled popover calendar.",
-                href: "/docs/quickstart",
+                tag: "INSTALL",
+                title: "npm install @kenos-ui/react-datepicker",
+                desc: "React 19+, Node 22+. Zero default CSS — style every DatePicker.* part yourself.",
+                href: "/docs/installation",
               },
               {
                 tag: "REFERENCE",
                 title: "Compound API and anatomy",
-                desc: "Every DatePicker.* part, props, and data attributes documented.",
+                desc: "Every DatePicker.* part, props, data attributes, and live demos documented.",
                 href: "/docs/date-picker",
               },
             ].map((item, i) => (
@@ -75,27 +73,36 @@ export function LandingCtaFooter() {
               <KenosMark size={56} strokeWidth={2} />
             </span>
             <h2 className="max-w-3xl text-balance text-3xl font-bold leading-tight md:text-5xl">
-              The space before <span className="text-zinc-500">design.</span>
+              Ship date UI with structure — <span className="text-zinc-500">not overrides.</span>
             </h2>
             <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-zinc-500 md:text-lg">
-              Install from npm, read the docs, and ship date UI with structure — not overrides.
+              Install from npm, read the docs, and compose scheduling primitives that respect
+              locale, keyboard, and screen readers out of the box.
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
               <Link
-                href="/docs/installation"
+                href="/docs/date-picker"
                 className="kenos-cta hover:shadow-[0_0_30px_rgb(99_102_241/0.4)]"
               >
-                Get started
+                Explore DatePicker
               </Link>
               <a
-                href="https://github.com/allysontsoares/kenos-ui"
+                href={NPM_PACKAGE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-md border border-white/[0.07] px-6 py-3 text-sm font-semibold text-zinc-100 transition-all duration-200 hover:border-white/20 hover:bg-zinc-900"
+              >
+                View on npm
+              </a>
+              <a
+                href={GITHUB_PACKAGE}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-md border border-white/[0.07] px-6 py-3 text-sm font-semibold text-zinc-100 transition-all duration-200 hover:border-white/20 hover:bg-zinc-900"
               >
                 <GithubIcon className="h-4 w-4" />
-                View on GitHub
+                Source
               </a>
             </div>
           </div>
@@ -104,7 +111,7 @@ export function LandingCtaFooter() {
 
       <footer className="border-b border-white/[0.07]">
         <div className="mx-auto max-w-[1200px] border-x border-white/[0.07]">
-          <div className="grid grid-cols-2 md:grid-cols-5">
+          <div className="grid grid-cols-2 md:grid-cols-4">
             <div className="col-span-2 border-b border-white/[0.07] p-8 md:col-span-1 md:border-b-0 md:border-r">
               <div className="mb-3 flex items-center gap-2">
                 <span className="text-zinc-100">
@@ -113,11 +120,11 @@ export function LandingCtaFooter() {
                 <span className="font-bold text-zinc-100">kenos</span>
               </div>
               <p className="mb-4 font-mono text-xs leading-relaxed text-zinc-500">
-                Unstyled React primitives for date UI.
+                @kenos-ui/react-datepicker — headless date primitives for React.
               </p>
               <div className="flex gap-4">
                 <a
-                  href="https://github.com/allysontsoares/kenos-ui"
+                  href={GITHUB_PACKAGE}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
@@ -126,7 +133,7 @@ export function LandingCtaFooter() {
                   <GithubIcon className="h-4 w-4" />
                 </a>
                 <a
-                  href="https://www.npmjs.com/org/kenos-ui"
+                  href={NPM_PACKAGE}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="npm"
@@ -142,7 +149,7 @@ export function LandingCtaFooter() {
             {Object.entries(FOOTER_LINKS).map(([section, links], i) => (
               <div
                 key={section}
-                className={`border-b border-white/[0.07] p-8 md:border-b-0 ${i < 3 ? "border-r" : ""}`}
+                className={`border-b border-white/[0.07] p-8 md:border-b-0 ${i < 1 ? "border-r" : ""}`}
               >
                 <p className="mb-4 font-mono text-[11px] uppercase tracking-wide text-zinc-500">
                   {section}
@@ -171,10 +178,10 @@ export function LandingCtaFooter() {
               &copy; {new Date().getFullYear()} Kenos UI — MIT licensed.
             </p>
             <Link
-              href="/docs"
+              href="/docs/date-picker"
               className="font-mono text-xs text-zinc-500 transition-colors hover:text-indigo-400"
             >
-              Documentation →
+              DatePicker docs →
             </Link>
           </div>
         </div>

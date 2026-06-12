@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { CodeBlock } from "./code-block";
-import { DocsProse, docsTableClass } from "./docs-prose";
+import { docsTableClass } from "./docs-prose";
 import { Eyebrow, PageIntro, PageTitle, Lead, H2, InlineCode, P } from "./pages";
 import { DemoStage } from "./blocks";
 import { DatePicker } from "./demos";
@@ -156,97 +155,6 @@ export function QuickStart() {
         </Link>
         .
       </Callout>
-    </>
-  );
-}
-
-const CHANGELOG_TAG_VARIANT = {
-  Unreleased: "beta",
-  Minor: "brand",
-  Patch: "secondary",
-  Beta: "beta",
-} as const;
-
-export function Changelog() {
-  const rel = [
-    {
-      v: "Unreleased",
-      date: "Jun 2026",
-      tag: "Unreleased" as const,
-      items: [
-        "DatePicker — time granularity (hour/minute segments), Presets, pageBehavior, allowsNonContiguousRanges, and controlled multiple selection.",
-        "DatePicker — Grid navigation refactor via useGridNavigation; range drag selection, range re-anchor, and Ctrl/Cmd+click toggle in multiple mode.",
-        "DatePicker — useDatePickerAnnouncer for month, selection, and range-complete screen reader updates.",
-        "DatePicker — CLDR-based week start lookup fixes SSR hydration mismatches for locales such as ar-EG.",
-        "DatePicker — Arrow keys in day/month/year grids call preventDefault so the page no longer scrolls alongside grid focus.",
-        "DatePicker — Portaled Content waits for client mount before rendering (SSR-safe popovers).",
-        "@kenos-ui/utils — useGridNavigation: getNextIndex override, GridNavigationKey export, optional onEscape.",
-        "Docs — Date Picker API reference, interactive demos, and updated snippets.",
-        "Docs — Indigo accent branding on landing, shell, CTAs, and overview quality checks.",
-        "Docs — Keyboard tables expanded (Page Up/Down, Tab/Shift+Tab for header controls).",
-      ],
-    },
-    {
-      v: "0.4.2",
-      date: "Jun 2026",
-      tag: "Patch" as const,
-      items: [
-        "Sync controlled single value into reducer state (SET_SELECTED_DATE) so external value changes update the segmented input and focused month.",
-      ],
-    },
-    {
-      v: "0.4.1",
-      date: "May 2026",
-      tag: "Minor" as const,
-      items: [
-        "First Kenos UI DatePicker feature release: single, range, and multiple modes with unified DatePicker.Root.",
-        "Segmented Input via timescape — locale-aware segments, bidirectional calendar sync, dual inputs for range.",
-        "Compound parts: ViewControl, Grid, Day (render prop), MonthGrid, YearGrid, Calendar shorthand.",
-        "Floating UI Content (portal, collision, forceMount, modal opt-in) with dialog-safe Escape handling.",
-        "Intl locale: week start, segment order, month/year labels; weekStartsOn override.",
-        "WAI-ARIA grid + spinbutton patterns, keyboard suite, vitest-axe, and Storybook stories.",
-      ],
-    },
-  ];
-  return (
-    <>
-      <PageIntro>
-        <Eyebrow>Get Started</Eyebrow>
-        <PageTitle>Changelog</PageTitle>
-        <Lead>
-          Release notes for <InlineCode>@kenos-ui/react-datepicker</InlineCode> and this
-          documentation site. Package versions follow{" "}
-          <a
-            href="https://github.com/allysontsoares/kenos-ui/blob/main/packages/datepicker/CHANGELOG.md"
-            className="font-semibold underline decoration-line-strong underline-offset-[3px] hover:text-indigo-600 hover:decoration-accent dark:hover:text-indigo-400"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            packages/datepicker/CHANGELOG.md
-          </a>
-          .
-        </Lead>
-      </PageIntro>
-      {rel.map((r) => (
-        <div key={r.v} className="border-t border-zinc-200 dark:border-zinc-800 py-[22px]">
-          <div className="mb-2 flex items-center gap-3">
-            <span className="font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
-              {r.v === "Unreleased" ? "Unreleased" : `v${r.v}`}
-            </span>
-            <Badge variant={CHANGELOG_TAG_VARIANT[r.tag]} className="h-5 px-1.5 py-0 text-[10px]">
-              {r.tag}
-            </Badge>
-            <span className="ml-auto text-[13px] text-zinc-500 dark:text-zinc-400">{r.date}</span>
-          </div>
-          <DocsProse>
-            <ul>
-              {r.items.map((it) => (
-                <li key={it}>{it}</li>
-              ))}
-            </ul>
-          </DocsProse>
-        </div>
-      ))}
     </>
   );
 }

@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { getDocsPageText } from "@/lib/copy-to-clipboard";
 import { CodeBlock, type CodeTab } from "./code-block";
 import { type ExampleSnippets } from "../../lib/example-snippets";
 import {
@@ -130,38 +132,76 @@ export function Example({
   );
 }
 
+const CopyIcon = ({ size = 15 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.7}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <rect x="9" y="9" width="11" height="11" rx="2" />
+    <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+  </svg>
+);
+
+const CheckIcon = ({ size = 15 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M20 6L9 17l-5-5" />
+  </svg>
+);
+
 /* ---------------- Copy Page split button (Ark UI style) ---------------- */
 export function CopyPage() {
   const [open, setOpen] = useState(false);
-  const item = (icon: ReactNode, labelText: string) => (
+  const { copied, copy } = useCopyToClipboard();
+
+  const copyPage = async () => {
+    const text = getDocsPageText();
+    if (text) await copy(text);
+  };
+
+  const item = (icon: ReactNode, labelText: string, onClick?: () => void) => (
     <button
-      onClick={() => setOpen(false)}
+      type="button"
+      onClick={() => {
+        onClick?.();
+        setOpen(false);
+      }}
       className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-[13.5px] text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
     >
       {icon}
       {labelText}
     </button>
   );
+
   return (
     <div className="relative" onMouseLeave={() => setOpen(false)}>
       <div className="inline-flex items-stretch overflow-hidden rounded-[10px] border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800">
-        <button className="inline-flex min-h-9 items-center gap-2 px-3.5 text-[13.5px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800">
-          <svg
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.7}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="9" y="9" width="11" height="11" rx="2" />
-            <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-          </svg>
-          Copy Page
+        <button
+          type="button"
+          onClick={copyPage}
+          className="inline-flex min-h-9 items-center gap-2 px-3.5 text-[13.5px] font-semibold text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+        >
+          {copied ? <CheckIcon /> : <CopyIcon />}
+          {copied ? "Copied" : "Copy Page"}
         </button>
         <button
+          type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label="More copy options"
           className="grid w-[34px] place-items-center border-l border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -229,57 +269,71 @@ export function CopyPage() {
 }
 
 export function ActionRow() {
+  const { copied: copiedLlm, copy: copyLlm } = useCopyToClipboard();
+  const { copied: copiedMd, copy: copyMd } = useCopyToClipboard();
+
   const link =
     "inline-flex items-center gap-1.5 text-[13.5px] text-zinc-500 dark:text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100";
+
+  const copyForLlm = async () => {
+    const text = getDocsPageText();
+    if (!text) return;
+    await copyLlm(`# Kenos UI documentation\n\nSource: ${window.location.href}\n\n${text}`);
+  };
+
+  const copyAsMarkdown = async () => {
+    const text = getDocsPageText();
+    if (!text) return;
+    await copyMd(`${window.location.href}\n\n${text}`);
+  };
+
   return (
     <div className="mb-6 flex flex-wrap items-center gap-[18px]">
-      <button className={link}>
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.6}
-        >
-          <rect x="9" y="9" width="11" height="11" rx="2" />
-          <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-        </svg>
-        Copy for LLM
+      <button type="button" onClick={copyForLlm} className={link}>
+        {copiedLlm ? <CheckIcon /> : <CopyIcon />}
+        {copiedLlm ? "Copied" : "Copy for LLM"}
       </button>
       <div className="h-3.5 w-px bg-line" />
-      <button className={link}>
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={1.6}
-        >
-          <path d="M4 4h16v16H4z" />
-          <path d="M8 9h8M8 13h5" />
-        </svg>
-        View as Markdown
+      <button type="button" onClick={copyAsMarkdown} className={link}>
+        {copiedMd ? (
+          <CheckIcon />
+        ) : (
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.6}
+            aria-hidden
+          >
+            <path d="M4 4h16v16H4z" />
+            <path d="M8 9h8M8 13h5" />
+          </svg>
+        )}
+        {copiedMd ? "Copied" : "View as Markdown"}
       </button>
     </div>
   );
 }
 
 /* ---------------- Anatomy diagram (Radix-style SVG) ---------------- */
-function AnatomyFallback({ parts }: { parts: AnatomyNode[] }) {
-  const render = (node: AnatomyNode, depth = 0) => (
+function renderAnatomyNode(node: AnatomyNode, depth = 0) {
+  return (
     <div key={node.tag + depth} className={depth ? "ml-4 mt-2" : ""}>
       <code className="font-mono text-[12px] text-zinc-500">{node.tag}</code>
       {node.note && (
         <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">{node.note}</span>
       )}
-      {node.children?.map((c) => render(c, depth + 1))}
+      {node.children?.map((c) => renderAnatomyNode(c, depth + 1))}
     </div>
   );
+}
+
+function AnatomyFallback({ parts }: { parts: AnatomyNode[] }) {
   return (
     <div className="my-[18px] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 p-6 font-mono text-sm">
-      {parts.map((p) => render(p))}
+      {parts.map((p) => renderAnatomyNode(p))}
     </div>
   );
 }
@@ -296,13 +350,12 @@ export function PageNav({ route }: { route: string }) {
   if (idx === -1) return null;
   const prev = PUBLISHED_ROUTES[idx - 1];
   const next = PUBLISHED_ROUTES[idx + 1];
-  const href = (r: string) => routeToHref(r);
   const card =
     "rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700";
   return (
     <div className="mt-[72px] grid grid-cols-1 gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-7 sm:grid-cols-2">
       {prev != null ? (
-        <Link href={href(prev)} className={card}>
+        <Link href={routeToHref(prev)} className={card}>
           <div className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">← Previous</div>
           <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">
             {titleForRoute(prev)}
@@ -312,7 +365,7 @@ export function PageNav({ route }: { route: string }) {
         <div />
       )}
       {next != null ? (
-        <Link href={href(next)} className={`${card} text-right`}>
+        <Link href={routeToHref(next)} className={`${card} text-right`}>
           <div className="mb-1 text-xs text-zinc-500 dark:text-zinc-400">Next →</div>
           <div className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">
             {titleForRoute(next)}

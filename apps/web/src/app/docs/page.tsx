@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { Overview } from "@/components/docs/pages";
+import type { Metadata } from "next";
 
 const title = "Overview";
 const description =
@@ -9,10 +9,10 @@ export const metadata: Metadata = {
   title,
   description,
   openGraph: {
-    title: `${title} · kenos`,
+    title: `${title} · kenos UI`,
     description,
     type: "website",
-    siteName: "kenos",
+    siteName: "kenos UI",
   },
   alternates: {
     canonical: "/docs",

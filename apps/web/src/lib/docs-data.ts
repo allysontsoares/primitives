@@ -72,7 +72,6 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "Overview", route: "" },
       { label: "Installation", route: "installation" },
-      { label: "Quick Start", route: "quickstart" },
       { label: "Changelog", route: "changelog" },
     ],
   },
@@ -104,7 +103,12 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
     demo: "select",
     npmPackage: "@kenos-ui/react-select",
     importName: "Select",
-    features: { dialogInterop: true, forms: true, multiple: true, portal: true },
+    features: {
+      dialogInterop: true,
+      forms: true,
+      multiple: true,
+      portal: true,
+    },
     parts: [
       {
         tag: "Select.Root",
@@ -115,7 +119,10 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             children: [
               { tag: "Select.Value", leaf: true },
               { tag: "Select.Icon", leaf: true },
-              { tag: "Select.ClearTrigger", note: "clears value without opening listbox" },
+              {
+                tag: "Select.ClearTrigger",
+                note: "clears value without opening listbox",
+              },
             ],
           },
           {
@@ -130,11 +137,19 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
                     tag: "Select.Content",
                     note: "listbox container (inline when Portal omitted)",
                     children: [
-                      { tag: "Select.Backdrop", note: "only when modal={true}" },
+                      {
+                        tag: "Select.Backdrop",
+                        note: "only when modal={true}",
+                      },
                       { tag: "Select.ScrollUpButton", note: "long lists" },
                       {
                         tag: "Select.List",
-                        children: [{ tag: "Select.Item value=…", note: "registers in store" }],
+                        children: [
+                          {
+                            tag: "Select.Item value=…",
+                            note: "registers in store",
+                          },
+                        ],
                       },
                       { tag: "Select.ScrollDownButton", note: "long lists" },
                     ],
@@ -165,7 +180,10 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
             tag: "Combobox.Input",
             note: "combobox role — typing filters the list",
           },
-          { tag: "Combobox.Trigger", note: "opens list without clearing filter text" },
+          {
+            tag: "Combobox.Trigger",
+            note: "opens list without clearing filter text",
+          },
           {
             tag: "Combobox.Content",
             note: "floating listbox (inline, no portal)",
@@ -174,7 +192,10 @@ export const COMPONENTS: Record<string, ComponentMeta> = {
                 tag: "Combobox.List",
                 children: [{ tag: "Combobox.Item value=…", note: "registers in store" }],
               },
-              { tag: "Combobox.Empty", note: "shown when filter matches nothing" },
+              {
+                tag: "Combobox.Empty",
+                note: "shown when filter matches nothing",
+              },
             ],
           },
           { tag: "Combobox.Clear", note: "clears value + input text" },
@@ -196,9 +217,21 @@ export const API: Record<string, ApiGroup[]> = {
           type: "string | null | string[]",
           desc: "Controlled/uncontrolled selected value. string[] when multiple={true}.",
         },
-        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
-        { name: "name", type: "string", desc: "Forwarded to Select.HiddenSelect for form submit." },
-        { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
+        {
+          name: "open / defaultOpen / onOpenChange",
+          type: "boolean",
+          desc: "Listbox open state.",
+        },
+        {
+          name: "name",
+          type: "string",
+          desc: "Forwarded to Select.HiddenSelect for form submit.",
+        },
+        {
+          name: "disabled / required / readOnly",
+          type: "boolean",
+          desc: "Root constraints.",
+        },
         {
           name: "modal",
           type: "boolean",
@@ -249,8 +282,16 @@ export const API: Record<string, ApiGroup[]> = {
           type: "HTMLElement | RefObject<HTMLElement>",
           desc: "Custom portal target (e.g. Dialog.Content ref). Requires portal={true}.",
         },
-        { name: "side / align / sameWidth", desc: "Floating UI positioning via @kenos-ui/utils." },
-        { name: "lazyMount", type: "boolean", def: "true", desc: "Skip DOM until first open." },
+        {
+          name: "side / align / sameWidth",
+          desc: "Floating UI positioning via @kenos-ui/utils.",
+        },
+        {
+          name: "lazyMount",
+          type: "boolean",
+          def: "true",
+          desc: "Skip DOM until first open.",
+        },
         {
           name: "onOpenChangeComplete",
           type: "(open: boolean) => void",
@@ -296,7 +337,10 @@ export const API: Record<string, ApiGroup[]> = {
         { name: "Home / End", desc: "First / last enabled option." },
         { name: "Type characters", desc: "Typeahead match on textValue." },
         { name: "Enter / Space", desc: "Select highlighted option." },
-        { name: "Escape", desc: "Close listbox; stopPropagation for Dialog interop." },
+        {
+          name: "Escape",
+          desc: "Close listbox; stopPropagation for Dialog interop.",
+        },
       ],
     },
   ],
@@ -314,8 +358,16 @@ export const API: Record<string, ApiGroup[]> = {
           type: "string",
           desc: "Controlled/uncontrolled filter text in the input.",
         },
-        { name: "open / defaultOpen / onOpenChange", type: "boolean", desc: "Listbox open state." },
-        { name: "disabled / required / readOnly", type: "boolean", desc: "Root constraints." },
+        {
+          name: "open / defaultOpen / onOpenChange",
+          type: "boolean",
+          desc: "Listbox open state.",
+        },
+        {
+          name: "disabled / required / readOnly",
+          type: "boolean",
+          desc: "Root constraints.",
+        },
         {
           name: "modal",
           type: "boolean",
@@ -342,8 +394,16 @@ export const API: Record<string, ApiGroup[]> = {
     {
       group: "Content props",
       props: [
-        { name: "side / align / sameWidth", desc: "Floating UI positioning via @kenos-ui/utils." },
-        { name: "lazyMount", type: "boolean", def: "true", desc: "Skip DOM until first open." },
+        {
+          name: "side / align / sameWidth",
+          desc: "Floating UI positioning via @kenos-ui/utils.",
+        },
+        {
+          name: "lazyMount",
+          type: "boolean",
+          def: "true",
+          desc: "Skip DOM until first open.",
+        },
         {
           name: "onOpenChangeComplete",
           type: "(open: boolean) => void",
@@ -373,21 +433,30 @@ export const API: Record<string, ApiGroup[]> = {
         { name: "[data-open]", desc: "On input/trigger when listbox is open." },
         { name: "[data-selected]", desc: "On selected option." },
         { name: "[data-highlighted]", desc: "Keyboard/hover highlight." },
-        { name: "[data-disabled]", desc: "Disabled input, trigger, or option." },
+        {
+          name: "[data-disabled]",
+          desc: "Disabled input, trigger, or option.",
+        },
       ],
     },
     {
       group: "Keyboard",
       keys: true,
       props: [
-        { name: "Type characters", desc: "Filter options by textValue (substring match)." },
+        {
+          name: "Type characters",
+          desc: "Filter options by textValue (substring match).",
+        },
         {
           name: "Arrow ↑ / ↓",
           desc: "Move highlight via aria-activedescendant; skips disabled items.",
         },
         { name: "Home / End", desc: "First / last enabled option." },
         { name: "Enter", desc: "Select highlighted option; closes listbox." },
-        { name: "Escape", desc: "Close listbox; stopPropagation for Dialog interop." },
+        {
+          name: "Escape",
+          desc: "Close listbox; stopPropagation for Dialog interop.",
+        },
       ],
     },
   ],
@@ -402,14 +471,54 @@ export type SearchEntry = {
 
 export const SEARCH: SearchEntry[] = [
   { title: "Overview", route: "", crumb: "Get Started", kind: "page" },
-  { title: "Installation", route: "installation", crumb: "Get Started", kind: "page" },
-  { title: "Quick Start", route: "quickstart", crumb: "Get Started", kind: "page" },
-  { title: "Date Picker", route: "date-picker", crumb: "Primitives", kind: "comp" },
-  { title: "Form Integration", route: "date-picker", crumb: "Date Picker", kind: "comp" },
-  { title: "Time Granularity", route: "date-picker", crumb: "Date Picker", kind: "comp" },
-  { title: "Presets", route: "date-picker", crumb: "Date Picker", kind: "comp" },
-  { title: "Accessibility", route: "date-picker", crumb: "Date Picker", kind: "comp" },
-  { title: "Changelog", route: "changelog", crumb: "Get Started", kind: "page" },
+  {
+    title: "Installation",
+    route: "installation",
+    crumb: "Get Started",
+    kind: "page",
+  },
+  {
+    title: "Quick Start",
+    route: "quickstart",
+    crumb: "Get Started",
+    kind: "page",
+  },
+  {
+    title: "Date Picker",
+    route: "date-picker",
+    crumb: "Primitives",
+    kind: "comp",
+  },
+  {
+    title: "Form Integration",
+    route: "date-picker",
+    crumb: "Date Picker",
+    kind: "comp",
+  },
+  {
+    title: "Time Granularity",
+    route: "date-picker",
+    crumb: "Date Picker",
+    kind: "comp",
+  },
+  {
+    title: "Presets",
+    route: "date-picker",
+    crumb: "Date Picker",
+    kind: "comp",
+  },
+  {
+    title: "Accessibility",
+    route: "date-picker",
+    crumb: "Date Picker",
+    kind: "comp",
+  },
+  {
+    title: "Changelog",
+    route: "changelog",
+    crumb: "Get Started",
+    kind: "page",
+  },
 ];
 
 /* flat route order for prev/next navigation */
